@@ -1,0 +1,134 @@
+// Gravity.cpp : Defines the entry point for the console application.
+//		Zachary Fejes, 2014
+
+#include "stdafx.h"
+
+using namespace std;
+using namespace arma;
+
+class planet {
+public:
+	string name;
+	double mass;
+	mat initial_position;
+	mat final_position;
+	mat initial_velocity;
+	mat final_velocity;
+
+	void print(void);
+};
+
+void planet::print(void) {
+	//This function of the planet class prints out all of the data pertaining to the planet object it is called from
+	cout << "Planet: " << name << "\nMass: " << mass << "\nInitial Position: " << initial_position
+		<< "\nInitial Velocity: " << initial_velocity << "\nFinal Position: " << final_position << "\nFinal Velocity: "
+		<< final_velocity << "\n\n";
+}
+
+
+mat grav_accel(mat Position, mat Mass) {
+	/*This function will calculate the gravitational attraction on each mass by every other mass. This should work for
+	n masses, with thier locations given by Location (n x 3) with each row giving the x,y,z coordinates of each mass in
+	Mass, such that the first row of Location corresponds to the first row of Mass.*/
+
+	double G = datum::G;
+	int i,j;
+	mat Acceleration(Mass.n_rows,3);
+	Acceleration.zeros();
+
+	for (i = 0; i < Mass.n_rows; i++){
+		for (j = 0; j < Mass.n_rows; j++){
+			if (i != j) {
+				Acceleration.row(i) = Acceleration.row(i) + G*Mass(j,0)*((Position.row(j) - Position.row(i))/pow(norm(Position.row(j) - Position.row(i),2),3));
+			}
+		}
+	}
+	return Acceleration;
+}
+
+mat vector_to_column(mat A_in) {
+	mat A_out(A_in.n_rows*A_in.n_cols,1);
+	A_out.zeros();
+	int i = 0;
+	int j = i;
+
+	while (i < A_out.n_rows) {
+		A_out.rows(i, i - 1 + A_in.n_cols) = trans(A_in.row(j));
+		i = i + A_in.n_cols;
+		j = j + 1;
+	}
+	return(A_out);
+}
+
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	cout << "\n N Body Gravity Simulator \n by Zachary Fejes, 2014 \n\n";		//System initialization text. Will be phased out
+	system("pause");
+	system("cls");
+
+	planet Earth;			//Initializing the first planet object: Earth, with appropriate values. Assume center of system
+	Earth.name = "Earth";
+	Earth.mass = 5.97219e24;
+	Earth.initial_position << 0 << 0 << 0 << endr;
+	Earth.initial_velocity << 0 << 0 << 0 << endr;
+
+	planet Luna;			//Initializing the second planet object, the Moon, at its average distance from earth
+	Luna.name = "Luna";
+	Luna.mass = 6.3477e22;
+	Luna.initial_position << 384400000 << 0 << 0 << endr;
+	Luna.initial_velocity << 0 << 1023 << 0 << endr;
+
+	Earth.print();			//Print the values of Earth planet object
+	Luna.print();			//Print the values of Luna planet object
+	system("pause");
+	system("cls");
+
+	mat Mass(2,1);			//Now we are initializing the Mass matrix with the values from our planet objects (can be N large)
+	Mass.row(0) = Earth.mass;
+	Mass.row(1) = Luna.mass;
+
+	mat Position(2,3);		//We initialize the Position matrix with the initial values from our planet objects (can be N large)
+	Position.row(0) = Earth.initial_position;
+	Position.row(1) = Luna.initial_position;
+
+	mat Velocity(2,3);		//We initialize the Velocity matrix with the initial values from our planet objects (can be N large)
+	Velocity.row(0) = Earth.initial_velocity;
+	Velocity.row(1) = Luna.initial_velocity;
+
+	/*The following is a first order Euler approximation of the motion of the bodies*/
+	int h = 1;		//h = step size. For now, 1 second.
+	int t = 0;		//t is the running time track. Starts at t = 0
+	int t_final = 14*24*60*60;	//Must be an integer! Currently set to ~2 full rotations
+	mat Acceleration(Velocity.n_rows,Velocity.n_cols);
+	Acceleration.zeros();
+
+	//TODO: Plot the initial location of each planet object here.
+
+	while (t <= t_final) {
+		Acceleration = grav_accel(Position,Mass);
+		Velocity = Velocity + h*Acceleration;
+		Position = Position + h*Velocity;
+		t = t + h;
+	}
+
+	Earth.final_position = Position.row(0);
+	Earth.final_velocity = Velocity.row(0);
+	Luna.final_position = Position.row(1);
+	Luna.final_velocity = Velocity.row(1);
+
+	//TODO: Plot the trajectory of each planet object here.
+
+	//TODO: Plot the final location of each planet object here.
+
+	cout << "The final information for each object after 1 minute is displayed below\n\n\n";
+	Earth.print();
+	Luna.print();
+	system("pause");
+	system("cls");
+
+	/*Here ends the first order Euler approximation of the gravitation interaction of two bodies*/
+
+	return 0;
+}
+
