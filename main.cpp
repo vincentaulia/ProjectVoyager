@@ -1,7 +1,6 @@
 //
 //  main.cpp
 //  Project Voyager
-//
 //  Created by Zeev Suprun on 2014-06-21.
 //
 
@@ -101,7 +100,7 @@ int main(int argc, char** argv)
 	spaceObjects[1].name = "Earth";
 	spaceObjects[1].mass = 5.97219e24;
     spaceObjects[1].radius = 6371000;
-	spaceObjects[1].position << 1496e5 << 0 << 0 << endr;
+	spaceObjects[1].position << 149597870700 << 0 << 0 << endr;
 	spaceObjects[1].velocity << 0 << 30000 << 0 << endr;
     
     //Initializing the second planet object, the Moon, at its average distance from earth
@@ -109,7 +108,7 @@ int main(int argc, char** argv)
 	spaceObjects[2].name = "Luna";
 	spaceObjects[2].mass = 6.3477e22;
     spaceObjects[2].radius = 1737100;
-	spaceObjects[2].position << 384400000 + 1496e5 << 0 << 0 << endr;
+	spaceObjects[2].position << 384400000 + 149597870700 << 0 << 0 << endr;
 	spaceObjects[2].velocity << 0 << 1023 + 30000 << 0 << endr;
     
     //Note that for the initial conditions of the placeholder code,
@@ -142,9 +141,9 @@ int main(int argc, char** argv)
       This was taken from Zach's example code. This should be eventually replaced with
       a Runge-Kutta 5th order approximation.   */
     
-	int h = 1;		//h = step size. For now, 1 second.
+	int h = 60*60*24;		//h = step size. For now, 1 day.
 	int t = 0;		//t is the running time track. Starts at t = 0
-	int t_final = 24*60*60;	//Must be an integer! Currently set to ~1 day.
+	int t_final = 24*60*60*365;	//Must be an integer! Currently set to ~1 year.
 	mat Acceleration(Velocity.n_rows,Velocity.n_cols);
 	Acceleration.zeros();
     
