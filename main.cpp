@@ -4,8 +4,6 @@
 //  Created by Zeev Suprun on 2014-06-21.
 //
 
-#include <iostream>
-#include <fstream>
 #include <armadillo>
 using namespace std;
 using namespace arma;
@@ -92,6 +90,7 @@ int main(int argc, char** argv)
      *************************************************************
      *************************************************************/
     
+    delete [] spaceObjects;
     outputFile.close();
     return 0;
 }
