@@ -1,0 +1,5 @@
+3
+Sol 1.989e30 695500000 0 0 0 0 0 0
+Earth 5.97219e24 6371000 149597870700 0 0 0 30000 0
+Luna 6.3477e22 1737100 149982270700 0 0 0 31023 0 
+name, mass, radius, xPosition yPosition zPosition, xVelocity yVelocity zVelocity
