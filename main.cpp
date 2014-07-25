@@ -15,7 +15,7 @@ int main(int argc, char** argv)
     ofstream outputFile;
     outputFile.open("output.txt");
     ifstream inputFile;
-    inputFile.open("planet_data.txt");
+    inputFile.open("solar_data.txt");
     
     int numSpaceObjs;
     inputFile >> numSpaceObjs;
@@ -28,25 +28,32 @@ int main(int argc, char** argv)
     double xPos, yPos, zPos, xVel, yVel, zVel;
 
     //The following loop initializes every element in the array of planet objects
-    //The data is written in the format:
-    //name mass radius x-Position yPosition zPosition xVelocity yVelocity zVelocity
     for (int i = 0; i < numSpaceObjs; i++) {
     
         inputFile >> spaceObjects[i].name;
         inputFile >> spaceObjects[i].mass;
         inputFile >> spaceObjects[i].radius;
-        
+        inputFile.get();                      //Get and ignore the next character, which is \n.
+        inputFile.ignore(10000,'\n');        //Ignore a line.
         inputFile >> xPos >> yPos >> zPos;
         inputFile >> xVel >> yVel >> zVel;
-    
+        
+        //Converting position from AU to meters.
+        xPos = xPos * 149597870700;
+        yPos = yPos * 149597870700;
+        zPos = zPos * 149597870700;
+        //Converting velocity from AU/day to meters/second.
+        xVel = xVel * 149597870700 / (24*60*60);
+        yVel = yVel * 149597870700 / (24*60*60);
+        zVel = zVel * 149597870700 / (24*60*60);
+        
         spaceObjects[i].position << xPos << yPos << zPos << endr;
         spaceObjects[i].velocity << xVel << yVel << zVel << endr;
+        inputFile.get();
+        inputFile.ignore(10000,'\n');        //Ignore a line.
+
     }
     inputFile.close();
-    //Note that for the placeholder inital conditions
-    //the earth, moon and sun are all moving in the same plane, and it is a lunar eclipse.
-    //this is to simplify things.
-    
     
     //Now we are initializing the Mass, Position and Velocity matrices
     //with the values from our planet objects (can be N large)
