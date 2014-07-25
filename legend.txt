@@ -1,6 +1,7 @@
 ################################# LEGEND ######################################
 *******************************************************************************
 TB
+M  R
 JDCT 
    X     Y     Z
    VX    VY    VZ
@@ -20,6 +21,8 @@ Coordinate system description:
 Symbol meaning [1 au=149597870.700 km, 1 day=86400.0 s]:
 
      TB      Target Body
+      M      Mass (kg)
+      R      Radius (km)
     JDCT     Epoch Julian Date, Coordinate Time
       X      x-component of position vector (AU)                               
       Y      y-component of position vector (AU)                               

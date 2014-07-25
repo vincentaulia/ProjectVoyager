@@ -58,6 +58,7 @@ element.send_keys("2")
 element = driver.find_element_by_name("set_time_span")
 element.click()
 
+"""
 #Table Settings
 driver.get("http://ssd.jpl.nasa.gov/horizons.cgi?s_tset=1#top")
 
@@ -65,11 +66,13 @@ driver.get("http://ssd.jpl.nasa.gov/horizons.cgi?s_tset=1#top")
 #element = driver.find_element_by_name("csv_format")
 #element.click()
 
-element = driver.find_element_by_name("obj_data")
-element.click()
+#Uncommnet below if you don't wan't object details
+#element = driver.find_element_by_name("obj_data")
+#element.click()
 
 element = driver.find_element_by_name("set_table")
 element.click()
+"""
 
 #Display/Output
 driver.get("http://ssd.jpl.nasa.gov/horizons.cgi?s_disp=1#top")
@@ -90,13 +93,33 @@ source = driver.page_source
 target = source.partition("Target body name: ")[2]
 target = target.split(None,1)[0]
 
+#Getting the mass
+temp = source.partition("Mass")[2]
+temp = temp.splitlines()[0]
+temp = temp.partition('^')[2]
+exp = temp.partition('k')[0].strip()
+temp = temp.replace('~', '=')
+temp = temp.partition('=')[2]
+mass = temp.split()[0].strip()
+mass = mass + "E" + exp
+
+#Getting the radius
+temp = source.partition("Radius (photosphere)")[2].splitlines()[0]
+temp = temp.partition('=')[2]
+radius = temp.partition('(')[0].strip()
+temp = temp.partition('^')[2]
+radius = radius + "E" +temp.partition(')')[0].strip()
+
+#Getting the core data
 entries = source.partition("$$SOE\n")[2]
 entries = entries.partition("$$EOE")[0]
 entries = entries.splitlines()
 
 f = open('solar_data.txt', 'w')
+f.write("9\n")
 
 f.write(target + "\n")
+f.write(mass + " " + radius + "\n")
 
 for l in entries:
     f.write(l+"\n")
@@ -133,12 +156,32 @@ for i in range(8):
     #Getting target name
     target = source.partition("Target body name: ")[2]
     target = target.split(None,1)[0]
+
+    #Getting the mass
+    temp = source.partition("Mass")[2]
+    temp = temp.splitlines()[0]
+    temp = temp.partition('^')[2]
+    exp = temp.partition('k')[0].strip()
+    temp = temp.replace('~', '=')
+    temp = temp.partition('=')[2]
+    mass = temp.split()[0].strip()
+    if '+' in mass:
+        mass = mass.partition('+')[0]
+    mass = mass + "E" + exp
     
+    #Getting the radius
+    temp = source.partition("radius")[2].splitlines()[0]
+    temp = temp.partition('=')[2]
+    temp = temp.replace('+', '(')
+    radius = temp.partition('(')[0].strip()
+
+    #Getting the core data
     entries = source.partition("$$SOE\n")[2]
     entries = entries.partition("$$EOE")[0]
     entries = entries.splitlines()
     
     f.write(target + "\n")
+    f.write("   " + mass + "  " + radius + "\n")
     
     for l in entries:
         f.write(l+"\n")
