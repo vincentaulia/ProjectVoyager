@@ -18,19 +18,19 @@ Coordinate system description:
     z-axis  : perpendicular to the xy-plane in the directional (+ or -) sense
               of Earth's north pole at the reference epoch.
 
-Symbol meaning  
+Symbol meaning [1 au=149597870.700 km, 1 day=86400.0 s]:
 
      TB      Target Body
       M      Mass (kg)
       R      Radius (km)
     JDCT     Epoch Julian Date, Coordinate Time
-      X      x-component of position vector (km)                               
-      Y      y-component of position vector (km)                               
-      Z      z-component of position vector (km)                               
-      VX     x-component of velocity vector (km/sec)                           
-      VY     y-component of velocity vector (km/sec)                           
-      VZ     z-component of velocity vector (km/sec)                           
-      LT     One-way down-leg Newtonian light-time (sec)                       
-      RG     Range; distance from coordinate center (km)                       
-      RR     Range-rate; radial velocity wrt coord. center (km/sec)            
+      X      x-component of position vector (AU)                               
+      Y      y-component of position vector (AU)                               
+      Z      z-component of position vector (AU)                               
+      VX     x-component of velocity vector (AU/day)                           
+      VY     y-component of velocity vector (AU/day)                           
+      VZ     z-component of velocity vector (AU/day)                           
+      LT     One-way down-leg Newtonian light-time (day)                       
+      RG     Range; distance from coordinate center (AU)                       
+      RR     Range-rate; radial velocity wrt coord. center (AU/day)
 *******************************************************************************
