@@ -15,7 +15,7 @@ int main(int argc, char** argv)
     ofstream outputFile;
     outputFile.open("output.txt");
     ifstream inputFile;
-    inputFile.open("major_bodies.txt");
+    inputFile.open("solar_data.txt");
     
     int numSpaceObjs;
     inputFile >> numSpaceObjs;
@@ -33,20 +33,19 @@ int main(int argc, char** argv)
         inputFile >> spaceObjects[i].name;
         inputFile >> spaceObjects[i].mass;
         inputFile >> spaceObjects[i].radius;
-        inputFile.ignore(10000,'\n');        //Ignore the rest of the line
-        //(this means it will only read the first radius for planets with 3 radii)
+        inputFile.get();                      //Get and ignore the next character, which is \n.
         inputFile.ignore(10000,'\n');        //Ignore a line.
         inputFile >> xPos >> yPos >> zPos;
         inputFile >> xVel >> yVel >> zVel;
         
         //Converting position from AU to meters.
-        xPos = xPos * 1000;
-        yPos = yPos * 1000;
-        zPos = zPos * 1000;
+        xPos = xPos * 149597870700;
+        yPos = yPos * 149597870700;
+        zPos = zPos * 149597870700;
         //Converting velocity from AU/day to meters/second.
-        xVel = xVel * 1000;
-        yVel = yVel * 1000;
-        zVel = zVel * 1000;
+        xVel = xVel * 149597870700 / (24*60*60);
+        yVel = yVel * 149597870700 / (24*60*60);
+        zVel = zVel * 149597870700 / (24*60*60);
         
         spaceObjects[i].position << xPos << yPos << zPos << endr;
         spaceObjects[i].velocity << xVel << yVel << zVel << endr;
@@ -78,7 +77,7 @@ int main(int argc, char** argv)
     
 	int h = 60*60*24;		//h = step size. For now, 1 day.
 	int t = 0;		//t is the running time track. Starts at t = 0
-	int t_final = 24*60*60*365*165;	//Must be an integer! Currently set to ~165 years.
+	int t_final = 24*60*60*365;	//Must be an integer! Currently set to ~1 year.
 	mat Acceleration(Velocity.n_rows,Velocity.n_cols);
 	Acceleration.zeros();
     
