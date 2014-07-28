@@ -7,8 +7,8 @@ import time
 def main():
 
     inFile = open("output.txt", "r")
-    #output.txt must be created by my main.cpp program
-    #This program will only work with Sol,Earth,Luna in that order.
+    #output.txt must be created by the main.cpp program
+    #If there are other planets in output.txt, this program will ignore them and only diplay the earth, moon and sun.
     win = GraphWin("Planet Motion", 500, 500)
     solX = 0
     solY = 0
@@ -28,22 +28,34 @@ def main():
     #1. Find the initial position of the moon and the earth and use that to create the Luna and Earth objects of the circle type.
     #2. To do that, I need to read the first three lines in the file. (The first will be discarded, because that's the sun.)
 
-    #The first line has information about the initial position of the sun, which is unnecessary, so we discard it.
-    inFile.readline()
+    earthInfo = []
+    moonInfo = []
 
-    earthInfo = (inFile.readline()).split(",") #earthInfo is a list of strings
+    for line in inFile:
+
+        info = line.split(",") #info is a list of strings
+
+        if (info[0] == "earth" or info[0] == "Earth" or info[0] == "Terra" or info[0] == "terra"):
+            earthInfo = info
+        elif (info[0] == "moon" or info[0] == "Moon" or info[0] == "luna" or info[0] == "Luna"):
+            moonInfo = info
+        #exit the loop after you read data for both the moon and the earth.
+        if (earthInfo != [] and moonInfo != []):
+            break
+
     earthX = float(earthInfo[3])*conv_Factor
     earthY = float(earthInfo[4])*conv_Factor
     earth = Circle(Point(earthX + win.getWidth()/2, earthY + win.getHeight()/2), 5)
     earth.setFill('green')
 
-    moonInfo = (inFile.readline()).split(",") #moonInfo is a list of strings
     moonX = float(moonInfo[3])*conv_Factor
     moonY = float(moonInfo[4])*conv_Factor
 
-    #The distance shown between the earth and the moon is 50 times the actual distance.
-    deltaX = (moonX - earthX)*50
-    deltaY = (moonY - earthY)*50
+
+    #The distance shown between the earth and the moon is MOON_OFFSET times the actual distance.
+    MOON_OFFSET = 1
+    deltaX = (moonX - earthX)*MOON_OFFSET
+    deltaY = (moonY - earthY)*MOON_OFFSET
     luna = Circle(Point(earthX + deltaX + win.getWidth()/2, earthY + deltaY + win.getHeight()/2), 2)
     luna.setFill('grey')
 
@@ -56,32 +68,34 @@ def main():
 
     for line in inFile:
         #Move the sun to its new position.
-        sol.move( float((line.split(","))[3]) * conv_Factor - solX, float((line.split(","))[3]) * conv_Factor - solY)
-        solX = float((line.split(","))[3]) * conv_Factor
-        solY = float((line.split(","))[4]) * conv_Factor
+        info = line.split(",")
+        if (info[0] == "sol" or info[0] == "Sol" or info[0] == "Sun" or info[0] == "sun"):
+            sol.move( float(info[3]) * conv_Factor - solX, float(info[4]) * conv_Factor - solY)
+            solX = float(info[3]) * conv_Factor
+            solY = float(info[4]) * conv_Factor
 
-        #Move the earth to its new position.
-        earthInfo = (inFile.readline()).split(",")
-        newEarthX = float(earthInfo[3])*conv_Factor
-        newEarthY = float(earthInfo[4])*conv_Factor
-        earth.move(newEarthX - earthX, newEarthY - earthY)
-        earthX = newEarthX
-        earthY = newEarthY
+        elif (info[0] == "earth" or info[0] == "Earth" or info[0] == "Terra" or info[0] == "terra"):
+            #Move the earth to its new position.
+            newEarthX = float(info[3])*conv_Factor
+            newEarthY = float(info[4])*conv_Factor
+            earth.move(newEarthX - earthX, newEarthY - earthY)
+            earthX = newEarthX
+            earthY = newEarthY
+        elif (info[0] == "moon" or info[0] == "Moon" or info[0] == "luna" or info[0] == "Luna"):
+            #Move the moon to its new position.
 
-        #Move the moon to its new position.
+            #newMoonX = float(moonInfo[3])*conv_Factor
+            #newMoonY = float(moonInfo[4])*conv_Factor
+            moonX = float(info[3])*conv_Factor
+            moonY = float(info[4])*conv_Factor
+            deltaX = (moonX - earthX)*MOON_OFFSET
+            deltaY = (moonY - earthY)*MOON_OFFSET
+            #luna.move(newMoonX - moonX, newMoonY - moonY)
+            luna.undraw()
+            luna = Circle(Point(earthX + deltaX + win.getWidth()/2, earthY + deltaY + win.getHeight()/2), 2)
+            luna.draw(win)
 
-        moonInfo = (inFile.readline()).split(",")
-        #newMoonX = float(moonInfo[3])*conv_Factor
-        #newMoonY = float(moonInfo[4])*conv_Factor
-        moonX = float(moonInfo[3])*conv_Factor
-        moonY = float(moonInfo[4])*conv_Factor
-        deltaX = (moonX - earthX)*50
-        deltaY = (moonY - earthY)*50
-        #luna.move(newMoonX - moonX, newMoonY - moonY)
-        luna.undraw()
-        luna = Circle(Point(earthX + deltaX + win.getWidth()/2, earthY + deltaY + win.getHeight()/2), 2)
-        luna.draw(win)
-        time.sleep(.05)
+        #time.sleep(0.05)
 
 
     win.getMouse() # Pause to view result
