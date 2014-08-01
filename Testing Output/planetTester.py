@@ -2,7 +2,7 @@ __author__ = 'zeev'
 
 #This program calculates the average distance between the solar barycenter and the 8 planets,
 #and compares that value to the actual average distance.
-inFile = open("output.txt", "r")
+inFile = open("output-100yrsEuler.txt", "r")
 
 counter = 0
 #Average distance between the solar barycenter and the sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune.
@@ -10,7 +10,7 @@ averageDistances = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 #Read through every line in the file to calculate the distance between the solar barycenter and the given planetary body.
 for line in inFile:
-    info = line.split(",")
+    info = line.split(" ")
     if(info[0] == "sol" or info[0] == "Sol" or info[0] == "Sun" or info[0] == "sun"):
         averageDistances[0] += (float(info[3])**2 + float(info[4])**2 + float(info[5])**2)**0.5
         counter += 1/9

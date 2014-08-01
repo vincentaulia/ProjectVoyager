@@ -6,7 +6,7 @@ import time
 
 def main():
 
-    inFile = open("output.txt", "r")
+    inFile = open("output-RK4.txt", "r")
     #output.txt must be created by the main.cpp program
     #If there are other planets in output.txt, this program will ignore them and only diplay the earth, moon and sun.
     win = GraphWin("Planet Motion", 500, 500)
@@ -33,7 +33,7 @@ def main():
 
     for line in inFile:
 
-        info = line.split(",") #info is a list of strings
+        info = line.split(" ") #info is a list of strings
 
         if (info[0] == "earth" or info[0] == "Earth" or info[0] == "Terra" or info[0] == "terra"):
             earthInfo = info
@@ -68,7 +68,7 @@ def main():
 
     for line in inFile:
         #Move the sun to its new position.
-        info = line.split(",")
+        info = line.split(" ")
         if (info[0] == "sol" or info[0] == "Sol" or info[0] == "Sun" or info[0] == "sun"):
             sol.move( float(info[3]) * conv_Factor - solX, float(info[4]) * conv_Factor - solY)
             solX = float(info[3]) * conv_Factor

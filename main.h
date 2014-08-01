@@ -10,18 +10,18 @@
 #define __Project_Voyager__main__
 
 #include <iostream>
-#include <fstream>
-
 class planet {
     
 public:
     //Planet's mass in kg.
     double mass;
     std::string name;
-    //The radius of the planet in km.
+    //The radius of the planet in meters.
     double radius;
+    //The radius of the planet's sphere of influence. (this variable is dummied out for now)
+    //double rad_sphere_of_influence;
     
-    //A matrix for the planet's position and velocity in cartesian coordinates. (in m and m/s)
+    //A matrix for the planet's position and velocity in cartesian coordinates. (in meters and m/s for now)
     //(at a later time, more appropriate units should be selected.)
     mat position;
     mat velocity;
@@ -30,10 +30,9 @@ public:
 
 //This function was taken from Zach's example code.
 mat grav_accel(mat Position, mat Mass) {
-	/*This function will calculate the gravitational attraction on each mass by every other mass. 
-     This should work for n masses, with thier locations given by Location (n x 3) with each row 
-     giving the x,y,z coordinates of each mass in Mass, such that the first row of Location corresponds 
-     to the first row of Mass.*/
+	/*This function will calculate the gravitational attraction on each mass by every other mass. This should work for
+     n masses, with thier locations given by Location (n x 3) with each row giving the x,y,z coordinates of each mass in
+     Mass, such that the first row of Location corresponds to the first row of Mass.*/
     
 	double G = datum::G;
 	mat Acceleration(Mass.n_rows,3);
@@ -49,25 +48,24 @@ mat grav_accel(mat Position, mat Mass) {
 	return Acceleration;
 }
 
-void writeData(planet* planetObjs, int numSpaceObjs, mat& vel, mat& pos, int time, ofstream& outFile) {
+void writeData(planet* planetObjs, int numSpaceObjs, mat& vel, mat& pos, unsigned int time, ofstream& outFile) {
 	/*Given an array of planet objects, the current time, and an ofstream object
      this function writes the relevant data to a csv file in the format:
      name, mass, radius, position, velocity, time */
 	for (int i = 0; i < numSpaceObjs; i++) {
         
-        outFile  << planetObjs[i].name << ", " << planetObjs[i].mass << ", " << planetObjs[i].radius << ", ";
+        outFile  << planetObjs[i].name << " " << planetObjs[i].mass << " " << planetObjs[i].radius << " ";
         
         //Printing out the position in the x, y and z dimensions.
         for (int j = 0; j < pos.n_cols; j++) {
-            outFile << pos(i,j) << ", ";
+            outFile << pos(i,j) << " ";
             
         }
         for (int j = 0; j < vel.n_cols; j++) {
-            outFile << vel(i,j) << ", ";
+            outFile << vel(i,j) << " ";
             
         }
         outFile << time << "\n";
-        
         
     }
 }

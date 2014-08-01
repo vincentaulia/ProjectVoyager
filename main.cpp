@@ -74,11 +74,11 @@ int main(int argc, char** argv)
      *************************************************************/
     /*The following is a first order Euler approximation of the motion of the bodies
      This was taken from Zach's example code. This should be eventually replaced with
-     a Runge-Kutta 5th order approximation.   */
-    /*
-	int h = 60*60*24;		//h = step size. For now, 1 day.
-	int t = 0;		//t is the running time track. Starts at t = 0
-	int t_final = 24*60*60*365*2;	//Must be an integer! Currently set to ~1 years.
+     a Runge-Kutta 5th order approximation.
+    
+	unsigned int h = 60*60*24;		//h = step size. For now, 1 day.
+	unsigned int t = 0;		//t is the running time track. Starts at t = 0
+	unsigned int t_final = 24*60*60*365*1;	//Must be an integer!
 	mat Acceleration(Velocity.n_rows,Velocity.n_cols);
 	Acceleration.zeros();
     
@@ -91,14 +91,14 @@ int main(int argc, char** argv)
 		Velocity = Velocity + h*Acceleration;
 		Position = Position + h*Velocity;
 		t = t + h;
-	}*/
-    
+	}
+    */
     /*Above is a commented out Euler approximation. The following is an RK4 approximation.
      *So far, this approximation doesn't seem to be accurate.
-     */
-    int h = 60*60*24;	 //h = step size. For now, 1 day.
-    int t = 0;	 //t is the running time track. Starts at t = 0
-    int t_final = 24*60*60*365;	//Must be an integer! Currently set to ~1 year.
+    */
+    unsigned int h = 60*60*24;	 //h = step size. For now, 1 day.
+    unsigned int t = 0;	 //t is the running time track. Starts at t = 0
+    unsigned int t_final = 24*60*60*365*1;	//Must be an integer! 
     
     mat k1(Velocity.n_rows, Velocity.n_cols);
     k1.zeros();
