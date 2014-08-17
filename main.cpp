@@ -13,7 +13,7 @@ using namespace arma;
 int main(int argc, char** argv)
 {
     ofstream outputFile;
-    outputFile.open("output-RK4.txt");
+    outputFile.open("output.txt");
     ifstream inputFile;
     inputFile.open("major_bodies.txt");
     
@@ -74,9 +74,9 @@ int main(int argc, char** argv)
      *************************************************************/
     /*The following is a first order Euler approximation of the motion of the bodies
      This was taken from Zach's example code. This should be eventually replaced with
-     a Runge-Kutta 5th order approximation.
+     a Runge-Kutta 5th order approximation.*/
     
-	unsigned int h = 60*60*24;		//h = step size. For now, 1 day.
+	unsigned int h = 60*60*0.25;		//h = step size, in seconds. Right now it's about 15 minutes.
 	unsigned int t = 0;		//t is the running time track. Starts at t = 0
 	unsigned int t_final = 24*60*60*365*1;	//Must be an integer!
 	mat Acceleration(Velocity.n_rows,Velocity.n_cols);
@@ -84,21 +84,23 @@ int main(int argc, char** argv)
     
 	while (t <= t_final) {
         
-        //This writes the planet data to the output file.
-        writeData(spaceObjects, numSpaceObjs, Velocity, Position, t, outputFile);
+        //This writes the planet data to the output file, but only every 24 hours, to avoid huge text files.
+        if (t % (60*60*24) == 0) {
+            writeData(spaceObjects, numSpaceObjs, Velocity, Position, t, outputFile);
+        }
         //start of first order Euler approximation.
 		Acceleration = grav_accel(Position,Mass);
 		Velocity = Velocity + h*Acceleration;
 		Position = Position + h*Velocity;
 		t = t + h;
 	}
-    */
+    
     /*Above is a commented out Euler approximation. The following is an RK4 approximation.
      *So far, this approximation doesn't seem to be accurate.
-    */
-    unsigned int h = 60*60*24;	 //h = step size. For now, 1 day.
+    
+    unsigned int h = 60*60*0.25;	 //h = step size, in seconds
     unsigned int t = 0;	 //t is the running time track. Starts at t = 0
-    unsigned int t_final = 24*60*60*365*1;	//Must be an integer! 
+    unsigned int t_final = 24*60*60*365*1;	//Must be an integer!
     
     mat k1(Velocity.n_rows, Velocity.n_cols);
     k1.zeros();
@@ -118,8 +120,10 @@ int main(int argc, char** argv)
     l4.zeros();
     
     while (t <= t_final) {
-        //This writes the planet data to the output file.
-        writeData(spaceObjects, numSpaceObjs, Velocity, Position, t, outputFile);    
+        //This writes the planet data to the output file, but only every 24 hours.
+        if (t % (60*60*24) == 0) {
+            writeData(spaceObjects, numSpaceObjs, Velocity, Position, t, outputFile);
+        }
         //start of RK4 approximation.
         k1 = grav_accel(Position,Mass);
         l1 = Velocity;
@@ -133,7 +137,7 @@ int main(int argc, char** argv)
         Velocity = Velocity + h/6*(k1 + 2*k2 + 2*k3 + k4);
         Position = Position + h/6*(l1 + 2*l2 + 2*l3 + l4);
         t = t + h;
-    }
+    }*/
     /*************************************************************
      *************************************************************
                         End of placeholder code
