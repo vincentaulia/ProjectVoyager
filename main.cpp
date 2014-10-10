@@ -56,13 +56,15 @@ int main(int argc, char** argv)
     }
     inputFile.close();
     
-    //Now we are initializing the Mass, Position and Velocity matrices
+    //Now we are initializing the Mass, Radius, Position and Velocity matrices
     //with the values from our planet objects (can be N large)
-    mat Mass(numSpaceObjs,1);
-    mat Position(numSpaceObjs,3);
-    mat Velocity(numSpaceObjs,3);
+    mat Mass(numSpaceObjs, 1);
+    mat Radius(numSpaceObjs, 1);
+    mat Position(numSpaceObjs, 3);
+    mat Velocity(numSpaceObjs, 3);
     for (int i = 0; i < numSpaceObjs; i++) {
         Mass.row(i) = spaceObjects[i].mass;
+        Radius.row(i) = spaceObjects[i].radius;
         Position.row(i) = spaceObjects[i].position;
         Velocity.row(i) = spaceObjects[i].velocity;
     }
@@ -90,6 +92,9 @@ int main(int argc, char** argv)
         }
         //start of first order Euler approximation.
 		Acceleration = grav_accel(Position,Mass);
+        //calculate the acceleration due to solar radiation pressure
+        Acceleration += rad_pressure_accel(Position, Mass, Radius);
+
 		Velocity = Velocity + h*Acceleration;
 		Position = Position + h*Velocity;
 		t = t + h;

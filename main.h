@@ -48,6 +48,32 @@ mat grav_accel(mat Position, mat Mass) {
 	return Acceleration;
 }
 
+// This function calculated the force applied by solar radiation pressure on objects in the solar system
+mat rad_pressure_accel(mat Position, mat Mass, mat Radius) {
+
+    // Solar Lumonisity and Light Speed constants
+    double Solar_Lumonisity = 3.846 * pow(10,26);
+    double Light_Speed = 299792458;
+
+    // Position of the sun
+    mat Sol_Position = Position.row(0);
+
+    // Number of objects in the array
+    int Number_Objects = Position.n_rows;
+
+    mat Acceleration(Number_Objects, 3);
+    Acceleration.zeros();
+
+    // Calculate the acceleration due to solar radiation pressure for every object in the list
+    // Assumes the space objects are perfectly sperical and have a perfectly absorbing surface
+    for (int i = 1; i < Number_Objects; i++) {
+        double Distance_Mag = sqrt(pow(Sol_Position(0) - Position(i, 0), 2) + pow(Sol_Position(1) - Position(i, 1), 2) + pow(Sol_Position(2) - Position(i, 2), 2));
+        Acceleration.row(i) = (((Solar_Lumonisity / Light_Speed)*(pow(Radius(i, 0), 2) / 4 / pow(Distance_Mag, 2)) / Distance_Mag) * (Position.row(i) - Sol_Position)) / Mass(i,0);
+    }
+
+    return Acceleration;
+}
+
 void writeData(planet* planetObjs, int numSpaceObjs, mat& vel, mat& pos, unsigned int time, ofstream& outFile) {
 	/*Given an array of planet objects, the current time, and an ofstream object
      this function writes the relevant data to a csv file in the format:
