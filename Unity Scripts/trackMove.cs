@@ -1,4 +1,11 @@
-﻿using UnityEngine;
+﻿/*
+ * Attached to: 301 (Moon)
+ * 				Prefab for planet
+ * 
+ * Files needed:	bit_info.txt
+ */
+
+using UnityEngine;
 using System.Collections;
 using System;
 using System.IO;
@@ -90,12 +97,18 @@ public class trackMove : MonoBehaviour
 				double Enext = E;
 				//Normally epsilon should be much smaller than this, but for now the program takes too long with small epsilons. 
 				double epsilon = Math.Pow (10, -10);
-			
+				int count = 0;
+
 				do {
+						count ++;
 						E = Enext;
 						Enext = E - ((E - el.ecc * Math.Sin (E) - anom) / (1 - el.ecc * Math.Cos (E)));
 				
-				} while (Math.Abs(Enext - E) > epsilon);
+				} while (Math.Abs(Enext - E) > epsilon && count < 15);
+
+				if (count == 15) {
+					Debug.Log ("Epsilon Crash: " + this.name);
+				}
 			
 				Vector3 R;
 				//*********LOSS OF PRECISION HERE BY CONVERTING TO FLOATS.
@@ -125,8 +138,6 @@ public class trackMove : MonoBehaviour
 						R += orbiting.transform.position;
 				} else {
 						int orbiting_id;
-						Debug.Log (460/100);
-						Debug.Log (430/100);
 
 						orbiting_id = (objectID /100)*100 + 99;
 						orbiting = GameObject.Find(orbiting_id.ToString());
@@ -183,8 +194,8 @@ public class trackMove : MonoBehaviour
 		// this planetary body's coordinates
 		void Awake ()
 		{
-				Debug.Log (gameObject.name + ": Awake");
-				Debug.Log (CONVFACTOR.ToString ("F10"));
+				//Debug.Log (gameObject.name + ": Awake");
+				//Debug.Log (CONVFACTOR.ToString ("F10"));
 			
 				getElements ();
 				Vector3 R;
@@ -228,11 +239,13 @@ public class trackMove : MonoBehaviour
 			doPaws = !doPaws;			
 			Debug.Log("doPaws = " + doPaws);
 		}
-		
+
+		//only advance the time if the game is not paused
 		if (!doPaws) {
 
 						time += 24*3600;
 				}
+		//Debug.Log ("time: " + time);
 			
 		}
 		
