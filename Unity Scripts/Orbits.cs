@@ -1,4 +1,14 @@
-﻿using UnityEngine;
+﻿/*
+ * Created by Jihad El Sheikh
+ * 
+ * This program creates a path that follows a body
+ * 
+ * Attached to: 	Orbit
+ * 
+ * Files needed:	None
+ */
+
+using UnityEngine;
 using System.Collections;
 
 public class Orbits : MonoBehaviour

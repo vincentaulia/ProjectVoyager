@@ -45,7 +45,7 @@ public class InfoWindows : MonoBehaviour {
 		}
 
 		//Create the button to display/hide the window
-		if (GUI.Button (new Rect (10, 100, 80, 25), InfoButton[InfoPresent])) {
+		if (GUI.Button (new Rect (10, 40, 80, 25), InfoButton[InfoPresent])) {
 			CreateWindow();
 			
 		}
@@ -96,7 +96,7 @@ public class InfoWindows : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//read the information upon start
-		System.IO.StreamReader info = new System.IO.StreamReader ("printedInfo.txt");
+		System.IO.StreamReader info = new System.IO.StreamReader ("Assets\\Textfiles\\English\\printedInfo.txt");
 		string line;
 		string[] split = null;
 		
