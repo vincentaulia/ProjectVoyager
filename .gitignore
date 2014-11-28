@@ -33,3 +33,4 @@ ehthumbs.db
 Thumbs.db
 
 *.exe
+/Unity/*.exe
