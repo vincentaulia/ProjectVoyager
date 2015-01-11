@@ -13,7 +13,7 @@ using namespace arma;
 int main(int argc, char** argv)
 {
     ofstream outputFile;
-    outputFile.open("output.txt");
+    outputFile.open("output-1yrRK10.txt");
     ifstream inputFile;
     inputFile.open("major_bodies.txt");
     
@@ -71,14 +71,15 @@ int main(int argc, char** argv)
     
     /*************************************************************
      *************************************************************
-                        Start of placeholder code
+            Start of Euler Approximation placeholder code
      *************************************************************
      *************************************************************/
     /*The following is a first order Euler approximation of the motion of the bodies
      This was taken from Zach's example code. This should be eventually replaced with
-     a Runge-Kutta 5th order approximation.*/
+     a Runge-Kutta 10th order approximation.*/
     
-	unsigned int h = 60*60*0.25;		//h = step size, in seconds. Right now it's about 15 minutes.
+    /*
+	unsigned int h = 60*60*24;		//h = step size, in seconds. Right now it's about 15 minutes.
 	unsigned int t = 0;		//t is the running time track. Starts at t = 0
 	unsigned int t_final = 24*60*60*365*1;	//Must be an integer!
 	mat Acceleration(Velocity.n_rows,Velocity.n_cols);
@@ -93,15 +94,142 @@ int main(int argc, char** argv)
         //start of first order Euler approximation.
 		Acceleration = grav_accel(Position,Mass);
         //calculate the acceleration due to solar radiation pressure
-        Acceleration += rad_pressure_accel(Position, Mass, Radius);
+        //Acceleration += rad_pressure_accel(Position, Mass, Radius);
 
 		Velocity = Velocity + h*Acceleration;
 		Position = Position + h*Velocity;
 		t = t + h;
 	}
+     */
+    /*************************************************************
+     *************************************************************
+                    End of Euler placeholder code
+     *************************************************************
+     *************************************************************/
+
     
-    /*Above is a commented out Euler approximation. The following is an RK4 approximation.
-     *So far, this approximation doesn't seem to be accurate.
+    /*************************************************************
+     *************************************************************
+Start of RK10 code (note: Compiles, but does not produce accurate results)
+     *************************************************************
+     *************************************************************/
+
+    // Algorithm for numerical integration of the 2nd order Acceleration ODE to find Position and Velocity
+    // Based on "A Runge-Kutta Method of Order 10" by E. Hairer
+    // Available: http://imamat.oxfordjournals.org/content/21/1/47.full.pdf (Accessed: 19 Oct. 2014)
+    // Implemented by Behrad Vatankhahghadim
+    // 19 October 2014
+    
+    
+   
+    // Set the number of stages to 17
+    int s = 17;
+    //declare variables to store summartions.
+    //mat Sum_AL, Sum_AK, Sum_BL, Sum_BK;
+    mat Sum_AL(Velocity.n_rows, Velocity.n_cols);
+    mat Sum_AK(Velocity.n_rows, Velocity.n_cols);
+    mat Sum_BL(Velocity.n_rows, Velocity.n_cols);
+    mat Sum_BK(Velocity.n_rows, Velocity.n_cols);
+    
+    //declare the k and l arrays. k and l are both arrays of matrices.
+    mat *k;
+    mat *l;
+    k = new mat [s];
+    l = new mat [s];
+    
+    //Initialize the matrix in each step of the array to be a 0 matrix
+    //Note: The pseudocode that the physics team provided doesn't say what to initialize these arrays to.
+    for (int counter = 0; counter <= s; counter ++) {
+        k[counter] = mat(Velocity.n_rows, Velocity.n_cols, fill::zeros);
+        l[counter] = mat(Velocity.n_rows, Velocity.n_cols, fill::zeros);
+        
+    }
+    
+    //declare and initialize the a_RK10 and b_RK10 arrays of coefficients.
+    double a_RK10[17][17];
+    double b_RK10[17];
+    populate_RK10_coeffs (a_RK10, b_RK10);
+    
+    unsigned int h = 60*60*24;		//h = step size, in seconds. Right now it's about 15 minutes.
+	unsigned int t = 0;		//t is the running time track. Starts at t = 0
+	unsigned int t_final = 24*60*60*365*1;	//Must be an integer!
+	mat Acceleration(Velocity.n_rows,Velocity.n_cols);
+	Acceleration.zeros();
+
+    /*
+     The following are needed before entering the loop:
+     - Set the Position and Velocity to their initial conditions
+     - Initialize the k and l arrays to 1D arrays of 17 elements (number of stages = s = 17)
+     - Assign the coefficients from the source above to a, b, c arrays (also available in JPG on Drive)
+     (a is 2D, while b and c are 1D)
+     */
+    
+    while (t <= t_final)
+    {
+        
+        // Start of RK10 approximation
+        
+        // Reset all summations to zero
+        Sum_AL.zeros();
+        Sum_AK.zeros();
+        Sum_BL.zeros();
+        Sum_BK.zeros();
+        
+
+        //Start of fancy math here.
+        // Loop through all stages
+        for (int i = 1; i <= s; i++)
+        {
+            // Accumulate the a_ij*l_j and a_ij*k_j summations
+            for (int j = 1; j < i; j++)
+            {
+                Sum_AL += (a_RK10[i][j] * l[j - 1]);
+                Sum_AK += (a_RK10[i][j] * k[j - 1]);
+            }
+            
+            // Calculate the intermediate k's and l's for each stage
+            k[i - 1] = Velocity + h * Sum_AL;
+            l[i - 1] = grav_accel (Position + h * Sum_AK , Mass);
+            
+            // Accumulate the b_i*l_i and b_i*k_i summations for later use
+            Sum_BL = Sum_BL + (b_RK10[i - 1] * l[i - 1]);
+            Sum_BK = Sum_BK + (b_RK10[i - 1] * k[i - 1]);
+        }
+        
+        //This writes the planet data to the output file, but only every 24 hours, to avoid huge text files.
+        if (t % (60*60*24) == 0) {
+            writeData(spaceObjects, numSpaceObjs, Velocity, Position, t, outputFile);
+        }
+        
+        
+        // Update the position and velocity using the previously calculated weighted sums of k's and l's
+        Position = Position + 1 * Sum_BK;
+        Velocity = Velocity + 1 * Sum_BL;
+        
+        // Step forward in time
+        t = t + h;
+    }
+    
+    
+    
+    /*************************************************************
+     *************************************************************
+                    End of RK10 Code
+     *************************************************************
+     *************************************************************/
+
+    /*************************************************************
+     *************************************************************
+                    Start of RK4 Placeholder code
+     *************************************************************
+     *************************************************************/
+    
+    /*
+     This is the RK4 code. This works, but it turns out that the RK4 approximation
+     is less accurate than the Euler approximation for our purposes.
+     I'm keeping this code here because it's an easier to understand version of the RK10/RK8 stuff,
+     so it might be helpful if you're trying to figure out RK10/RK8 stuff. */
+    /*
     
     unsigned int h = 60*60*0.25;	 //h = step size, in seconds
     unsigned int t = 0;	 //t is the running time track. Starts at t = 0
@@ -145,10 +273,11 @@ int main(int argc, char** argv)
     }*/
     /*************************************************************
      *************************************************************
-                        End of placeholder code
+                    End of RK4 placeholder code
      *************************************************************
      *************************************************************/
     
+    //Cleaining up
     delete [] spaceObjects;
     outputFile.close();
     return 0;

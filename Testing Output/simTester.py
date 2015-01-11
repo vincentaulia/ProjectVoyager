@@ -1,19 +1,37 @@
 __author__ = 'zeev'
 
+'''
+Input:
+An output file that main.cpp generates when it takes major_bodies.txt as an input.
+A nasa data text file (either realData-1yr.txt or realData-10yr.txt)
 
-simName = "output-1yrEuler15min.txt"
+Note: both these files track only the 40 major bodies in the solar system.
+So the sun, the planets, and the bigger moons. If you want to see more celestial bodies
+you'd need to use a different input file for main.cpp and a different nasa data text file.
+
+Note: It is important that both of these new files start on the same day.
+
+Output:
+the sum difference in position/velocity and the average difference in position/velocity.
+(these are average over all of the celestial bodies so I don't think they have a useful mathematical meaning
+but they're useful for us because if these numbers are lower for one simulation than another then that simulation
+is better)
+
+The average difference in position/velocity for one celestial body in particular.
+'''
+simName = "output-1yrRK10.txt"
 simulated = open(simName, "r")
 realData = open("realData-1yr.txt")
 
-numPlanets = 39
-
+numPlanets = 40
 
 sumDiffPos = 0
 sumDiffVel = 0
 counter = 0
 trackDiffPos = 0
 trackDiffVel = 0
-objectToTrack = "Neptune"
+#Change this line to track a different object. Make sure the name is right
+objectToTrack = "Earth"
 
 for line in realData:
     #Find the real postion and velocity vectors of the planet object.
@@ -44,6 +62,7 @@ for line in realData:
 #it's mathematically meaningless, but it gives a good idea of how accurate the simulation is.
 avgDiffPos = sumDiffPos/counter
 avgDiffVel = sumDiffVel/counter
+#The average difference in position/velocity for the planet you're interested in.
 trackDiffPos = trackDiffPos / (counter / numPlanets)
 trackDiffVel = trackDiffVel / (counter / numPlanets)
 
@@ -51,6 +70,7 @@ print("Simulation input file: {}".format(simName))
 print("Sum difference in position (in AU): {}".format(sumDiffPos/149597870700))
 print("Sum difference in velocity (in AU/s): {}".format(sumDiffVel/149597870700))
 print("Average difference in position (in AU): {}".format(avgDiffPos/149597870700))
-print("Average difference in velocity (in AU/s): {}".format(avgDiffVel/149597870700))
-print("Average difference in {} position (in AU): {}".format(objectToTrack, trackDiffPos/149597870700))
+print("Average difference in velocity (in AU/s): {}\n\n".format(avgDiffVel/149597870700))
+
+print("Average difference in {} position (in AU):{}".format(objectToTrack, trackDiffPos/149597870700))
 print("Average difference in {} velocity (in AU/s): {}".format(objectToTrack, trackDiffVel/149597870700))
