@@ -199,6 +199,8 @@ public class Orbits : MonoBehaviour
 		// to move first before getting its current position
 	void LateUpdate ()
 	{
+		setWidth (0.002f*Camera.main.GetComponent<CameraUserControl> ().distance);
+
 		//if the game is playing, then unflag localPause
 		if (!Global.time_doPause) {
 			localPause = false;
