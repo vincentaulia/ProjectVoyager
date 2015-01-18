@@ -20,7 +20,7 @@ public class OrbitalElements : MonoBehaviour
 		public Elements orb_elements;
 		string line;
 
-		public void getElements (string name, string radius, string parameters = null)
+		public void getElements (string name, string radius, string parameters)
 		{
 				bool lineFound = false;
 				

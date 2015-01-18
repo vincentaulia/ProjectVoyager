@@ -13,7 +13,7 @@ using System.Collections;
 //needed to catch the exception
 //using System.IO;
 using UnityEngine;
-using UnityEditor;
+//using UnityEditor;
 
 public class InitObjects : MonoBehaviour
 {
@@ -79,7 +79,7 @@ public class InitObjects : MonoBehaviour
 			//this is commented out because it is already executed below
 			//calculate the orbital elements for it
 			/*if (Global.body [i].name != "10") {
-				Global.body [i].GetComponent<OrbitalElements> ().getElements (line [1], line[3]);
+				Global.body [i].GetComponent<OrbitalElements> ().getElements (line [1], line[3], null);
 			}*/
 
 						//if the radii of the moon vary dpeneding on the axis
@@ -116,7 +116,7 @@ public class InitObjects : MonoBehaviour
 						} else if(int.Parse(Global.body[i].name) % 100 != 99) {
 								//this needs to be done after setting the scales of the bodies
 								//otherwise they would be affected by the parent's scale
-								Global.body [i].GetComponent<OrbitalElements> ().getElements (line [1]);
+								Global.body [i].GetComponent<OrbitalElements> ().getElements (line [1], line[3], null);
 								orbiting_id = Global.body [i].GetComponent<OrbitalElements> ().orb_elements.IDFocus;
 								Global.body [i].transform.parent = GameObject.Find (orbiting_id).transform;
 						}
@@ -129,7 +129,7 @@ public class InitObjects : MonoBehaviour
 				Global.body [i].transform.localEulerAngles = Vector3.zero;
 			}
 			else {
-				Global.body [i].GetComponent<OrbitalElements> ().getElements (line [1], line[3]);
+				Global.body [i].GetComponent<OrbitalElements> ().getElements (line [1], line[3], null);
 				orbiting_id = Global.body[i].GetComponent<OrbitalElements>().orb_elements.IDFocus;
 				Global.body [i].transform.parent = GameObject.Find (orbiting_id).transform;
 				//Debug.Log (Global.body[i].name + ":" + orbiting_id);
