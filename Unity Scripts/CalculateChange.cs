@@ -2,6 +2,8 @@
 
 using UnityEngine;
 using System.Collections;
+using System;
+
 
 // Component W of the Perifocal Coordinate system has been added to this struct
 struct Elements {
@@ -39,39 +41,51 @@ struct Elements {
 		//It MUST be called every time any of the orbital elements change.
 		
 		//Calculating P
-		double Px = Mathf.Cos (arg) * Mathf.Cos (asc) - Mathf.Sin (arg) * Mathf.Cos (incl) * Mathf.Sin (asc);
-		double Py = Mathf.Cos (arg) * Mathf.Sin (asc) + Mathf.Sin (arg) * Mathf.Cos (incl) * Mathf.Cos (asc);
-		double Pz = Mathf.Sin (arg) * Mathf.Sin (incl);
+		double Px = Math.Cos (arg) * Math.Cos (asc) - Math.Sin (arg) * Math.Cos (incl) * Math.Sin (asc);
+		double Py = Math.Cos (arg) * Math.Sin (asc) + Math.Sin (arg) * Math.Cos (incl) * Math.Cos (asc);
+		double Pz = Math.Sin (arg) * Math.Sin (incl);
 		//*********LOSS OF PRECISION HERE BY CONVERTING TO FLOATS.
 		P = new Vector3 ((float)Px, (float)Py, (float)Pz);
 		
 		
 		//Calculating Q
-		double Qx = -Mathf.Sin (arg) * Mathf.Cos (asc) - Mathf.Cos (arg) * Mathf.Cos (incl) * Mathf.Sin (asc);
-		double Qy = -Mathf.Sin (arg) * Mathf.Sin (asc) + Mathf.Cos (arg) * Mathf.Cos (incl) * Mathf.Cos (asc);
-		double Qz = Mathf.Sin (incl) * Mathf.Cos (arg);
+		double Qx = -Math.Sin (arg) * Math.Cos (asc) - Math.Cos (arg) * Math.Cos (incl) * Math.Sin (asc);
+		double Qy = -Math.Sin (arg) * Math.Sin (asc) + Math.Cos (arg) * Math.Cos (incl) * Math.Cos (asc);
+		double Qz = Math.Sin (incl) * Math.Cos (arg);
 		//*********LOSS OF PRECISION HERE BY CONVERTING TO FLOATS.
 		Q = new Vector3 ((float)Qx, (float)Qy, (float)Qz);
 		
 		//Calculating W
-		double Wx = Mathf.Sin(incl) * Mathf.Sin(asc);
-		double Wy = -1 * Mathf.Sin(incl) * Mathf.Cos(asc);
-		double Wz = Mathf.Cos(incl);
+		double Wx = Math.Sin(incl) * Math.Sin(asc);
+		double Wy = -1 * Math.Sin(incl) * Math.Cos(asc);
+		double Wz = Math.Cos(incl);
 		//*********LOSS OF PRECISION HERE BY CONVERTING TO FLOATS.
 		W = new Vector3 ((float)Wx, (float)Wy, (float)Wz);
 		
 		
 		
 		// Calculating n
-		n = Mathf.Sqrt ((6.67384e-11) * (mass + massFocus) / (axis * axis * axis));
+		n = Math.Sqrt ((6.67384e-11) * (mass + massFocus) / (axis * axis * axis));
 	}
 	
 }
 
-public class UpdateOrbitalElements : MonoBehaviour {
+public class test_calculate_changes : MonoBehaviour {
 	
 	void Start() {
-
+		
+		/***************************************
+		 *HEY PHYSICS TEAM, PAY ATTENTION OVER HERE 
+		 ****************************************/
+		Elements testOrbElements;
+		//Initialize this set of orbital elements to whatever you want it. 
+		
+		//call the CalcNormalDeltaV, CalcTangentialDeltaV, CalcRadialDeltaV functions here with testOrbElements as a parameter.
+		
+		//Outputting data
+		//Use Debug.Log(testOrbElements.___); to output whatever you want. 
+		
+		
 	}
 	
 	void Update() {
@@ -89,17 +103,17 @@ public class UpdateOrbitalElements : MonoBehaviour {
 		// Approximation of the true anomaly as a sine series of the mean anomaly
 		double TrueAnomaly;
 		TrueAnomaly = Initial.anom;
-		TrueAnomaly += ((2 * Initial.ecc) - (0.25 * Mathf.Pow(Initial.ecc, 3))) * Mathf.Sin(Initial.anom);
-		TrueAnomaly += (1.25 * Mathf.Pow(Initial.ecc, 2)) * Mathf.Sin(2 * Initial.anom);
-		TrueAnomaly += ((13/12) * Mathf.Pow(Initial.ecc, 3)) * Mathf.Sin(3 * Initial.anom);
+		TrueAnomaly += ((2 * Initial.ecc) - (0.25 * Math.Pow(Initial.ecc, 3))) * Math.Sin(Initial.anom);
+		TrueAnomaly += (1.25 * Math.Pow(Initial.ecc, 2)) * Math.Sin(2 * Initial.anom);
+		TrueAnomaly += ((13/12) * Math.Pow(Initial.ecc, 3)) * Math.Sin(3 * Initial.anom);
 		
 		/* Calculate the final inclination after the maneuver */
 		
 		// Calculate the difference in inclination
 		double DeltaI;
-		double Numerator = (double)DeltaV.magnitude * (1 + (Initial.ecc * Mathf.Cos(TrueAnomaly)));
-		double Denominator = 2 * Mathf.Sqrt(1 + Mathf.Pow(Initial.ecc, 2)) * Initial.n * Initial.axis * Mathf.Cos(Initial.arg + TrueAnomaly);
-		DeltaI = 2 * Mathf.Asin(Numerator/Denominator);
+		double Numerator = (double)DeltaV.magnitude * (1 + (Initial.ecc * Math.Cos(TrueAnomaly)));
+		double Denominator = 2 * Math.Sqrt(1 + Math.Pow(Initial.ecc, 2)) * Initial.n * Initial.axis * Math.Cos(Initial.arg + TrueAnomaly);
+		DeltaI = 2 * Math.Asin(Numerator/Denominator);
 		
 		double FinalIncl = DeltaI + Initial.incl;
 		
@@ -113,12 +127,12 @@ public class UpdateOrbitalElements : MonoBehaviour {
 		
 		// Calculate the specific relative angular momentum
 		double h;
-		h = Mathf.Sqrt(Mathf.Sqrt(1 - Mathf.Pow(Initial.ecc, 2)) * Initial.axis * Mu);
+		h = Math.Sqrt(Math.Sqrt(1 - Math.Pow(Initial.ecc, 2)) * Initial.axis * Mu);
 		
 		// Calculate the initial velocity in Perifocal Coordinates
 		Vector3 InitialVelocity;
-		double IVp = -1 * Mu * Mathf.Sin(TrueAnomaly) / h;
-		double IVq = (Initial.ecc + Mathf.Sin(TrueAnomaly)) * Mu / h;
+		double IVp = -1 * Mu * Math.Sin(TrueAnomaly) / h;
+		double IVq = (Initial.ecc + Math.Sin(TrueAnomaly)) * Mu / h;
 		double IVw = 0;
 		InitialVelocity = new Vector3 ((float)IVp, (float)IVq, (float)IVw);
 		
@@ -126,7 +140,7 @@ public class UpdateOrbitalElements : MonoBehaviour {
 		
 		// Calculate the angle between the initial and the final orbits
 		double AngleBtwnOrbits;
-		AngleBtwnOrbits = 2 * Mathf.Asin((double)DeltaV.magnitude / (2 * VelocityMag));
+		AngleBtwnOrbits = 2 * Math.Asin((double)DeltaV.magnitude / (2 * VelocityMag));
 		
 		// Calculate the argument of latitude
 		double ArgOfLatitude;
@@ -134,8 +148,8 @@ public class UpdateOrbitalElements : MonoBehaviour {
 		
 		// Calculate the difference between the intial and the final longitudes of ascending node
 		double DeltaOmega;
-		DeltaOmega = Mathf.Sin(ArgOfLatitude) * Mathf.Sin(AngleBtwnOrbits) / Mathf.Sin(FinalIncl);
-		DeltaOmega = Mathf.Asin(DeltaOmega);
+		DeltaOmega = Math.Sin(ArgOfLatitude) * Math.Sin(AngleBtwnOrbits) / Math.Sin(FinalIncl);
+		DeltaOmega = Math.Asin(DeltaOmega);
 		
 		double FinalAsc = DeltaOmega + Initial.asc;
 		
@@ -159,43 +173,45 @@ public class UpdateOrbitalElements : MonoBehaviour {
 		// Approximation of the true anomaly as a sine series of the mean anomaly
 		double TrueAnomaly;
 		TrueAnomaly = Initial.anom;
-		TrueAnomaly += ((2 * Initial.ecc) - (0.25 * Mathf.Pow(Initial.ecc, 3))) * Mathf.Sin(Initial.anom);
-		TrueAnomaly += (1.25 * Mathf.Pow(Initial.ecc, 2)) * Mathf.Sin(2 * Initial.anom);
-		TrueAnomaly += ((13/12) * Mathf.Pow(Initial.ecc, 3)) * Mathf.Sin(3 * Initial.anom);
-
+		TrueAnomaly += ((2 * Initial.ecc) - (0.25 * Math.Pow(Initial.ecc, 3))) * Math.Sin(Initial.anom);
+		TrueAnomaly += (1.25 * Math.Pow(Initial.ecc, 2)) * Math.Sin(2 * Initial.anom);
+		TrueAnomaly += ((13/12) * Math.Pow(Initial.ecc, 3)) * Math.Sin(3 * Initial.anom);
+		
 		// Calculate the standard gravitational parameter
 		double Mu;
 		Mu = 6.67384e-11 * (Initial.mass + Initial.massFocus);
 		
 		// Calculate the specific relative angular momentum
 		double h;
-		h = Mathf.Sqrt(Mathf.Sqrt(1 - Mathf.Pow(Initial.ecc, 2)) * Initial.axis * Mu);
+		h = Math.Sqrt(Math.Sqrt(1 - Math.Pow(Initial.ecc, 2)) * Initial.axis * Mu);
 		
 		// Calculate the initial velocity in Perifocal Coordinates
 		Vector3 InitialVelocity;
-		double IVp = -1 * Mu * Mathf.Sin(TrueAnomaly) / h;
-		double IVq = (Initial.ecc + Mathf.Sin(TrueAnomaly)) * Mu / h;
+		double IVp = -1 * Mu * Math.Sin(TrueAnomaly) / h;
+		double IVq = (Initial.ecc + Math.Sin(TrueAnomaly)) * Mu / h;
 		double IVw = 0;
 		InitialVelocity = new Vector3 ((float)IVp, (float)IVq, (float)IVw);
 		
 		// Calculate the magnitude of the initial velocity
 		double VelocityMag = InitialVelocity.magnitude;
 		
+		// Calculate the orbital distance from object to primary
+		double r;
+		r = Math.Pow(h, 2) / Mu / (1 + (Initial.ecc * Math.Cos(TrueAnomaly)));
+
+
 		// Calculate the new specific orbital energy
 		double EnergNew;
-		EnergNew = ((Mathf.Pow(VelocityMag, 2) + Mathf.Pow((double)DeltaV.magnitude, 2)) / 2) - (Mu / r); 
+		EnergNew = ((Math.Pow(VelocityMag, 2) + Math.Pow((double)DeltaV.magnitude, 2)) / 2) - (Mu / r); 
 		
 		/* Calculate the new semi-major axis */
 		Initial.axis = -1 * Mu / 2 / EnergNew;
 		
-		// Calculate the orbital distance from object to primary
-		double r;
-		r = Mathf.Pow(h, 2) / Mu / (1 + (Initial.ecc * Mathf.Cos(TrueAnomaly)));
-		
+
 		// Calculate the position of the object in Perifocal Coordinates
 		Vector3 rVec;
-		double rVp = r * Mathf.Cos(TrueAnomaly);
-		double rVq = r * Mathf.Sin(TrueAnomaly);
+		double rVp = r * Math.Cos(TrueAnomaly);
+		double rVq = r * Math.Sin(TrueAnomaly);
 		double rVw = 0;
 		rVec = new Vector3 ((float)rVp, (float)rVq, (float)rVw);
 		
@@ -204,7 +220,7 @@ public class UpdateOrbitalElements : MonoBehaviour {
 		hNewMag = (double)Vector3.Cross(rVec, InitialVelocity + DeltaV).magnitude;
 		
 		/***** Calculate the new eccentricity *****/
-		Initial.ecc = Mathf.Sqrt(1 + (Mathf.Pow(hNewMag, 2) * EnergNew / Mathf.Pow(Mu, 2)));
+		Initial.ecc = Math.Sqrt(1 + (Math.Pow(hNewMag, 2) * EnergNew / Math.Pow(Mu, 2)));
 		
 		/***** Calculate the final P, Q, W and n orbital elements after the maneuver *****/
 		Initial.calcData();
@@ -220,9 +236,9 @@ public class UpdateOrbitalElements : MonoBehaviour {
 		// Approximation of the true anomaly as a sine series of the mean anomaly
 		double TrueAnomaly;
 		TrueAnomaly = Initial.anom;
-		TrueAnomaly += ((2 * Initial.ecc) - (0.25 * Mathf.Pow(Initial.ecc, 3))) * Mathf.Sin(Initial.anom);
-		TrueAnomaly += (1.25 * Mathf.Pow(Initial.ecc, 2)) * Mathf.Sin(2 * Initial.anom);
-		TrueAnomaly += ((13/12) * Mathf.Pow(Initial.ecc, 3)) * Mathf.Sin(3 * Initial.anom);
+		TrueAnomaly += ((2 * Initial.ecc) - (0.25 * Math.Pow(Initial.ecc, 3))) * Math.Sin(Initial.anom);
+		TrueAnomaly += (1.25 * Math.Pow(Initial.ecc, 2)) * Math.Sin(2 * Initial.anom);
+		TrueAnomaly += ((13/12) * Math.Pow(Initial.ecc, 3)) * Math.Sin(3 * Initial.anom);
 		
 		// Calculate the standard gravitational parameter
 		double Mu;
@@ -230,12 +246,12 @@ public class UpdateOrbitalElements : MonoBehaviour {
 		
 		// Calculate the specific relative angular momentum
 		double h;
-		h = Mathf.Sqrt(Mathf.Sqrt(1 - Mathf.Pow(Initial.ecc, 2)) * Initial.axis * Mu);
+		h = Math.Sqrt(Math.Sqrt(1 - Math.Pow(Initial.ecc, 2)) * Initial.axis * Mu);
 		
 		// Calculate the initial velocity in Perifocal Coordinates
 		Vector3 InitialVelocity;
-		double IVp = -1 * Mu * Mathf.Sin(TrueAnomaly) / h;
-		double IVq = (Initial.ecc + Mathf.Sin(TrueAnomaly)) * Mu / h;
+		double IVp = -1 * Mu * Math.Sin(TrueAnomaly) / h;
+		double IVq = (Initial.ecc + Math.Sin(TrueAnomaly)) * Mu / h;
 		double IVw = 0;
 		InitialVelocity = new Vector3((float)IVp, (float)IVq, (float)IVw);
 		
@@ -244,21 +260,21 @@ public class UpdateOrbitalElements : MonoBehaviour {
 		
 		// Calculate the orbital distance from object to primary
 		double r;
-		r = Mathf.Pow(h, 2) / Mu / (1 + (Initial.ecc * Mathf.Cos(TrueAnomaly)));
+		r = Math.Pow(h, 2) / Mu / (1 + (Initial.ecc * Math.Cos(TrueAnomaly)));
 		
 		// Calculate the new specific orbital energy
 		double EnergNew;
-		EnergNew = ((Mathf.Pow(VelocityMag, 2) + Mathf.Pow((double)DeltaV.magnitude, 2)) / 2) - (Mu / r); 
+		EnergNew = ((Math.Pow(VelocityMag, 2) + Math.Pow((double)DeltaV.magnitude, 2)) / 2) - (Mu / r); 
 		
 		/***** Calculate the new semi-major axis *****/
 		Initial.axis = -1 * Mu / 2 / EnergNew;
 		
 		// Calculate the magnitude of the new angular velocity vector
 		double hNew;
-		hNew = Mathf.Sqrt(Mu * Initial.axis * (1 - Mathf.Pow(Initial.ecc, 2)));
+		hNew = Math.Sqrt(Mu * Initial.axis * (1 - Math.Pow(Initial.ecc, 2)));
 		
 		/***** Calculate the new eccentricity *****/
-		Initial.ecc = Mathf.Sqrt(1 + (Mathf.Pow(hNew, 2) * EnergNew / Mathf.Pow(Mu, 2)));
+		Initial.ecc = Math.Sqrt(1 + (Math.Pow(hNew, 2) * EnergNew / Math.Pow(Mu, 2)));
 		
 		/***** Calculate the final P, Q, W and n orbital elements after the maneuver *****/
 		Initial.calcData();
