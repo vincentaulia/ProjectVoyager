@@ -89,7 +89,7 @@ public class OrbitalElements : MonoBehaviour
 				//convert from km to m
 				orb_elements.radiusx = orb_elements.radiusy = orb_elements.radiusz = float.Parse (radius) * 1000;
 			}
-			
+
 						orb_elements.calcData ();
 				} else {
 						Debug.LogError ("ERROR [OrbitalElements]: Cannot assign orbital values");

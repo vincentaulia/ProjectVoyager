@@ -181,6 +181,7 @@ public class Orbits : MonoBehaviour
 		public void setWidth(float newWidth){
 			width = newWidth;
 			line.SetWidth (width, width);
+			return;
 		}
 
 		//get the edith of the orbit

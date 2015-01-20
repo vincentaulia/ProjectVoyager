@@ -118,7 +118,8 @@ public class InsertShip : MonoBehaviour
 
 				//calculate the orbital elements for it
 				Global.ship [i].GetComponent<OrbitalElements> ().getElements (name, "0.1", string.Join (" ", parameters));
-				float size = 0.005f;
+				//float size = 0.005f;
+				float size = 0.0005f; //added this for the Voyager 1 probe. Should actually modify this to take the size/scale given on the prefab object
 				Global.ship [i].transform.localScale = new Vector3 (size, size, size);
 				//place the ship in orbit around the planet
 				Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
