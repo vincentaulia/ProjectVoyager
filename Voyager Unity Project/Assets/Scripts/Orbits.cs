@@ -13,20 +13,20 @@ using System.Collections.Generic;
 
 public class Orbits : MonoBehaviour
 {
-		private LineRenderer line;
-		GameObject planet;		//store the gameobject of the planet
-		float width;			//store the diameter of the planet
-		Vector3 origin;			//the start position of the track
-		Vector3 current;		//the current position of the track
-		float diff, prev_diff;	//to compare the distance of one point to the previous point
-		bool overlap;			//returns true if the track is complete
-		bool reached_half;		//returns true if the track is half-complere
-		int i;					//stores number of points in the track
-		long time_step = 24 * 60 * 60;	//stepsize is a day
-		float orbital_period;	//stores the time it takes for one orbit
-		float mass;				//mass of focus body
-		float radius;			//semi-major axis of orbit
-		bool localPause;		//make sure the game track has moved before the game is paused
+	private LineRenderer line;
+	GameObject planet;		//store the gameobject of the planet
+	float width;			//store the diameter of the planet
+	Vector3 origin;			//the start position of the track
+	Vector3 current;		//the current position of the track
+	float diff, prev_diff;	//to compare the distance of one point to the previous point
+	bool overlap;			//returns true if the track is complete
+	bool reached_half;		//returns true if the track is half-complere
+	int i;					//stores number of points in the track
+	long time_step = 24 * 60 * 60;	//stepsize is a day
+	float orbital_period;	//stores the time it takes for one orbit
+	float mass;				//mass of focus body
+	float radius;			//semi-major axis of orbit
+	bool localPause;		//make sure the game track has moved before the game is paused
 
 	bool isMoon = false;	//this variable indicates if the script is used for a moon
 	string parentID;	//store the ID of the parent object
@@ -180,6 +180,7 @@ public class Orbits : MonoBehaviour
 		//set the width of the orbit
 		public void setWidth(float newWidth){
 			width = newWidth;
+			line = GetComponent<LineRenderer> ();
 			line.SetWidth (width, width);
 			return;
 		}
