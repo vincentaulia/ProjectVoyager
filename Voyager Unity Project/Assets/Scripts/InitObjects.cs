@@ -23,12 +23,14 @@ public class InitObjects : MonoBehaviour
 		int count;
 		//Count the nmber of orbits for the moons
 		int countMoon;
+		Object basicFile;
 
 		// Use this for initialization
 		void Awake ()
 		{
 
 				try {
+						basicFile = Resources.Load ("basic_info");
 						basic = new System.IO.StreamReader ("basic_info.txt");
 				} catch (System.IO.FileNotFoundException e) {
 						Debug.LogError ("Can't loacte the file 'basic_info.txt'.");
