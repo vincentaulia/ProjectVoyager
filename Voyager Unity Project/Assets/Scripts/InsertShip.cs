@@ -100,19 +100,29 @@ public class InsertShip : MonoBehaviour
 				//read the object's id to get its mass
 				orbitingID = parameters [2];
 
-				//Add exception handler here
-				//Searches the file to get the mass of the object it is orbiting
-				System.IO.StreamReader basic_file = new System.IO.StreamReader ("basic_info.txt");
-				while ((mass = basic_file.ReadLine ()) != null) {
-						if (mass.StartsWith (orbitingID)) {
-								line = mass.Split ();
-								parameters [3] = line [2];
-								break;
-						}
-						
-				}
+		string[] basic;
+		Object basicFile;
+		basicFile = Resources.Load ("basic_info");
+		basic = basicFile.ToString().Split('\n');
+		bool found = false;
+
+		//Add exception handler here
+		//Searches the file to get the mass of the object it is orbiting
+		
+		for(int j = 0; j<basic.Length; j++){
+			//while ((mass = basic_file.ReadLine ()) != null) {
+			
+			if (basic[j].StartsWith (orbitingID)) {
+				line = basic[j].Split ();
+				//get the mass
+				parameters [3] = line [2];
+				found = true;
+				break;
+			}
+			
+		}
 				//output an error message if the id was not found in the file
-				if (mass == null) {
+		if (!found) {
 						Debug.LogError ("ERROR [InsertShip]: Cannot find object in textfile.");
 				}
 

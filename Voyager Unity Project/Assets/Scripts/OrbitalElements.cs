@@ -23,24 +23,23 @@ public class OrbitalElements : MonoBehaviour
 		public void getElements (string name, string radius, string parameters)
 		{
 				bool lineFound = false;
-				
+
+				string[] orbit;
+				object orbitFile;
+				orbitFile = Resources.Load ("orbit_info");
+
 				//decide whether to read from file or from the inputted string
 				if (parameters != null) {
 						line = parameters;
 						lineFound = true;
-				} else if (File.Exists (Global.ORBITAL_FILENAME)) {
-						StreamReader file = null;
-						try {
-								file = new StreamReader (Global.ORBITAL_FILENAME);
-								while ((line = file.ReadLine()) != null) {
-										if (line.StartsWith (gameObject.transform.name)) {
-												lineFound = true;
-												break;
-										}
+				} else if (orbitFile != null) {
+						orbit = orbitFile.ToString ().Split ('\n');
+						for (int i = 0; i<orbit.Length; i++) {
+								line = orbit [i];
+								if (line.StartsWith (gameObject.transform.name)) {
+										lineFound = true;
+										break;
 								}
-						} finally {
-								if (file != null)
-										file.Close ();
 						}
 				}
 
@@ -71,24 +70,24 @@ public class OrbitalElements : MonoBehaviour
 						//direction (Prograde or Retrograde)
 						orb_elements.dir = int.Parse (split [11]);
 						//the id of the body it is orbiting
-						orb_elements.IDFocus = split[2];
-			//the radius of the body
-			if (radius.Contains ("x")) {
-				int[] j = new int[3];
+						orb_elements.IDFocus = split [2];
+						//the radius of the body
+						if (radius.Contains ("x")) {
+								int[] j = new int[3];
 				
-				//split them up
-				j [0] = radius.IndexOf ('x');
-				j [1] = radius.IndexOf ('x', j [0] + 1);
+								//split them up
+								j [0] = radius.IndexOf ('x');
+								j [1] = radius.IndexOf ('x', j [0] + 1);
 				
-				//convert them to floats, and convert to m
-				orb_elements.radiusx = float.Parse (radius.Substring (0, j [0])) * 1000;
-				orb_elements.radiusy = float.Parse (radius.Substring (j [0] + 1, j [1] - j [0] - 1)) * 1000;
-				orb_elements.radiusz = float.Parse (radius.Substring (j [1] + 1)) * 1000;
+								//convert them to floats, and convert to m
+								orb_elements.radiusx = float.Parse (radius.Substring (0, j [0])) * 1000;
+								orb_elements.radiusy = float.Parse (radius.Substring (j [0] + 1, j [1] - j [0] - 1)) * 1000;
+								orb_elements.radiusz = float.Parse (radius.Substring (j [1] + 1)) * 1000;
 
-			} else {
-				//convert from km to m
-				orb_elements.radiusx = orb_elements.radiusy = orb_elements.radiusz = float.Parse (radius) * 1000;
-			}
+						} else {
+								//convert from km to m
+								orb_elements.radiusx = orb_elements.radiusy = orb_elements.radiusz = float.Parse (radius) * 1000;
+						}
 
 						orb_elements.calcData ();
 				} else {
@@ -96,11 +95,10 @@ public class OrbitalElements : MonoBehaviour
 				}
 		}
 
-
 		void Awake ()
 		{
 				//getElements (); //commented this out so it doesn't automatically do it upon initisialization.
-									//The function will get called manually.
+				//The function will get called manually.
 		}
 
 		// Use this for initialization

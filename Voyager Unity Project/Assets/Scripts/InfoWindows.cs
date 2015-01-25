@@ -81,21 +81,28 @@ public class InfoWindows : MonoBehaviour {
 	//match the id of the planet to the information in file
 	//return the infomation to be displayed
 	string getInfo(string planet){
-		System.IO.StreamReader info = new System.IO.StreamReader ("Assets\\Textfiles\\English\\printedInfo.txt");
-		string line;
-		line = info.ReadLine ();
-
+		string[] info;
+		object infoFile;
+		infoFile = Resources.Load ("Textfiles/English/printedInfo");
+		
+		//System.IO.StreamReader info = new System.IO.StreamReader ("Assets\\Textfiles\\English\\printedInfo.txt");
+		//Debug.Log (infoFile);
+		info = infoFile.ToString ().Split ('\n');
+		string line= null;
+		//line = info.ReadLine ();
+		
 		//read until the EOF
-		while (line != null) {
+		//while (line != null) {
+		for (int i=0; i< info.Length; i++) {
+			Debug.Log (line);
+			line = info [i];
 			//check if information about the planet is present
-			if (line.StartsWith(planet)){
+			if (line.StartsWith (planet)) {
 				//break down the information to separate lines
-				line = line.Replace("$", "\n");	//splits the lines at the $ sign
+				line = line.Replace ("$", "\n");	//splits the lines at the $ sign
 				break;
 			}
-			line = info.ReadLine();
-				}
-		info.Close();
+		}
 		return line;
 		/*
 		int index;

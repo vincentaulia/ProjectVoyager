@@ -12,13 +12,12 @@ using System.Collections;
 
 //needed to catch the exception
 //using System.IO;
-using UnityEngine;
+//using UnityEngine;
 //using UnityEditor;
 
 public class InitObjects : MonoBehaviour
 {
-		//System.IO.StreamReader basic = new System.IO.StreamReader ("basic_infoo.txt");
-		System.IO.StreamReader basic;
+		string[] basic;
 		public GameObject orbitPreFab;
 		int count;
 		//Count the nmber of orbits for the moons
@@ -31,7 +30,8 @@ public class InitObjects : MonoBehaviour
 
 				try {
 						basicFile = Resources.Load ("basic_info");
-						basic = new System.IO.StreamReader ("basic_info.txt");
+						//split the file into lines and store it in an array
+						basic = basicFile.ToString ().Split ('\n');
 				} catch (System.IO.FileNotFoundException e) {
 						Debug.LogError ("Can't loacte the file 'basic_info.txt'.");
 						return;
@@ -46,16 +46,14 @@ public class InitObjects : MonoBehaviour
 
 				float diameter;
 				string id;
-				string readFile;
 				string[] line;
-				int i = 0;
 				string orbiting_id;
 				//bool isMoon = false;
 
 				//read the id and radii from the file
 				//set the scale of the object
-				while ((readFile = basic.ReadLine ()) != null) {
-						line = readFile.Split ();
+				for (int i = 0; i<basic.Length; i++) {
+						line = basic [i].Split ();
 
 						id = line [0];
 
@@ -78,9 +76,9 @@ public class InitObjects : MonoBehaviour
 								isMoon = true;
 						}*/
 
-			//this is commented out because it is already executed below
-			//calculate the orbital elements for it
-			/*if (Global.body [i].name != "10") {
+						//this is commented out because it is already executed below
+						//calculate the orbital elements for it
+						/*if (Global.body [i].name != "10") {
 				Global.body [i].GetComponent<OrbitalElements> ().getElements (line [1], line[3], null);
 			}*/
 
@@ -124,19 +122,18 @@ public class InitObjects : MonoBehaviour
 						}
 */
 
-			//calculate the orbital elements for it
-			if(Global.body [i].name == "10") {
-				//make sure position and rotation of sun is set to zero relative to the Bary Center
-				Global.body [i].transform.localPosition = Vector3.zero;
-				Global.body [i].transform.localEulerAngles = Vector3.zero;
-			}
-			else {
-				Global.body [i].GetComponent<OrbitalElements> ().getElements (line [1], line[3], null);
-				orbiting_id = Global.body[i].GetComponent<OrbitalElements>().orb_elements.IDFocus;
-				Global.body [i].transform.parent = GameObject.Find (orbiting_id).transform;
-				//Debug.Log (Global.body[i].name + ":" + orbiting_id);
-			}
-			/*
+						//calculate the orbital elements for it
+						if (Global.body [i].name == "10") {
+								//make sure position and rotation of sun is set to zero relative to the Bary Center
+								Global.body [i].transform.localPosition = Vector3.zero;
+								Global.body [i].transform.localEulerAngles = Vector3.zero;
+						} else {
+								Global.body [i].GetComponent<OrbitalElements> ().getElements (line [1], line [3], null);
+								orbiting_id = Global.body [i].GetComponent<OrbitalElements> ().orb_elements.IDFocus;
+								Global.body [i].transform.parent = GameObject.Find (orbiting_id).transform;
+								//Debug.Log (Global.body[i].name + ":" + orbiting_id);
+						}
+						/*
 						//This needs to be done after setting the scales of everything, so it doesn't alter it
 						//This makes moons the children of the planets they are orbiting
 						if (isMoon) {
@@ -165,16 +162,16 @@ public class InitObjects : MonoBehaviour
 								Global.orbits [count].GetComponent<Orbits> ().makeOrbit (0, Global.body [i].name);
 						}
 
-			//Detect is an object is a moon
-			if (Global.body [i].name != "10" && (int.Parse (Global.body [i].name) % 100 != 99)) {
-				countMoon = Global.orbitsMoon.Count;
+						//Detect is an object is a moon
+						if (Global.body [i].name != "10" && (int.Parse (Global.body [i].name) % 100 != 99)) {
+								countMoon = Global.orbitsMoon.Count;
 				
-				Global.orbitsMoon.Add ((GameObject)Instantiate (orbitPreFab));
-				Global.orbitsMoon [countMoon].name = "Orbit" + Global.body [i].name;
-				Global.orbitsMoon [countMoon].transform.parent = GameObject.Find ("Orbit").transform;
-				//calculate the points of the orbit
-				Global.orbitsMoon [countMoon].GetComponent<Orbits> ().makeMoonOrbit (0, Global.body [i].name, Global.body[i].GetComponent<OrbitalElements>().orb_elements.IDFocus);
-			}
+								Global.orbitsMoon.Add ((GameObject)Instantiate (orbitPreFab));
+								Global.orbitsMoon [countMoon].name = "Orbit" + Global.body [i].name;
+								Global.orbitsMoon [countMoon].transform.parent = GameObject.Find ("Orbit").transform;
+								//calculate the points of the orbit
+								Global.orbitsMoon [countMoon].GetComponent<Orbits> ().makeMoonOrbit (0, Global.body [i].name, Global.body [i].GetComponent<OrbitalElements> ().orb_elements.IDFocus);
+						}
 
 
 						//this is to create orbits for planets and moons
@@ -192,13 +189,7 @@ public class InitObjects : MonoBehaviour
 				Global.orbits [count].GetComponent<Orbits> ().makeOrbit (0, Global.body [i].name);
 				
 			}*/
-
-						i++;
-
-
 				}
-
-				basic.Close ();
 				
 		}
 }
