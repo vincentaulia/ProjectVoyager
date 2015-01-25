@@ -90,6 +90,7 @@ public class CameraUserControl : MonoBehaviour {
 	public float scrollSpeed = 10.0f;	//the standard scrolling speed
 	public float zoomMin = 0.1f;		//minimal zoom distance
 	public float zoomMax = 500.0f;		//maximum zooming distance
+	public float zoomMinAngle = Mathf.PI/3;	//angle of the minimum zoom distance (in radians)
 	//	public float thetaMin = 275.0f;		//minimum view angle (degrees)
 	//	public float thetaMax = 85.0f;		//maximum view angle (degrees)
 	public float distance;				//the distance at a given time between the camera and the target object
@@ -102,6 +103,7 @@ public class CameraUserControl : MonoBehaviour {
 	public float catchTime = 0.25f;		//the allowed time between clicks for a double click
 	public static string input = "";	//the input value in the 'jump to object' GUI window
 	public float standardDistance = 0.5f;		//this is a calculated value for the auto-position of a camera around a new target.
+	float standardZoomAngle = Mathf.PI/6;	//angle of the standard zoom distance (in radians)
 	
 	float x = 0.0f;
 	float y = 0.0f;
@@ -140,25 +142,25 @@ public class CameraUserControl : MonoBehaviour {
 	void Update () {
 		if (Input.GetMouseButtonDown (0)) {
 			if (Time.time - lastClickTime < catchTime) {
-				Debug.Log("Double Click Logged");
+				//Debug.Log("Double Click Logged");
 				// Do double click things in here
 				Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 				RaycastHit rayHitInfo;
 				bool didHit = Physics.Raycast (mouseRay, out rayHitInfo);
 				
 				if (didHit) {
-					Debug.Log (rayHitInfo.collider.name + " " + rayHitInfo.point);
+					//Debug.Log (rayHitInfo.collider.name + " " + rayHitInfo.point);
 					if (target != rayHitInfo.collider.transform) { // if we haven't clicked on the current target
 						target = rayHitInfo.collider.transform;    // make the clicked object the new target
 						moveToNewTarget (target);
 					}
 				}
 				else {
-					Debug.Log ("Hit empty space");
+					//Debug.Log ("Hit empty space");
 				}
 			}
 			else {
-				Debug.Log("Single Click Logged");
+				//Debug.Log("Single Click Logged");
 				// Do single click things in here
 			}
 			lastClickTime = Time.time;
@@ -166,9 +168,6 @@ public class CameraUserControl : MonoBehaviour {
 	}
 	
 	void LateUpdate () {
-		//This has been commented out because if forced the camera to trail after moving objects.
-		//transform.LookAt(target.position); // this forces the camera to always look at a moving object. Does not yet follow.
-		
 		// only update if the mousebutton is held down
 		if (Input.GetMouseButtonDown(1)){
 			isActivated = true;
@@ -192,19 +191,8 @@ public class CameraUserControl : MonoBehaviour {
 			x += Input.GetAxis("Mouse X") * xSpeed;
 			y -= Input.GetAxis("Mouse Y") * ySpeed;	 
 			
-			Debug.Log ("y = " + transform.localEulerAngles.y + " x = " + transform.localEulerAngles.x);
-			/* This has been commented because now that we are roatating freely, the 0/90 degree issue doesn't exist
-			// prevent the camera from rotating to the 90 or 270 angle positions (top or bottom)
-			if (transform.localEulerAngles.x <= thetaMin && transform.localEulerAngles.x >= 260.0f && y < 0) {
-				Debug.Log ("Within lower stop zone");
-				y = 0;
-			}
-			
-			if (transform.localEulerAngles.x >= thetaMax && transform.localEulerAngles.x <= 100.0f && y > 0) {
-				Debug.Log ("Within upper stop zone");
-				y = 0;
-			}
-			*/
+			//Debug.Log ("y = " + transform.localEulerAngles.y + " x = " + transform.localEulerAngles.x);
+
 			// when mouse moves left and right we actually rotate around local y axis	
 			transform.RotateAround(target.position,transform.up, x);
 			
@@ -247,18 +235,10 @@ public class CameraUserControl : MonoBehaviour {
 		
 		return dist;
 	}
-	/*
-	// This function calculates the standard distance away from a given target, based on it's size
-	float stdDistance(Transform target) {
-		target.radius; //the radius, as input to each object
-		// distance = radius/tan(theta). For testing, let theta = pi/6, and radius = Mathf.Max(target.localScale)
-		return (Mathf.Max (target.localScale)) / (Mathf.Tan ((Mathf.PI) / 6));
-	}
-*/
 	
 	// This function returns a scroll speed linearly proportional to the distance from the object (and zoomMin)
 	float determineScrollSpeed(float standardScrollSpeed, float currentDistance, float standardDistance, float zoomMin) {
-		if (currentDistance == 0.1f)			//If we're at the zoomMin for the object
+		if (currentDistance <= 1.005*zoomMin)			//If we're at the zoomMin for the object
 			return 1;							//return a speed of 1, to prevent a zero scroll speed error
 		return (currentDistance - zoomMin);		//otherwise, return the new scroll speed
 	}
@@ -267,11 +247,38 @@ public class CameraUserControl : MonoBehaviour {
 	void moveToNewTarget (Transform target) {
 		transform.LookAt(target.position); 							// this forces the camera to always look at a moving object. Does not yet follow.
 		position = transform.position - target.position; 			// determine our position relative to our new target (useless)
-		newPosition = -(transform.forward*standardDistance) + target.position; //set new position at standard distance from target
-		Debug.Log ("Position: " + position + "    New Position: " + newPosition);
+		//newPosition = -(transform.forward*standardDistance) + target.position; //set new position at standard distance from target
+		newPosition = -(transform.forward * standardZoomCalc (target, standardZoomAngle)) + target.position;
+		zoomMinCalc (target);	// determine the new 
+		//Debug.Log ("Position: " + position + "    New Position: " + newPosition);
 		transform.position = Vector3.Lerp (transform.position, newPosition, 0.001f*Time.smoothDeltaTime); //smoothly move us to the new position
 		distance = standardDistance;
 		return;
+	}
+
+	// This function returns the zoomMin distance for the current target
+	void zoomMinCalc (Transform target) {
+				// find the maximum target radius, of three dimension radius
+				// determine the distance necessary to make a ___ degree angle with the maximum radius ( return maxRadius/tan(theta);
+		float[] radius = {(float)target.GetComponent<OrbitalElements> ().orb_elements.radiusx,
+			             	(float)target.GetComponent<OrbitalElements> ().orb_elements.radiusy,
+							(float)target.GetComponent<OrbitalElements> ().orb_elements.radiusz};
+		zoomMin = (Mathf.Max (radius) + Mathf.Max (radius) * 0.000001f)/50000000;
+		Debug.Log ("zoomMin = " + zoomMin);
+		return;
+	}
+
+	// This function returns the standardZoom distance for the current target
+	float standardZoomCalc (Transform target, float standardZoomAngle) {
+		// find the maximum target radius of three dimension radius
+		// determine the distance necessary to make a ____ degree angle with the max radius 
+		float[] radius = {(float)target.GetComponent<OrbitalElements> ().orb_elements.radiusx,
+							(float)target.GetComponent<OrbitalElements> ().orb_elements.radiusy,
+							(float)target.GetComponent<OrbitalElements> ().orb_elements.radiusz};
+		//Debug.Log ("rad1 = " + radius[0] + "   rad2 = " + radius[1] + "    rad3 = " + radius[2] + "   MaxRad = " + Mathf.Max (radius)/Mathf.Tan(standardZoomAngle));
+		standardDistance = (Mathf.Max (radius) / Mathf.Tan (standardZoomAngle))/20000000;
+		distance = standardDistance;
+		return standardDistance;
 	}
 }
 
