@@ -34,7 +34,8 @@ public class MovePca : MonoBehaviour
 
 				//for the ships
 				for (int i=0; i<Global.ship.Count; i++) {
-						Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
+						Global.ship [i].transform.position = Global.ship [i].GetComponent<shipOEHistory> ().findShipPos (Global.time);
+			//OLD Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
 
 				}
 				button = new Rect (10, 170, 60, 60);
@@ -96,7 +97,9 @@ public class MovePca : MonoBehaviour
 						//move the ships
 						for (int i=0; i<Global.ship.Count; i++) {
 				
-								Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
+				Global.ship [i].transform.position = Global.ship [i].GetComponent<shipOEHistory> ().findShipPos (Global.time);
+				
+				//OLD Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
 						}
 				}
 

@@ -1,5 +1,5 @@
 ﻿/*
- * Created by Jihad El Sheikh
+ * Created by Jihad El Sheikh and Tirthak Patel
  * 
  * This program creates a path that follows a body
  * 
