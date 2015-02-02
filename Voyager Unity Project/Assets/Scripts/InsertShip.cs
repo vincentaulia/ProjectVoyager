@@ -99,7 +99,7 @@ public class InsertShip : MonoBehaviour
 
 				//read the object's id to get its mass
 				orbitingID = parameters [2];
-
+		
 		string[] basic;
 		Object basicFile;
 		basicFile = Resources.Load ("basic_info");
@@ -128,13 +128,17 @@ public class InsertShip : MonoBehaviour
 
 				//calculate the orbital elements for it
 				Global.ship [i].GetComponent<OrbitalElements> ().getElements (name, "0.1", string.Join (" ", parameters));
+				Elements el = Global.ship [i].GetComponent<OrbitalElements> ().orb_elements;
+				Global.ship [i].GetComponent<shipOEHistory> ().shipOEHistoryConstructor (el, Global.time, Global.ship [i]);  
+
 				//float size = 0.005f;
 				float size = 0.0005f; //added this for the Voyager 1 probe. Should actually modify this to take the size/scale given on the prefab object
 				Global.ship [i].transform.localScale = new Vector3 (size, size, size);
 				//place the ship in orbit around the planet
-				Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
+				//Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
+				Global.ship [i].transform.position = Global.ship [i].GetComponent<shipOEHistory> ().findShipPos (Global.time);
 				Global.ship [i].transform.parent = GameObject.Find ("ForShip").transform;
-
+				Debug.Log ("Ship Created");
 		}
 
 		void DoMyWindow (int windowID)
