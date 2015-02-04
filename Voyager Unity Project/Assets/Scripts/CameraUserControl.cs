@@ -140,19 +140,39 @@ public class CameraUserControl : MonoBehaviour {
 	}
 	
 	void Update () {
+		Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit rayHitInfo;
+		bool didHit = Physics.Raycast (mouseRay, out rayHitInfo);
+
+		// Do mouse hover things here
+		if (didHit) {
+			Debug.Log ("Mousing Over " + rayHitInfo.collider.name);
+		}
+		else {
+			Debug.Log ("");
+		}
+		
+
+
 		if (Input.GetMouseButtonDown (0)) {
 			if (Time.time - lastClickTime < catchTime) {
 				//Debug.Log("Double Click Logged");
 				// Do double click things in here
-				Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+			/*	Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 				RaycastHit rayHitInfo;
 				bool didHit = Physics.Raycast (mouseRay, out rayHitInfo);
-				
+			*/	
 				if (didHit) {
 					//Debug.Log (rayHitInfo.collider.name + " " + rayHitInfo.point);
 					if (target != rayHitInfo.collider.transform) { // if we haven't clicked on the current target
-						target = rayHitInfo.collider.transform;    // make the clicked object the new target
-						moveToNewTarget (target);
+						if (rayHitInfo.collider.CompareTag("DistantPlanetIcon")) { // if we've clicked on a distant blue indicator
+							target = rayHitInfo.collider.transform.parent.transform; // get the parent object transform.
+							moveToNewTarget (target);					// and move to the new target
+						}
+						else { // if we've clicked directly on an object
+							target = rayHitInfo.collider.transform;    	// make the clicked object the new target
+							moveToNewTarget (target);					// and move to the new target
+						}
 					}
 				}
 				else {
