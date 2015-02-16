@@ -100,7 +100,7 @@ public class shipOEHistory : MonoBehaviour
 	}
 	
 	
-	//////////////////// Chnaged a bunch of Cin to Sin and Inital to Initial
+	//////////////////// Changed a bunch of Cin to Sin and Inital to Initial
 	
 	/*	This function takes the initial orbital elements of the 
 		ship and returns the final orbital elements based on the

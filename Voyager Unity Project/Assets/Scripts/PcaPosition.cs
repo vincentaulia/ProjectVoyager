@@ -28,7 +28,7 @@ public class PcaPosition : MonoBehaviour
 				double epsilon = Math.Pow (10, -10);
 				int count = 0;
 
-			/*	if (body.name.Equals("625")) {
+				/*	if (body.name.Equals("625")) {
 			Debug.Log ("anom: " + el.anom);
 			Debug.Log ("arg: " + el.arg);
 			Debug.Log ("asc: " + el.asc);
@@ -64,14 +64,14 @@ public class PcaPosition : MonoBehaviour
 				GameObject orbiting;
 				
 				//if it's a ship, get the id of it's orbit focus
-				if (body.name.Contains ("Ship")) {
+				//if (body.name.Contains ("Ship")) {
 
-			orbiting = GameObject.Find (el.IDFocus);
-			R += orbiting.transform.position; 
+						//orbiting = GameObject.Find (el.IDFocus);
+						//R += orbiting.transform.position; 
 
-				}
-		//Don't need this anymore. Will make moons children of planets
-		/*else {
+				//}
+				//Don't need this anymore. Will make moons children of planets
+				/*else {
 
 
 

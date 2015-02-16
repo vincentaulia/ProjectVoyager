@@ -20,12 +20,14 @@ public class InsertShip : MonoBehaviour
 		bool showEdit = false;
 		string name;
 		//holds the data from the text fields
-		string[] data = new string[12];
+		string[] data = new string[12];	
 		public Rect windowRect;
 		Rect warning;
 		bool clickedAdd, clickedCancel;
 		bool showWarning;
 		string warningMsg;
+
+		public GameObject orbitPrefab;
 
 		void OnGUI ()
 		{
@@ -50,12 +52,12 @@ public class InsertShip : MonoBehaviour
 								Global.orbits [i].GetComponent<Orbits> ().setWidth (w + 5);
 
 						}
-			c = Global.orbitsMoon.Count;
-			for (int i=0; i<c; i++) {
-				float w = Global.orbitsMoon [i].GetComponent<Orbits> ().getWidth ();
-				Global.orbitsMoon [i].GetComponent<Orbits> ().setWidth (w + 5);
+						c = Global.orbitsMoon.Count;
+						for (int i=0; i<c; i++) {
+								float w = Global.orbitsMoon [i].GetComponent<Orbits> ().getWidth ();
+								Global.orbitsMoon [i].GetComponent<Orbits> ().setWidth (w + 5);
 				
-			}
+						}
 				}
 				if (GUI.Button (new Rect (10, 280, 70, 20), "\\/ orbit")) {
 						int c = Global.orbits.Count;
@@ -70,18 +72,18 @@ public class InsertShip : MonoBehaviour
 								}
 				
 						}
-			c = Global.orbitsMoon.Count;
-			for (int i=0; i<c; i++) {
-				float w = Global.orbitsMoon [i].GetComponent<Orbits> ().getWidth ();
-				//if width is smaller than 6, then decrease the width by a fraction instead
-				//of decreasing it by a fixed number
-				if (w < 6) {
-					Global.orbitsMoon [i].GetComponent<Orbits> ().setWidth (w * 0.6f);
-				} else {
-					Global.orbitsMoon [i].GetComponent<Orbits> ().setWidth (w - 5);
-				}
+						c = Global.orbitsMoon.Count;
+						for (int i=0; i<c; i++) {
+								float w = Global.orbitsMoon [i].GetComponent<Orbits> ().getWidth ();
+								//if width is smaller than 6, then decrease the width by a fraction instead
+								//of decreasing it by a fixed number
+								if (w < 6) {
+										Global.orbitsMoon [i].GetComponent<Orbits> ().setWidth (w * 0.6f);
+								} else {
+										Global.orbitsMoon [i].GetComponent<Orbits> ().setWidth (w - 5);
+								}
 				
-			}
+						}
 				}
 
 		}
@@ -100,29 +102,29 @@ public class InsertShip : MonoBehaviour
 				//read the object's id to get its mass
 				orbitingID = parameters [2];
 		
-		string[] basic;
-		Object basicFile;
-		basicFile = Resources.Load ("basic_info");
-		basic = basicFile.ToString().Split('\n');
-		bool found = false;
+				string[] basic;
+				Object basicFile;
+				basicFile = Resources.Load ("basic_info");
+				basic = basicFile.ToString ().Split ('\n');
+				bool found = false;
 
-		//Add exception handler here
-		//Searches the file to get the mass of the object it is orbiting
+				//Add exception handler here
+				//Searches the file to get the mass of the object it is orbiting
 		
-		for(int j = 0; j<basic.Length; j++){
-			//while ((mass = basic_file.ReadLine ()) != null) {
+				for (int j = 0; j<basic.Length; j++) {
+						//while ((mass = basic_file.ReadLine ()) != null) {
 			
-			if (basic[j].StartsWith (orbitingID)) {
-				line = basic[j].Split ();
-				//get the mass
-				parameters [3] = line [2];
-				found = true;
-				break;
-			}
+						if (basic [j].StartsWith (orbitingID)) {
+								line = basic [j].Split ();
+								//get the mass
+								parameters [3] = line [2];
+								found = true;
+								break;
+						}
 			
-		}
+				}
 				//output an error message if the id was not found in the file
-		if (!found) {
+				if (!found) {
 						Debug.LogError ("ERROR [InsertShip]: Cannot find object in textfile.");
 				}
 
@@ -137,11 +139,22 @@ public class InsertShip : MonoBehaviour
 				//place the ship in orbit around the planet
 				//Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
 				Global.ship [i].transform.position = Global.ship [i].GetComponent<shipOEHistory> ().findShipPos (Global.time);
+				Global.ship [i].transform.position += GameObject.Find (orbitingID).transform.position;
 				Global.ship [i].transform.parent = GameObject.Find ("ForShip").transform;
 				Debug.Log ("Ship Created");
-		}
-
-		void DoMyWindow (int windowID)
+				
+		int count;
+		count = Global.orbitsShip.Count;
+		//create a orbit object
+		Global.orbitsShip.Add ((GameObject)Instantiate (orbitPrefab));
+		Global.orbitsShip [count].name = "Orbit" + Global.ship [i].name;
+		Global.orbitsShip [count].transform.parent = GameObject.Find ("OrbitsShip").transform;
+		//calculate the points of the orbit
+		Global.orbitsShip [count].GetComponent<ShipOrbit> ().createOrbit (Global.time, Global.ship [i].name);
+		
+	}
+	
+	void DoMyWindow (int windowID)
 		{
 				if (GUILayout.Button ("Add Ships")) {
 						showEdit = true;

@@ -31,6 +31,9 @@ public class Global : MonoBehaviour {
 	//holds a list of moon orbits in the game
 	public static List <GameObject> orbitsMoon = new List<GameObject>();
 
+	//holds a list of ship orbits in the game
+	public static List <GameObject> orbitsShip = new List<GameObject>();
+
 	// m to AU - output.txt coordinates are in meters
 	public const double CONVFACTOR = 149597870.700 * 1000;
 	//this file holds the orbital elements of all the gameObject's orbits, which are used to make tracks.

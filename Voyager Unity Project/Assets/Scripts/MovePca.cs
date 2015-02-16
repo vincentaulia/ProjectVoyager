@@ -35,6 +35,10 @@ public class MovePca : MonoBehaviour
 				//for the ships
 				for (int i=0; i<Global.ship.Count; i++) {
 						Global.ship [i].transform.position = Global.ship [i].GetComponent<shipOEHistory> ().findShipPos (Global.time);
+						//get object that it is orbiting
+						GameObject orbiting = GameObject.Find(Global.ship[i].GetComponent<shipOEHistory>().currentOE(Global.time).IDFocus);
+						//add position of ship to the position of planet it is orbiting
+						Global.ship [i].transform.position += orbiting.transform.position;
 			//OLD Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
 
 				}
@@ -96,9 +100,11 @@ public class MovePca : MonoBehaviour
 			
 						//move the ships
 						for (int i=0; i<Global.ship.Count; i++) {
-				
 				Global.ship [i].transform.position = Global.ship [i].GetComponent<shipOEHistory> ().findShipPos (Global.time);
-				
+				//get object that it is orbiting
+				GameObject orbiting = GameObject.Find(Global.ship[i].GetComponent<shipOEHistory>().currentOE(Global.time).IDFocus);
+				//add position of ship to the position of planet it is orbiting
+				Global.ship [i].transform.position += orbiting.transform.position;
 				//OLD Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
 						}
 				}

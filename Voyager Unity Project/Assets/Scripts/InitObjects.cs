@@ -157,7 +157,7 @@ public class InitObjects : MonoBehaviour
 								//create a orbit object
 								Global.orbits.Add ((GameObject)Instantiate (orbitPreFab));
 								Global.orbits [count].name = "Orbit" + Global.body [i].name;
-								Global.orbits [count].transform.parent = GameObject.Find ("Orbit").transform;
+								Global.orbits [count].transform.parent = GameObject.Find ("OrbitsBody").transform;
 								//calculate the points of the orbit
 								Global.orbits [count].GetComponent<Orbits> ().makeOrbit (0, Global.body [i].name);
 						}
@@ -168,7 +168,7 @@ public class InitObjects : MonoBehaviour
 				
 								Global.orbitsMoon.Add ((GameObject)Instantiate (orbitPreFab));
 								Global.orbitsMoon [countMoon].name = "Orbit" + Global.body [i].name;
-								Global.orbitsMoon [countMoon].transform.parent = GameObject.Find ("Orbit").transform;
+								Global.orbitsMoon [countMoon].transform.parent = GameObject.Find ("OrbitsBody").transform;
 								//calculate the points of the orbit
 								Global.orbitsMoon [countMoon].GetComponent<Orbits> ().makeMoonOrbit (0, Global.body [i].name, Global.body [i].GetComponent<OrbitalElements> ().orb_elements.IDFocus);
 						}
