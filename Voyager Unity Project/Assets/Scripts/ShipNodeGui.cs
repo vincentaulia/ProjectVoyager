@@ -34,7 +34,7 @@ public class ShipNodeGui : MonoBehaviour {
 		if (open == -1) {
 						GUI.BeginGroup (new Rect (Screen.width / 2 + 150, Screen.height / 2, 300, 215));
 						GUI.Box (new Rect (0, 0, 300, 300), "Delta V Node");
-						GUI.Label (new Rect (0, 20, 100, 20), "Normal ( X, Y, Z)");
+						GUI.Label (new Rect (0, 20, 100, 20), "Normal ( 0, 0, Normal)");
 						a1 = GUI.TextField (new Rect (30, 40, 80, 20), a1, 8);
 						a1 = Regex.Replace (a1, "[^.0-9]", "");
 						a2 = GUI.TextField (new Rect (120, 40, 80, 20), a2, 8);
@@ -42,7 +42,7 @@ public class ShipNodeGui : MonoBehaviour {
 						a3 = GUI.TextField (new Rect (210, 40, 80, 20), a3, 8);
 						a3 = Regex.Replace (a3, "[^.0-9]", "");
 
-			GUI.Label (new Rect (0, 70, 100, 20), "Tangent  ( X, Y, Z)");
+			GUI.Label (new Rect (0, 70, 100, 20), "Tangent  ( 0, tangential, 0)");
 						b1 = GUI.TextField (new Rect (30, 100, 80, 20), b1, 8);
 						b1 = Regex.Replace (b1, "[^.0-9]", "");
 						b2 = GUI.TextField (new Rect (120, 100, 80, 20), b2, 8);
@@ -50,7 +50,7 @@ public class ShipNodeGui : MonoBehaviour {
 						b3 = GUI.TextField (new Rect (210, 100, 80, 20), b3, 8);
 						b3 = Regex.Replace (b3, "[^.0-9]", "");
 
-			GUI.Label (new Rect (0, 130, 100, 20), "Radial  ( X, Y, Z)");
+			GUI.Label (new Rect (0, 130, 100, 20), "Radial  ( radial, 0, 0)");
 						c1 = GUI.TextField (new Rect (30, 150, 80, 20), c1, 8);
 						c1 = Regex.Replace (c1, "[^.0-9]", "");
 						c2 = GUI.TextField (new Rect (120, 150, 80, 20), c2, 8);
