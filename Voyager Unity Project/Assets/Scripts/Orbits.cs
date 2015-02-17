@@ -101,8 +101,6 @@ public class Orbits : MonoBehaviour
 						//increase the time step
 						time += time_step;
 				}
-				//Debug.Log ("body: " + body);
-				//Debug.Log ("total time: " + time);
 		}
 
 		public void makeOrbit (long time, string body)
@@ -173,8 +171,6 @@ public class Orbits : MonoBehaviour
 						prev_diff = diff;
 						time += time_step;
 				}
-				//Debug.Log ("body: " + body);
-				//Debug.Log ("total time: " + time);
 		}
 
 		//set the width of the orbit
@@ -233,7 +229,6 @@ public class Orbits : MonoBehaviour
 						//update all points on the moon's orbit relative to parent's new position
 						int index = 0;
 						while (index < moonI) {
-								//Debug.Log (index + " " + moonPositions[index]);
 								line.SetPosition (index, parentPosition + moonPositions [index]);
 								index++;
 						}
