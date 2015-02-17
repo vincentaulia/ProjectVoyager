@@ -203,7 +203,19 @@ public class Orbits : MonoBehaviour
 		// to move first before getting its current position
 		void LateUpdate ()
 		{
-				setWidth (0.002f * Camera.main.GetComponent<CameraUserControl> ().distance);
+				setWidth (0.002f * Camera.main.GetComponent<CameraUserControl> ().distance); //sets the width of the orbit based on camera distance
+		/*
+				if (isMoon) {
+					if(Vector3.Distance(Camera.main.transform.position, transform.position) > 0.5f) {
+						Debug.Log (Vector3.Distance(Camera.main.transform.position, transform.position));
+						renderer.enabled = false;
+					//	Debug.Log ("Far enough");
+					}
+					else {
+						renderer.enabled = true;
+					}
+				}
+		*/
 
 				//if the game is playing, then unflag localPause
 				if (!Global.time_doPause) {

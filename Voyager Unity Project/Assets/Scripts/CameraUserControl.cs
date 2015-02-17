@@ -142,17 +142,20 @@ public class CameraUserControl : MonoBehaviour {
 	void Update () {
 		Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit rayHitInfo;
-		bool didHit = Physics.Raycast (mouseRay, out rayHitInfo);
+		bool didHit = Physics.Raycast (mouseRay, out rayHitInfo, Mathf.Infinity);
 
 		// Do mouse hover things here
 		if (didHit) {
-			Debug.Log ("Mousing Over " + rayHitInfo.collider.name);
+			if (rayHitInfo.collider.CompareTag("DistantPlanetIcon")) {
+				Debug.Log ("Mousing Over " + rayHitInfo.collider.transform.parent.name);
+			}
+			else {
+				Debug.Log ("Mousing Over " + rayHitInfo.collider.name);
+		   }
 		}
 		else {
 			Debug.Log ("");
 		}
-		
-
 
 		if (Input.GetMouseButtonDown (0)) {
 			if (Time.time - lastClickTime < catchTime) {

@@ -43,7 +43,7 @@ public class DistantIcon : MonoBehaviour {
 			//render the icon and scale it to the camera's distance from the planet.
 		}
 
-		renderer.enabled = IconActive;
-		//gameObject.SetActive (IconActive);		// render the icon if it should be active (beyond distance)
+		renderer.enabled = IconActive;	//render the icon if it should be active (beyond distance)
+		collider.enabled = IconActive;	//collider is active if it should be active (beyond distance)
 	}
 }
