@@ -28,6 +28,16 @@ public class PcaPosition : MonoBehaviour
 				double epsilon = Math.Pow (10, -10);
 				int count = 0;
 
+				/*	if (body.name.Equals("625")) {
+			Debug.Log ("anom: " + el.anom);
+			Debug.Log ("arg: " + el.arg);
+			Debug.Log ("asc: " + el.asc);
+			Debug.Log ("axis: " + el.axis);
+			Debug.Log("ecc: " + el.ecc);
+			Debug.Log("incl: " + el.incl);
+			Debug.Log("mass: " + el.mass);
+				}*/
+		
 				do {
 						count ++;
 						E = Enext;
@@ -50,6 +60,46 @@ public class PcaPosition : MonoBehaviour
 		
 				//scales down R to fit the program. The extra 1000 is for converting from m to km
 				R = R / (Global.scale * 1000f);
+
+				GameObject orbiting;
+				
+				//if it's a ship, get the id of it's orbit focus
+				//if (body.name.Contains ("Ship")) {
+
+						//orbiting = GameObject.Find (el.IDFocus);
+						//R += orbiting.transform.position; 
+
+				//}
+				//Don't need this anymore. Will make moons children of planets
+				/*else {
+
+
+
+						//this is to add the vector to the object it is orbiting
+						int objectID = int.Parse (body.name);
+							
+						//if the id ends with 99, then it orbits the sun (10)
+						//if the id is something else, then it orbits a planet
+						if (objectID == 10)
+								;
+						else if (objectID % 100 == 99) {
+			
+								orbiting = GameObject.Find ("10");
+								//Debug.Log (body.name + ": " + orbiting.name);
+								R += orbiting.transform.position;
+						} else {
+								int orbiting_id;
+			
+								orbiting_id = (objectID / 100) * 100 + 99;
+								orbiting = GameObject.Find (orbiting_id.ToString ());
+								//Debug.Log (body.name + ": " + orbiting.name);
+								R += orbiting.transform.position;
+			
+						}
+
+
+				}*/
+		
 				return R;
 		}
 

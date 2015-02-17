@@ -140,7 +140,7 @@ public class CameraUserControl : MonoBehaviour
 				}
 		}
 	
-<<<<<<< HEAD
+
 	void Update () {
 		Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit rayHitInfo;
@@ -158,22 +158,7 @@ public class CameraUserControl : MonoBehaviour
 		else {
 			Debug.Log ("");
 		}
-=======
-		void Update ()
-		{
-				Ray mouseRay = Camera.main.ScreenPointToRay (Input.mousePosition);
-				RaycastHit rayHitInfo;
-				bool didHit = Physics.Raycast (mouseRay, out rayHitInfo);
 
-				// Do mouse hover things here
-				if (didHit) {
-						Debug.Log ("Mousing Over " + rayHitInfo.collider.name);
-				} else {
-						Debug.Log ("");
-				}
-		
-
->>>>>>> origin/master
 
 				if (Input.GetMouseButtonDown (0)) {
 						if (Time.time - lastClickTime < catchTime) {

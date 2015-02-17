@@ -46,18 +46,9 @@ public class DistantIcon : MonoBehaviour
 						//THIS LINE CAUSES THE MOONS TO GO HAY-WIRE
 						//transform.localScale = scale;
 
-<<<<<<< HEAD
-		renderer.enabled = IconActive;	//render the icon if it should be active (beyond distance)
-		collider.enabled = IconActive;	//collider is active if it should be active (beyond distance)
-	}
-=======
-						//Debug.Log ("Within render distance");
-						//render the icon and scale it to the camera's distance from the planet.
 				}
-
-				renderer.enabled = IconActive;
-				//gameObject.SetActive (IconActive);		// render the icon if it should be active (beyond distance)
-
+				renderer.enabled = IconActive;	//render the icon if it should be active (beyond distance)
+				collider.enabled = IconActive;	//collider is active if it should be active (beyond distance)
 		}
->>>>>>> origin/master
+
 }

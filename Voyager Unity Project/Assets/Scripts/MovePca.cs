@@ -29,21 +29,49 @@ public class MovePca : MonoBehaviour
 						Global.body [i].transform.localPosition = PcaPosition.findPos (Global.body [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.body [i]);
 						//lossy works only when all x,y,z have the same scale
 						//the localPosition need to be scaled relative to the scale of the parent
-						Global.body [i].transform.localPosition /= Global.body [i].transform.parent.lossyScale.x;
+						Global.body[i].transform.localPosition /= Global.body[i].transform.parent.lossyScale.x;
 				}
 
 				//for the ships
 				for (int i=0; i<Global.ship.Count; i++) {
 						Global.ship [i].transform.position = Global.ship [i].GetComponent<shipOEHistory> ().findShipPos (Global.time);
 						//get object that it is orbiting
-						GameObject orbiting = GameObject.Find (Global.ship [i].GetComponent<shipOEHistory> ().currentOE (Global.time).IDFocus);
+						GameObject orbiting = GameObject.Find(Global.ship[i].GetComponent<shipOEHistory>().currentOE(Global.time).IDFocus);
 						//add position of ship to the position of planet it is orbiting
 						Global.ship [i].transform.position += orbiting.transform.position;
+			//OLD Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
+
 				}
 				button = new Rect (10, 170, 60, 60);
 
 				bary = GameObject.Find ("Bary Center");
 		}
+	
+		// Update is called once per frame
+		/*void Update () {
+
+		//if the P button is pressed.. toggle pausing the game
+		if (Input.GetKeyDown(KeyCode.P)) {
+			Paws ();
+		}
+
+		//only advance the time if the game is not paused
+		if (!doPaws) {
+			Global.time += 24*60*60;
+
+			//updates the positions of all bodies except for the sun
+			for (int i=1; i<Global.body.Count; i++) {
+				Global.body[i].transform.position = PcaPosition.findPos (Global.body[i].GetComponent<OrbitalElements>().orb_elements, Global.time, Global.body[i]);
+			}
+
+			//move the ships
+			for (int i=0; i<Global.ship.Count; i++) {
+
+				Global.ship[i].transform.position = PcaPosition.findPos (Global.ship[i].GetComponent<OrbitalElements>().orb_elements, Global.time, Global.ship[i]);
+			}
+		}
+	 }
+*/
 
 		// Update is called once per frame
 		void FixedUpdate ()
@@ -67,18 +95,20 @@ public class MovePca : MonoBehaviour
 								Global.body [i].transform.localPosition = PcaPosition.findPos (Global.body [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.body [i]);
 								//lossy works only when all x,y,z have the same scale
 								//the localPosition need to be scaled relative to the scale of the parent
-								Global.body [i].transform.localPosition /= Global.body [i].transform.parent.lossyScale.x;
+								Global.body[i].transform.localPosition /= Global.body[i].transform.parent.lossyScale.x;
 						}
 			
 						//move the ships
 						for (int i=0; i<Global.ship.Count; i++) {
-								Global.ship [i].transform.position = Global.ship [i].GetComponent<shipOEHistory> ().findShipPos (Global.time);
-								//get object that it is orbiting
-								GameObject orbiting = GameObject.Find (Global.ship [i].GetComponent<shipOEHistory> ().currentOE (Global.time).IDFocus);
-								//add position of ship to the position of planet it is orbiting
-								Global.ship [i].transform.position += orbiting.transform.position;
+				Global.ship [i].transform.position = Global.ship [i].GetComponent<shipOEHistory> ().findShipPos (Global.time);
+				//get object that it is orbiting
+				GameObject orbiting = GameObject.Find(Global.ship[i].GetComponent<shipOEHistory>().currentOE(Global.time).IDFocus);
+				//add position of ship to the position of planet it is orbiting
+				Global.ship [i].transform.position += orbiting.transform.position;
+				//OLD Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
 						}
 				}
+
 		}
 
 		void OnGUI ()
