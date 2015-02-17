@@ -114,6 +114,7 @@ public class CameraUserControl : MonoBehaviour
 				Vector3 angles = transform.eulerAngles;
 				x = angles.y;
 				y = angles.x;
+				moveToNewTarget (target);
 		}
 	
 		void OnGUI ()
@@ -163,7 +164,7 @@ public class CameraUserControl : MonoBehaviour
 				if (Input.GetMouseButtonDown (0)) {
 						if (Time.time - lastClickTime < catchTime) {
 								//Debug.Log("Double Click Logged");
-								// Do double click things in here
+								// Do double left click things in here
 								//Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 								//RaycastHit rayHitInfo;
 								//bool didHit = Physics.Raycast (mouseRay, out rayHitInfo);
@@ -184,7 +185,7 @@ public class CameraUserControl : MonoBehaviour
 								}
 						} else {
 								//Debug.Log("Single Click Logged");
-								// Do single click things in here
+								// Do single left click things in here
 						}
 						lastClickTime = Time.time;
 				}
@@ -225,7 +226,8 @@ public class CameraUserControl : MonoBehaviour
 						// reset back to 0 so it doesn't continue to rotate while holding the button
 						x = 0;
 						y = 0; 	
-				} else {		
+				}
+				else {		
 						// see if mouse wheel is used 	
 						if (Input.GetAxis ("Mouse ScrollWheel") != 0) {	
 								// get the distance between camera and target
@@ -288,13 +290,18 @@ public class CameraUserControl : MonoBehaviour
 			             	(float)target.GetComponent<OrbitalElements> ().orb_elements.radiusy,
 							(float)target.GetComponent<OrbitalElements> ().orb_elements.radiusz};
 				zoomMin = (Mathf.Max (radius) + Mathf.Max (radius) * 0.000001f) / 50000000;
-				Debug.Log ("zoomMin = " + zoomMin);
+				//Debug.Log ("zoomMin = " + zoomMin);
 				return;
 		}
 
 		// This function returns the standardZoom distance for the current target
 		float standardZoomCalc (Transform target, float standardZoomAngle)
 		{
+				if (target.name == "10") {
+					standardDistance = 70.0f;
+					distance = standardDistance;
+					return 70.0f;
+				}
 				// find the maximum target radius of three dimension radius
 				// determine the distance necessary to make a ____ degree angle with the max radius 
 				float[] radius = {(float)target.GetComponent<OrbitalElements> ().orb_elements.radiusx,
