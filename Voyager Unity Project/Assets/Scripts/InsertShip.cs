@@ -20,13 +20,12 @@ public class InsertShip : MonoBehaviour
 		bool showEdit = false;
 		string name;
 		//holds the data from the text fields
-		string[] data = new string[12];	
+		string[] data = new string[12];
 		public Rect windowRect;
 		Rect warning;
 		bool clickedAdd, clickedCancel;
 		bool showWarning;
 		string warningMsg;
-
 		public GameObject orbitPrefab;
 
 		void OnGUI ()
@@ -41,51 +40,6 @@ public class InsertShip : MonoBehaviour
 				if (showWarning) {
 						warning = GUILayout.Window (2, warning, warningFunc, "Warning");
 				}
-
-
-				//These two blocks just to test the functionality of changing the width of the orbits
-				//TO BE REMOVED LATER
-				if (GUI.Button (new Rect (10, 250, 70, 20), "/\\ orbit")) {
-						int c = Global.orbits.Count;
-						for (int i=0; i<c; i++) {
-								float w = Global.orbits [i].GetComponent<Orbits> ().getWidth ();
-								Global.orbits [i].GetComponent<Orbits> ().setWidth (w + 5);
-
-						}
-						c = Global.orbitsMoon.Count;
-						for (int i=0; i<c; i++) {
-								float w = Global.orbitsMoon [i].GetComponent<Orbits> ().getWidth ();
-								Global.orbitsMoon [i].GetComponent<Orbits> ().setWidth (w + 5);
-				
-						}
-				}
-				if (GUI.Button (new Rect (10, 280, 70, 20), "\\/ orbit")) {
-						int c = Global.orbits.Count;
-						for (int i=0; i<c; i++) {
-								float w = Global.orbits [i].GetComponent<Orbits> ().getWidth ();
-								//if width is smaller than 6, then decrease the width by a fraction instead
-								//of decreasing it by a fixed number
-								if (w < 6) {
-										Global.orbits [i].GetComponent<Orbits> ().setWidth (w * 0.6f);
-								} else {
-										Global.orbits [i].GetComponent<Orbits> ().setWidth (w - 5);
-								}
-				
-						}
-						c = Global.orbitsMoon.Count;
-						for (int i=0; i<c; i++) {
-								float w = Global.orbitsMoon [i].GetComponent<Orbits> ().getWidth ();
-								//if width is smaller than 6, then decrease the width by a fraction instead
-								//of decreasing it by a fixed number
-								if (w < 6) {
-										Global.orbitsMoon [i].GetComponent<Orbits> ().setWidth (w * 0.6f);
-								} else {
-										Global.orbitsMoon [i].GetComponent<Orbits> ().setWidth (w - 5);
-								}
-				
-						}
-				}
-
 		}
 
 		void createShip (string[] parameters)
@@ -104,7 +58,7 @@ public class InsertShip : MonoBehaviour
 		
 				string[] basic;
 				Object basicFile;
-				basicFile = Resources.Load ("basic_info");
+				basicFile = Resources.Load (Global.BASIC_FILENAME);
 				basic = basicFile.ToString ().Split ('\n');
 				bool found = false;
 
@@ -112,7 +66,6 @@ public class InsertShip : MonoBehaviour
 				//Searches the file to get the mass of the object it is orbiting
 		
 				for (int j = 0; j<basic.Length; j++) {
-						//while ((mass = basic_file.ReadLine ()) != null) {
 			
 						if (basic [j].StartsWith (orbitingID)) {
 								line = basic [j].Split ();
@@ -133,28 +86,26 @@ public class InsertShip : MonoBehaviour
 				Elements el = Global.ship [i].GetComponent<OrbitalElements> ().orb_elements;
 				Global.ship [i].GetComponent<shipOEHistory> ().shipOEHistoryConstructor (el, Global.time, Global.ship [i]);  
 
-				//float size = 0.005f;
 				float size = 0.0005f; //added this for the Voyager 1 probe. Should actually modify this to take the size/scale given on the prefab object
 				Global.ship [i].transform.localScale = new Vector3 (size, size, size);
 				//place the ship in orbit around the planet
-				//Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
 				Global.ship [i].transform.position = Global.ship [i].GetComponent<shipOEHistory> ().findShipPos (Global.time);
 				Global.ship [i].transform.position += GameObject.Find (orbitingID).transform.position;
 				Global.ship [i].transform.parent = GameObject.Find ("ForShip").transform;
 				Debug.Log ("Ship Created");
 				
-		int count;
-		count = Global.orbitsShip.Count;
-		//create a orbit object
-		Global.orbitsShip.Add ((GameObject)Instantiate (orbitPrefab));
-		Global.orbitsShip [count].name = "Orbit" + Global.ship [i].name;
-		Global.orbitsShip [count].transform.parent = GameObject.Find ("OrbitsShip").transform;
-		//calculate the points of the orbit
-		Global.orbitsShip [count].GetComponent<ShipOrbit> ().createOrbit (Global.time, Global.ship [i].name);
+				int count;
+				count = Global.orbitsShip.Count;
+				//create a orbit object
+				Global.orbitsShip.Add ((GameObject)Instantiate (orbitPrefab));
+				Global.orbitsShip [count].name = "Orbit" + Global.ship [i].name;
+				Global.orbitsShip [count].transform.parent = GameObject.Find ("OrbitsShip").transform;
+				//calculate the points of the orbit
+				Global.orbitsShip [count].GetComponent<ShipOrbit> ().createOrbit (Global.time, Global.ship [i].name);
 		
-	}
+		}
 	
-	void DoMyWindow (int windowID)
+		void DoMyWindow (int windowID)
 		{
 				if (GUILayout.Button ("Add Ships")) {
 						showEdit = true;
@@ -319,8 +270,4 @@ public class InsertShip : MonoBehaviour
 		{
 	
 		}
-
-
-
-
 }

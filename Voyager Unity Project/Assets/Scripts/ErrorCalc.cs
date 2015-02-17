@@ -197,6 +197,5 @@ public class ErrorCalc : MonoBehaviour
 		// Update is called once per frame
 		void Update ()
 		{
-				//Debug.Log ("ErrorCalc: " + Global.body[83].transform.position);
 		}
 }

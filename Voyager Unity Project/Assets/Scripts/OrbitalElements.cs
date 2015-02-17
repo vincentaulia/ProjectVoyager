@@ -26,7 +26,7 @@ public class OrbitalElements : MonoBehaviour
 
 				string[] orbit;
 				object orbitFile;
-				orbitFile = Resources.Load ("orbit_info");
+				orbitFile = Resources.Load (Global.ORBITAL_FILENAME);
 
 				//decide whether to read from file or from the inputted string
 				if (parameters != null) {
@@ -97,8 +97,6 @@ public class OrbitalElements : MonoBehaviour
 
 		void Awake ()
 		{
-				//getElements (); //commented this out so it doesn't automatically do it upon initisialization.
-				//The function will get called manually.
 		}
 
 		// Use this for initialization
@@ -110,6 +108,5 @@ public class OrbitalElements : MonoBehaviour
 		// Update is called once per frame
 		void Update ()
 		{
-				//Debug.Log ("OrbitalElements: " + Global.body [83].transform.position);
 		}
 }
