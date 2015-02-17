@@ -32,8 +32,9 @@ public class shipOEHistory : MonoBehaviour
 		currentTimePos = 0;
 	}
 	
-	public void deltavChange(Elements Initial, long time, Vector3 normal, Vector3 tangent, Vector3 radial)
+	public void deltavChange(long time, Vector3 normal, Vector3 tangent, Vector3 radial)
 	{
+		Elements Initial = currentOE(Global.time);
 		CalcNormalDeltaV (ref Initial, normal);
 		CalcTangentialDeltaV (ref Initial, tangent);
 		CalcRadialDeltaV (ref Initial, radial);
