@@ -170,5 +170,7 @@ public struct Elements
 				n = Math.Sqrt ((6.67384e-11) * (mass + massFocus) / (axis * axis * axis)) * dir;
 				//Debug.Log (dir);
 		}
+
+
 	
 }
