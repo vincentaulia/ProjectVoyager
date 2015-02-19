@@ -109,6 +109,8 @@ public class MovePca : MonoBehaviour
 								//OLD Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
 						}
 				}
+
+		/*
 				if (onlyonce) {
 						GameObject earth = GameObject.Find ("399");
 						GameObject thing = GameObject.Find ("199");
@@ -121,7 +123,8 @@ public class MovePca : MonoBehaviour
 			}
 
 						onlyonce = false;
-				}
+				}*/
+
 
 		}
 

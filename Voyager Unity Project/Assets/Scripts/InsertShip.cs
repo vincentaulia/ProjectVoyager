@@ -41,6 +41,22 @@ public class InsertShip : MonoBehaviour
 				if (showWarning) {
 						warning = GUILayout.Window (2, warning, warningFunc, "Warning");
 				}
+		/*
+				if(GUI.Button(new Rect(10,250,70,20), "Add node")){
+					GameObject ship = GameObject.Find ("Ship1");
+			ship.GetComponent<shipOEHistory>().deltavChange(10, new Vector3(0,0,0.00005f), new Vector3(0,0.00001f,0), new Vector3(0.0002f,0,0));
+			Debug.Log ("number: " + ship.GetComponent<shipOEHistory>().getNumberOfElements());
+			Elements one = ship.GetComponent<shipOEHistory>().shipOE[0];
+			Elements two = ship.GetComponent<shipOEHistory>().shipOE[1];
+			Debug.Log ("one axis: " + one.axis);
+			Debug.Log ("two axis: " + two.axis);
+			long oneTime = ship.GetComponent<shipOEHistory>().startTimeOE(one);
+			long twoTime = ship.GetComponent<shipOEHistory>().startTimeOE(two);
+			Debug.Log ("one time: " + oneTime);
+			Debug.Log ("two time: " + twoTime);
+					//Debug.Log (ship.transform.position.magnitude * Global.scale);
+				}*/
+
 		}
 
 		void createShip (string[] parameters)
@@ -94,7 +110,6 @@ public class InsertShip : MonoBehaviour
 				Global.ship [i].transform.position = Global.ship [i].GetComponent<shipOEHistory> ().findShipPos (Global.time);
 				Global.ship [i].transform.position += GameObject.Find (orbitingID).transform.position;
 				Global.ship [i].transform.parent = GameObject.Find ("ForShip").transform;
-				Debug.Log ("Ship Created");
 				
 				int count;
 				count = Global.orbitsShip.Count;
@@ -236,11 +251,7 @@ public class InsertShip : MonoBehaviour
 								return;
 						}
 						
-						Debug.Log ("Reached end of warnings...");
-
 						createShip (data);
-						Debug.Log ("created ship...");
-						
 
 						showEdit = false;
 				} else if (clickedCancel) {

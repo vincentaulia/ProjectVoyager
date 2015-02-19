@@ -174,9 +174,19 @@ public struct Elements
 		public static bool operator == (Elements x, Elements y)
 		{
 				if (x.axis == y.axis) {
+			Debug.Log ("x-axis: " + x.axis);
+			Debug.Log ("y-axis: " + y.axis);
 						if (x.ecc == y.ecc) {
+				Debug.Log ("x-ecc: " + x.ecc);
+				Debug.Log ("y-ecc: " + y.ecc);
 								if (x.incl == y.incl) {
+					Debug.Log ("x-incl: " + x.incl);
+					Debug.Log ("y-incl: " + y.incl);
+					Debug.Log ("x-asc: " + x.asc);
+					Debug.Log ("y-asc: " + y.asc);
 										if (x.asc == y.asc) {
+						Debug.Log ("x-asc: " + x.asc);
+						Debug.Log ("y-asc: " + y.asc);
 												if (x.anom == y.anom) {
 														if (x.arg == y.arg) {
 																if (x.dir == y.dir) {

@@ -304,11 +304,12 @@ public class shipOEHistory : MonoBehaviour
 		}
 
 		//return the number of Element structs in the list array
-		public int numberOfElements ()
+		public int getNumberOfElements ()
 		{
 				return shipOE.Count;
 		}
 
+		//return the start time for the selected Elements struct
 		public long startTimeOE (Elements el)
 		{
 				for (int i=0; i < shipOE.Count; i++) {
