@@ -27,16 +27,6 @@ public class PcaPosition : MonoBehaviour
 				//Normally epsilon should be much smaller than this, but for now the program takes too long with small epsilons. 
 				double epsilon = Math.Pow (10, -10);
 				int count = 0;
-
-				/*	if (body.name.Equals("625")) {
-			Debug.Log ("anom: " + el.anom);
-			Debug.Log ("arg: " + el.arg);
-			Debug.Log ("asc: " + el.asc);
-			Debug.Log ("axis: " + el.axis);
-			Debug.Log("ecc: " + el.ecc);
-			Debug.Log("incl: " + el.incl);
-			Debug.Log("mass: " + el.mass);
-				}*/
 		
 				do {
 						count ++;
@@ -133,6 +123,8 @@ public struct Elements
 		public string IDFocus;
 		//name of the body
 		public string name;
+		//sphere of influence
+		public double soi;
 		//radius of the body (in meters)
 		public double radiusx;
 		public double radiusy;

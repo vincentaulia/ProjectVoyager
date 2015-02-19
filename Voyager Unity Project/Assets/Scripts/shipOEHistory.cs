@@ -31,13 +31,76 @@ public class shipOEHistory : MonoBehaviour
 				shipObject = shipObj;
 				currentTimePos = 0;
 		}
-	
+
+		public string currentSphereOfInfluence()
+		{
+			Elements current = currentOE (Global.time);   //SHIP ELEMENTS
+			Vector3 currentPos = findShipPos (Global.time);    //SHIP POSITION 
+			
+			GameObject parentPlanet = GameObject.Find (current.IDFocus);  //GAME OBJECT CYRRENT FOCCUS
+			string IDF = null;
+			IDF = focusDown (currentPos, parentPlanet);
+			Debug.Log ("IDF1");
+			Debug.Log (IDF);
+			if (IDF != null)
+				return IDF;
+			IDF = focusUp (currentPos, parentPlanet);
+			Debug.Log ("IDF2");
+			Debug.Log (IDF);
+			return IDF;
+		}
+		
+		public string focusUp(Vector3 shipP, GameObject GO)
+		{
+			GameObject parentPlanet = GameObject.Find (GO.GetComponent<OrbitalElements> ().orb_elements.IDFocus); //probably good
+			string IDF = focusDown (shipP, parentPlanet);
+			if (IDF == null)
+				return focusUp (shipP - PcaPosition.findPos (parentPlanet.GetComponent<OrbitalElements> ().orb_elements, Global.time, GO), parentPlanet);
+			else 
+				return IDF;
+		}
+		
+		public string focusDown(Vector3 shipP, GameObject GO)
+		{
+			int children = GO.transform.childCount;
+			int numberRender = 0;
+			bool flag = false;
+			for (int i = 0; i < children; ++i)
+			{	
+				string currentTag = GO.transform.GetChild(i).gameObject.tag;
+				if (currentTag != "Rendering" && currentTag != "name" && currentTag != "DistantPlanetIcon")
+				{
+					double radiusChild =  GO.transform.GetChild(i).gameObject.GetComponent<OrbitalElements> ().orb_elements.soi;
+					Vector3 childPosition = PcaPosition.findPos (GO.GetComponent<OrbitalElements> ().orb_elements, Global.time, GO.transform.GetChild(i).gameObject);
+					Vector3 shipRef = shipP - childPosition;
+					double difference = (double)(shipRef).magnitude;
+					difference = difference * Global.scale * 1000;
+					
+					if (difference <= radiusChild)
+					{
+						flag = true;
+						return focusDown(shipRef, GO.transform.GetChild(i).gameObject);
+					}
+				}
+				else
+					numberRender++;
+			}
+			if (!flag)
+			{
+				double radiusParent = GO.GetComponent<OrbitalElements> ().orb_elements.soi;
+				//Vector3 parentPosition = PcaPosition.findPos (GO.GetComponent<OrbitalElements> ().orb_elements, Global.time, GO);
+				double difference = (double)(shipP).magnitude;
+				difference = difference * Global.scale * 1000;
+				if (difference <= radiusParent)
+				{
+					return GO.GetComponent<OrbitalElements> ().orb_elements.name;
+				}
+			}
+			return null;
+		}
+
 		public void deltavChange (long time, Vector3 normal, Vector3 tangent, Vector3 radial)
 		{
-				//Vector: (radial , tangential , normal)
-				//Vector3 normal = new Vector3(0,0,norm);
-
-
 				Elements Initial = currentOE (Global.time);
 				CalcNormalDeltaV (ref Initial, normal);
 				CalcTangentialDeltaV (ref Initial, tangent);

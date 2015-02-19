@@ -44,7 +44,7 @@ public class InsertShip : MonoBehaviour
 		/*
 				if(GUI.Button(new Rect(10,250,70,20), "Add node")){
 					GameObject ship = GameObject.Find ("Ship1");
-			ship.GetComponent<shipOEHistory>().deltavChange(10, new Vector3(0,0,0.00005f), new Vector3(0,0.00001f,0), new Vector3(0.0002f,0,0));
+			ship.GetComponent<shipOEHistory>().deltavChange(10, new Vector3(0,0,0), new Vector3(0,100,0), new Vector3(0,0,0));
 			Debug.Log ("number: " + ship.GetComponent<shipOEHistory>().getNumberOfElements());
 			Elements one = ship.GetComponent<shipOEHistory>().shipOE[0];
 			Elements two = ship.GetComponent<shipOEHistory>().shipOE[1];

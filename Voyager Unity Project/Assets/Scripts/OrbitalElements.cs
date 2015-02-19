@@ -71,6 +71,10 @@ public class OrbitalElements : MonoBehaviour
 						orb_elements.dir = int.Parse (split [11]);
 						//the id of the body it is orbiting
 						orb_elements.IDFocus = split [2];
+						//sphere of influence
+						orb_elements.soi = orb_elements.axis * Math.Pow ((orb_elements.mass / orb_elements.massFocus), (2.0/5));
+				Debug.Log (orb_elements.name);
+				Debug.Log (orb_elements.soi);
 						//the radius of the body
 						if (radius.Contains ("x")) {
 								int[] j = new int[3];
@@ -97,8 +101,7 @@ public class OrbitalElements : MonoBehaviour
 
 		void Awake ()
 		{
-				//getElements (); //commented this out so it doesn't automatically do it upon initisialization.
-				//The function will get called manually.
+
 		}
 
 		// Use this for initialization
@@ -110,6 +113,6 @@ public class OrbitalElements : MonoBehaviour
 		// Update is called once per frame
 		void Update ()
 		{
-				//Debug.Log ("OrbitalElements: " + Global.body [83].transform.position);
+			
 		}
 }

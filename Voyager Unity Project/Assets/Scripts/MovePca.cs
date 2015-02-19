@@ -102,6 +102,8 @@ public class MovePca : MonoBehaviour
 						//move the ships
 						for (int i=0; i<Global.ship.Count; i++) {
 								Global.ship [i].transform.position = Global.ship [i].GetComponent<shipOEHistory> ().findShipPos (Global.time);
+								//FOR TESTING PURPOSES
+								string a = Global.ship[i].GetComponent<shipOEHistory>().currentSphereOfInfluence();
 								//get object that it is orbiting
 								GameObject orbiting = GameObject.Find (Global.ship [i].GetComponent<shipOEHistory> ().currentOE (Global.time).IDFocus);
 								//add position of ship to the position of planet it is orbiting
