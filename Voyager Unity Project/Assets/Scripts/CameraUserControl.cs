@@ -150,14 +150,14 @@ public class CameraUserControl : MonoBehaviour
 		// Do mouse hover things here
 		if (didHit) {
 			if (rayHitInfo.collider.CompareTag("DistantPlanetIcon")) {
-				Debug.Log ("Mousing Over " + rayHitInfo.collider.transform.parent.name);
+				//Debug.Log ("Mousing Over " + rayHitInfo.collider.transform.parent.name);
 			}
 			else {
-				Debug.Log ("Mousing Over " + rayHitInfo.collider.name);
+				//Debug.Log ("Mousing Over " + rayHitInfo.collider.name);
 		   }
 		}
 		else {
-			Debug.Log ("");
+			//Debug.Log ("");
 		}
 
 
