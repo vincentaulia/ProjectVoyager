@@ -9,6 +9,7 @@
  * Files needed:	basic_info.txt
  * 
  */
+
 using UnityEngine;
 using System.Collections;
 
@@ -232,8 +233,12 @@ public class InsertShip : MonoBehaviour
 								establishWarning ("a number between 0 and 360 inclusive", "mean anomaly");
 								return;
 						}
+						
+						Debug.Log ("Reached end of warnings...");
 
 						createShip (data);
+						Debug.Log ("created ship...");
+
 						showEdit = false;
 				} else if (clickedCancel) {
 						showEdit = false;
