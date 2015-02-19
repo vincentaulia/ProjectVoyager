@@ -56,7 +56,7 @@ public class InsertShip : MonoBehaviour
 
 				//read the object's id to get its mass
 				orbitingID = parameters [2];
-		
+
 				string[] basic;
 				Object basicFile;
 				basicFile = Resources.Load (Global.BASIC_FILENAME);
@@ -77,6 +77,7 @@ public class InsertShip : MonoBehaviour
 						}
 			
 				}
+
 				//output an error message if the id was not found in the file
 				if (!found) {
 						Debug.LogError ("ERROR [InsertShip]: Cannot find object in textfile.");
@@ -103,6 +104,7 @@ public class InsertShip : MonoBehaviour
 				Global.orbitsShip [count].transform.parent = GameObject.Find ("OrbitsShip").transform;
 				//calculate the points of the orbit
 				Global.orbitsShip [count].GetComponent<ShipOrbit> ().createOrbit (Global.time, Global.ship [i].name);
+				
 		
 		}
 	
@@ -238,6 +240,7 @@ public class InsertShip : MonoBehaviour
 
 						createShip (data);
 						Debug.Log ("created ship...");
+						
 
 						showEdit = false;
 				} else if (clickedCancel) {

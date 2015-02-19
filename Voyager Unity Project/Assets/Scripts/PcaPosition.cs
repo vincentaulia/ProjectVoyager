@@ -66,8 +66,8 @@ public class PcaPosition : MonoBehaviour
 				//if it's a ship, get the id of it's orbit focus
 				//if (body.name.Contains ("Ship")) {
 
-						//orbiting = GameObject.Find (el.IDFocus);
-						//R += orbiting.transform.position; 
+				//orbiting = GameObject.Find (el.IDFocus);
+				//R += orbiting.transform.position; 
 
 				//}
 				//Don't need this anymore. Will make moons children of planets
@@ -171,6 +171,30 @@ public struct Elements
 				//Debug.Log (dir);
 		}
 
+		public static bool operator == (Elements x, Elements y)
+		{
+				if (x.axis == y.axis) {
+						if (x.ecc == y.ecc) {
+								if (x.incl == y.incl) {
+										if (x.asc == y.asc) {
+												if (x.anom == y.anom) {
+														if (x.arg == y.arg) {
+																if (x.dir == y.dir) {
+																		if (x.IDFocus == y.IDFocus) {
+																				return true;
+																		}
+																}
+														}
+												}
+										}
+								}
+						}
+				}
+				return false;
+		}
 
-	
+		public static bool operator != (Elements x, Elements y)
+		{
+				return !(x == y);
+		}
 }

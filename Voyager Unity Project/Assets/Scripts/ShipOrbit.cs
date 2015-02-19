@@ -57,7 +57,7 @@ public class ShipOrbit : MonoBehaviour {
 		line.SetPosition (i++, origin);
 		//record it for use in the next cycle
 		localTime = time + time_step;
-		
+
 		//keep adding points until the track is complete
 		while (i != 402) {
 			

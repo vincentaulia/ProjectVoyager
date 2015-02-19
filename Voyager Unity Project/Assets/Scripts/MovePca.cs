@@ -18,6 +18,7 @@ public class MovePca : MonoBehaviour
 		int pic = 0;			//holds whether it's a pause or play
 		public Texture[] pawsPic = new Texture[2];	//element 0 is play. element 1 is pause
 		GameObject bary;
+		bool onlyonce = true;
 
 		// Use this for initialization
 		void Start ()
@@ -29,17 +30,17 @@ public class MovePca : MonoBehaviour
 						Global.body [i].transform.localPosition = PcaPosition.findPos (Global.body [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.body [i]);
 						//lossy works only when all x,y,z have the same scale
 						//the localPosition need to be scaled relative to the scale of the parent
-						Global.body[i].transform.localPosition /= Global.body[i].transform.parent.lossyScale.x;
+						Global.body [i].transform.localPosition /= Global.body [i].transform.parent.lossyScale.x;
 				}
 
 				//for the ships
 				for (int i=0; i<Global.ship.Count; i++) {
 						Global.ship [i].transform.position = Global.ship [i].GetComponent<shipOEHistory> ().findShipPos (Global.time);
 						//get object that it is orbiting
-						GameObject orbiting = GameObject.Find(Global.ship[i].GetComponent<shipOEHistory>().currentOE(Global.time).IDFocus);
+						GameObject orbiting = GameObject.Find (Global.ship [i].GetComponent<shipOEHistory> ().currentOE (Global.time).IDFocus);
 						//add position of ship to the position of planet it is orbiting
 						Global.ship [i].transform.position += orbiting.transform.position;
-			//OLD Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
+						//OLD Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
 
 				}
 				button = new Rect (10, 170, 60, 60);
@@ -95,18 +96,31 @@ public class MovePca : MonoBehaviour
 								Global.body [i].transform.localPosition = PcaPosition.findPos (Global.body [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.body [i]);
 								//lossy works only when all x,y,z have the same scale
 								//the localPosition need to be scaled relative to the scale of the parent
-								Global.body[i].transform.localPosition /= Global.body[i].transform.parent.lossyScale.x;
+								Global.body [i].transform.localPosition /= Global.body [i].transform.parent.lossyScale.x;
 						}
 			
 						//move the ships
 						for (int i=0; i<Global.ship.Count; i++) {
-				Global.ship [i].transform.position = Global.ship [i].GetComponent<shipOEHistory> ().findShipPos (Global.time);
-				//get object that it is orbiting
-				GameObject orbiting = GameObject.Find(Global.ship[i].GetComponent<shipOEHistory>().currentOE(Global.time).IDFocus);
-				//add position of ship to the position of planet it is orbiting
-				Global.ship [i].transform.position += orbiting.transform.position;
-				//OLD Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
+								Global.ship [i].transform.position = Global.ship [i].GetComponent<shipOEHistory> ().findShipPos (Global.time);
+								//get object that it is orbiting
+								GameObject orbiting = GameObject.Find (Global.ship [i].GetComponent<shipOEHistory> ().currentOE (Global.time).IDFocus);
+								//add position of ship to the position of planet it is orbiting
+								Global.ship [i].transform.position += orbiting.transform.position;
+								//OLD Global.ship [i].transform.position = PcaPosition.findPos (Global.ship [i].GetComponent<OrbitalElements> ().orb_elements, Global.time, Global.ship [i]);
 						}
+				}
+				if (onlyonce) {
+						GameObject earth = GameObject.Find ("399");
+						GameObject thing = GameObject.Find ("199");
+						Elements one = earth.GetComponent<OrbitalElements> ().orb_elements;
+						Elements two = thing.GetComponent<OrbitalElements> ().orb_elements;
+						if (one == two) {
+								Debug.Log ("YES equal");
+						}else{
+				Debug.Log ("NOT EQUAL");
+			}
+
+						onlyonce = false;
 				}
 
 		}

@@ -309,7 +309,7 @@ public class shipOEHistory : MonoBehaviour
 				return shipOE.Count;
 		}
 
-		/*public long startTimeOE (Elements el)
+		public long startTimeOE (Elements el)
 		{
 				for (int i=0; i < shipOE.Count; i++) {
 						if(shipOE[i] == el){
@@ -318,5 +318,5 @@ public class shipOEHistory : MonoBehaviour
 						}	
 				}
 				return -1;
-		}*/
+		}
 }
