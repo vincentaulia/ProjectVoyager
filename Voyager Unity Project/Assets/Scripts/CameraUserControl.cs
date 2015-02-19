@@ -112,9 +112,11 @@ public class CameraUserControl : MonoBehaviour
 		void Start ()
 		{
 				Vector3 angles = transform.eulerAngles;
-				x = angles.y;
-				y = angles.x;
+				//x = angles.y;
+				//y = angles.x;
 				moveToNewTarget (target);
+				x = 0;
+				y = 0;
 		}
 	
 		void OnGUI ()
@@ -284,12 +286,19 @@ public class CameraUserControl : MonoBehaviour
 		// This function returns the zoomMin distance for the current target
 		void zoomMinCalc (Transform target)
 		{
+				if (target.name == "10") { //if the target is the sun
+					zoomMin = 1.0f;
+					return;
+				}
 				// find the maximum target radius, of three dimension radius
 				// determine the distance necessary to make a ___ degree angle with the maximum radius ( return maxRadius/tan(theta);
 				float[] radius = {(float)target.GetComponent<OrbitalElements> ().orb_elements.radiusx,
 			             	(float)target.GetComponent<OrbitalElements> ().orb_elements.radiusy,
 							(float)target.GetComponent<OrbitalElements> ().orb_elements.radiusz};
 				zoomMin = (Mathf.Max (radius) + Mathf.Max (radius) * 0.000001f) / 50000000;
+				if (zoomMin <= Camera.main.nearClipPlane) { 		//if the zoomMin is less than the clipping distance
+					zoomMin = 1.01f*Camera.main.nearClipPlane;		//set it instead to slightly above the clipping distance
+				}
 				//Debug.Log ("zoomMin = " + zoomMin);
 				return;
 		}
@@ -297,7 +306,7 @@ public class CameraUserControl : MonoBehaviour
 		// This function returns the standardZoom distance for the current target
 		float standardZoomCalc (Transform target, float standardZoomAngle)
 		{
-				if (target.name == "10") {
+				if (target.name == "10") {	//if the target is the sun
 					standardDistance = 70.0f;
 					distance = standardDistance;
 					return 70.0f;
@@ -309,6 +318,9 @@ public class CameraUserControl : MonoBehaviour
 							(float)target.GetComponent<OrbitalElements> ().orb_elements.radiusz};
 				//Debug.Log ("rad1 = " + radius[0] + "   rad2 = " + radius[1] + "    rad3 = " + radius[2] + "   MaxRad = " + Mathf.Max (radius)/Mathf.Tan(standardZoomAngle));
 				standardDistance = (Mathf.Max (radius) / Mathf.Tan (standardZoomAngle)) / 20000000;
+				if (standardDistance <= Camera.main.nearClipPlane) {	//if the standardDistance is less than the clipping distance
+					standardDistance = 1.2f*Camera.main.nearClipPlane;	//set it instead to slightly above the clipping distance
+				}
 				distance = standardDistance;
 				return standardDistance;
 		}
