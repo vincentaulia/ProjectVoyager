@@ -112,17 +112,24 @@ public class shipOEHistory : MonoBehaviour
 		{
 				Debug.Log ("Print Ship Count");
 				Debug.Log (shipT.Count);
-				if (shipT.Count == 1)
-						return shipOE [0];
-				else if (time >= shipT [shipT.Count - 1])
-						return shipOE [shipT.Count - 1];
-				else if (time > shipT [currentTimePos - 1] && time < shipT [currentTimePos + 1])
-						return shipOE [currentTimePos];
-				else {
-						int tpf = timePosFind (time);
-						currentTimePos = tpf;
-						return shipOE [tpf];
+				if (currentTimePos >= 1 && (currentTimePos + 1) < shipT.Count) 
+				{
+						if (time > shipT [currentTimePos - 1] && time < shipT [currentTimePos + 1]) 
+								return shipOE [currentTimePos];
+						else
+						{
+							int tpf = timePosFind (time);
+							currentTimePos = tpf;
+							return shipOE [tpf];
+						}
 				}
+				else
+				{
+					int tpf = timePosFind (time);
+					currentTimePos = tpf;
+					return shipOE [tpf];
+				}
+				
 		}
 	
 		public void AddNewOE (Elements toAdd, long time)
