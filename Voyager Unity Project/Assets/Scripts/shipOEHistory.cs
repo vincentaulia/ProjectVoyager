@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 using System.Globalization;
+using System.Diagnostics; //For testing purposes only
+using Debug = UnityEngine.Debug; //HUH
 
 /* A class for storing the Orbital Elements of a ship and a time at which the Orbital
 Elements change. The class also includes functions for calculating new OE based deltaV.*/
@@ -18,6 +20,7 @@ public class shipOEHistory : MonoBehaviour
 		public GameObject shipObject;
 		private int currentTimePos;
 		private Vector3 def;
+		public Stopwatch stopwatch = new Stopwatch(); //for testing purposes only
 	
 		/* Constructor, takes the first OE of a ship, the GamObject ship and the time at which it is created
         NOTE: ship GameObject is only needed for PcaPosition.findPos */
@@ -26,14 +29,18 @@ public class shipOEHistory : MonoBehaviour
 	
 		public void shipOEHistoryConstructor (Elements el, long time, GameObject shipObj)
 		{
+				//stopwatch.Start ();
 				shipOE.Add (el);
 				shipT.Add (time);
 				shipObject = shipObj;
 				currentTimePos = 0;
-		}
+				//stopwatch.Stop(); // REMOVE LATER
+				//Debug.Log (stopwatch.Elapsed.TotalMilliseconds); //REMOVE LATER
+		}	
 
-		public string currentSphereOfInfluence()
+		public string currentSphereOfInfluence() // 150 milisecond speed :/
 		{
+			//stopwatch.Start (); //REMOVE LATER
 			Elements current = currentOE (Global.time);   //SHIP ELEMENTS
 			Vector3 currentPos = findShipPos (Global.time);    //SHIP POSITION 
 			
@@ -43,10 +50,16 @@ public class shipOEHistory : MonoBehaviour
 			Debug.Log ("IDF1");
 			Debug.Log (IDF);
 			if (IDF != null)
+			{
+				//stopwatch.Stop(); // REMOVE LATER
+				//Debug.Log (stopwatch.Elapsed.TotalMilliseconds); //REMOVE LATER
 				return IDF;
+			}
 			IDF = focusUp (currentPos, parentPlanet);
 			Debug.Log ("IDF2");
 			Debug.Log (IDF);
+			//stopwatch.Stop(); //REMOVE LATER
+			//Debug.Log (stopwatch.Elapsed.TotalMilliseconds); //REMOVE LATER
 			return IDF;
 		}
 		
@@ -108,10 +121,9 @@ public class shipOEHistory : MonoBehaviour
 				AddNewOE (Initial, time);
 		}
 	
-		public Elements currentOE (long time)
+		public Elements currentOE (long time)  //EXECUTION TIME -- 0-1 miliseconds :)
 		{
-				Debug.Log ("Print Ship Count");
-				Debug.Log (shipT.Count);
+			//stopwatch.Start (); // remove later
 				if (currentTimePos >= 1 && (currentTimePos + 1) < shipT.Count) 
 				{
 						if (time > shipT [currentTimePos - 1] && time < shipT [currentTimePos + 1]) 
@@ -120,6 +132,8 @@ public class shipOEHistory : MonoBehaviour
 						{
 							int tpf = timePosFind (time);
 							currentTimePos = tpf;
+							//stopwatch.Stop(); //remove later
+							//Debug.Log (stopwatch.Elapsed.TotalMilliseconds);
 							return shipOE [tpf];
 						}
 				}
@@ -127,6 +141,8 @@ public class shipOEHistory : MonoBehaviour
 				{
 					int tpf = timePosFind (time);
 					currentTimePos = tpf;
+					//stopwatch.Stop(); //remove later
+					//Debug.Log (stopwatch.Elapsed.TotalMilliseconds);
 					return shipOE [tpf];
 				}
 				

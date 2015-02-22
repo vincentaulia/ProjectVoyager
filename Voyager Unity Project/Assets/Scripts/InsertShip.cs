@@ -12,6 +12,8 @@
 
 using UnityEngine;
 using System.Collections;
+using System.Diagnostics; //For testing purposes only
+using Debug = UnityEngine.Debug; //HUH
 
 public class InsertShip : MonoBehaviour
 {
@@ -28,6 +30,7 @@ public class InsertShip : MonoBehaviour
 		bool showWarning;
 		string warningMsg;
 		public GameObject orbitPrefab;
+		public Stopwatch stopwatch = new Stopwatch(); //for testing purposes only
 
 		void OnGUI ()
 		{
@@ -61,7 +64,8 @@ public class InsertShip : MonoBehaviour
 
 		void createShip (string[] parameters)
 		{
-
+				Debug.Log ("Ship Created");
+				//stopwatch.Start(); REMOVE LATER
 				int i = Global.ship.Count;
 				string mass, orbitingID;
 				string[] line, inputParameter;
@@ -119,7 +123,9 @@ public class InsertShip : MonoBehaviour
 				Global.orbitsShip [count].transform.parent = GameObject.Find ("OrbitsShip").transform;
 				//calculate the points of the orbit
 				Global.orbitsShip [count].GetComponent<ShipOrbit> ().createOrbit (Global.time, Global.ship [i].name);
-				
+				//stopwatch.Stop(); // REMOVE LATER
+				//Debug.Log ("TIME ELAPSED");
+				//Debug.Log(stopwatch.Elapsed.TotalMilliseconds); //REMOVE LATER
 		
 		}
 	
