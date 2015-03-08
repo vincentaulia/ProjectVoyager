@@ -165,24 +165,31 @@ public struct Elements
 
 		public static bool operator == (Elements x, Elements y)
 		{
+				Debug.Log ("x-axis: " + x.axis);
+				Debug.Log ("y-axis: " + y.axis);
 				if (x.axis == y.axis) {
-			Debug.Log ("x-axis: " + x.axis);
-			Debug.Log ("y-axis: " + y.axis);
+						Debug.Log ("x-ecc: " + x.ecc);
+						Debug.Log ("y-ecc: " + y.ecc);
 						if (x.ecc == y.ecc) {
-				Debug.Log ("x-ecc: " + x.ecc);
-				Debug.Log ("y-ecc: " + y.ecc);
+								Debug.Log ("x-incl: " + x.incl);
+								Debug.Log ("y-incl: " + y.incl);
 								if (x.incl == y.incl) {
-					Debug.Log ("x-incl: " + x.incl);
-					Debug.Log ("y-incl: " + y.incl);
-					Debug.Log ("x-asc: " + x.asc);
-					Debug.Log ("y-asc: " + y.asc);
+										Debug.Log ("x-asc: " + x.asc);
+										Debug.Log ("y-asc: " + y.asc);
 										if (x.asc == y.asc) {
-						Debug.Log ("x-asc: " + x.asc);
-						Debug.Log ("y-asc: " + y.asc);
+												Debug.Log ("x-anom: " + x.anom);
+												Debug.Log ("y-anom: " + y.anom);
 												if (x.anom == y.anom) {
+														Debug.Log ("x-arg: " + x.arg);
+														Debug.Log ("y-arg: " + y.arg);
 														if (x.arg == y.arg) {
+																Debug.Log ("x-dir: " + x.dir);
+																Debug.Log ("y-argdir " + y.dir);
 																if (x.dir == y.dir) {
+																		Debug.Log ("x-IDFocus: " + x.IDFocus);
+																		Debug.Log ("y-IDFocus " + y.IDFocus);
 																		if (x.IDFocus == y.IDFocus) {
+																				Debug.Log ("it is equal");
 																				return true;
 																		}
 																}

@@ -74,8 +74,8 @@ public class OrbitalElements : MonoBehaviour
 						orb_elements.IDFocus = split [2];
 						//sphere of influence
 						orb_elements.soi = orb_elements.axis * Math.Pow ((orb_elements.mass / orb_elements.massFocus), (2.0/5));
-				Debug.Log (orb_elements.name);
-				Debug.Log (orb_elements.soi);
+				//Debug.Log (orb_elements.name);
+				//Debug.Log (orb_elements.soi);
 						//the radius of the body
 						if (radius.Contains ("x")) {
 								int[] j = new int[3];

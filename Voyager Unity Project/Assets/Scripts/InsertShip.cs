@@ -44,21 +44,29 @@ public class InsertShip : MonoBehaviour
 				if (showWarning) {
 						warning = GUILayout.Window (2, warning, warningFunc, "Warning");
 				}
-		/*
+
+		//this is to test the output after adding a NODE
+		//SHOULD BE REMOVED LATER
 				if(GUI.Button(new Rect(10,250,70,20), "Add node")){
 					GameObject ship = GameObject.Find ("Ship1");
-			ship.GetComponent<shipOEHistory>().deltavChange(10, new Vector3(0,0,0), new Vector3(0,100,0), new Vector3(0,0,0));
+			ship.GetComponent<shipOEHistory>().deltavChange(10, new Vector3(0,0,0), new Vector3(0,500,0), new Vector3(0,0,0));
 			Debug.Log ("number: " + ship.GetComponent<shipOEHistory>().getNumberOfElements());
 			Elements one = ship.GetComponent<shipOEHistory>().shipOE[0];
 			Elements two = ship.GetComponent<shipOEHistory>().shipOE[1];
+			Debug.Log ("shipOE count: " + ship.GetComponent<shipOEHistory>().shipOE.Count);
 			Debug.Log ("one axis: " + one.axis);
 			Debug.Log ("two axis: " + two.axis);
-			long oneTime = ship.GetComponent<shipOEHistory>().startTimeOE(one);
-			long twoTime = ship.GetComponent<shipOEHistory>().startTimeOE(two);
-			Debug.Log ("one time: " + oneTime);
-			Debug.Log ("two time: " + twoTime);
+			Debug.Log ("two ecc: " + two.ecc);
+			Debug.Log ("two incl: " + two.incl);
+			Debug.Log ("two asc: " + two.asc);
+			Debug.Log ("two anom: " + two.anom);
+			Debug.Log ("two arg: " + two.arg);
+			//long oneTime = ship.GetComponent<shipOEHistory>().startTimeOE(one);
+			//long twoTime = ship.GetComponent<shipOEHistory>().startTimeOE(two);
+			//Debug.Log ("one time: " + oneTime);
+			//Debug.Log ("two time: " + twoTime);
 					//Debug.Log (ship.transform.position.magnitude * Global.scale);
-				}*/
+				}
 
 		}
 

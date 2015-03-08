@@ -303,16 +303,16 @@ public class shipOEHistory : MonoBehaviour
 				double EnergNew;
 				EnergNew = ((System.Math.Pow (VelocityMag, 2) + System.Math.Pow ((double)DeltaV.magnitude, 2)) / 2) - (Mu / r); 
 		
-				/* Calculate the new semi-major axis */
+				// Calculate the new semi-major axis //
 				Initial.axis = -1 * Mu / 2 / EnergNew;
 		
 				// Calculate the orbital distance from object to primary
 		
 		
-				/* ///////////////////////////////////////////////////////////OLD LOCATION
-		double r;
-		r = System.Math.Pow(h, 2) / Mu / (1 + (Initial.ecc * System.Math.Cos(TrueAnomaly)));
-		*/
+				 ///////////////////////////////////////////////////////////OLD LOCATION
+		//double r;
+		//r = System.Math.Pow(h, 2) / Mu / (1 + (Initial.ecc * System.Math.Cos(TrueAnomaly)));
+
 		
 		
 				// Calculate the position of the object in Perifocal Coordinates
@@ -326,14 +326,14 @@ public class shipOEHistory : MonoBehaviour
 				double hNewMag;
 				hNewMag = (double)Vector3.Cross (rVec, InitialVelocity + DeltaV).magnitude;
 		
-				/***** Calculate the new eccentricity *****/
+				/////////// Calculate the new eccentricity ///////
 				////////////////////////////////////////// hNew -------------->  hNewMagg ?????????????????????????????????????
 				Initial.ecc = System.Math.Sqrt (1 + (System.Math.Pow (hNewMag, 2) * EnergNew / System.Math.Pow (Mu, 2)));
 		
-				/***** Calculate the final P, Q, W and n orbital elements after the maneuver *****/
+				////// Calculate the final P, Q, W and n orbital elements after the maneuver ///////
 				Initial.calcData ();
 		}
-	
+
 		/*	This function takes the initial orbital elements of the 
 		ship and returns the final orbital elements based on the
 		delta-V applied in the radial/anti-radial direction.
