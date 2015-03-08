@@ -32,7 +32,8 @@ public class OrbitalElements : MonoBehaviour
 				if (parameters != null) {
 						line = parameters;
 						lineFound = true;
-				} else if (orbitFile != null) {
+				} 
+				else if (orbitFile != null) {
 						orbit = orbitFile.ToString ().Split ('\n');
 						for (int i = 0; i<orbit.Length; i++) {
 								line = orbit [i];
