@@ -129,6 +129,12 @@ public struct Elements
 		public double radiusx;
 		public double radiusy;
 		public double radiusz;
+
+		//needed for the ships
+		public double dryMass;
+		public double fuelMass;
+		public double Isp;
+		public double deltaVbudget;
 	
 		//The variables P, Q, and n must be calculated using the other orbital elements.
 		//If any of the other orbital elements change, P, Q, and n must be recalculated. 

@@ -74,8 +74,20 @@ public class OrbitalElements : MonoBehaviour
 						orb_elements.IDFocus = split [2];
 						//sphere of influence
 						orb_elements.soi = orb_elements.axis * Math.Pow ((orb_elements.mass / orb_elements.massFocus), (2.0/5));
-				//Debug.Log (orb_elements.name);
-				//Debug.Log (orb_elements.soi);
+
+						//for the Ships
+						if (split.Length > 12) {
+							orb_elements.dryMass = double.Parse (split [13], CultureInfo.InvariantCulture);
+							orb_elements.fuelMass = double.Parse (split [14], CultureInfo.InvariantCulture);
+							orb_elements.Isp = double.Parse (split [12], CultureInfo.InvariantCulture);
+							orb_elements.deltaVbudget = orb_elements.Isp*9.822*Math.Log((orb_elements.dryMass + orb_elements.fuelMass)/orb_elements.dryMass);
+						} else {
+							orb_elements.dryMass = 0;
+							orb_elements.fuelMass = 0;
+							orb_elements.Isp = 0;
+							orb_elements.deltaVbudget = 0;
+						}
+
 						//the radius of the body
 						if (radius.Contains ("x")) {
 								int[] j = new int[3];

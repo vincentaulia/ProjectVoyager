@@ -23,7 +23,7 @@ public class InsertShip : MonoBehaviour
 		bool showEdit = false;
 		string name;
 		//holds the data from the text fields
-		string[] data = new string[12];
+		string[] data = new string[15];
 		public Rect windowRect;
 		Rect warning;
 		bool clickedAdd, clickedCancel;
@@ -155,6 +155,9 @@ public class InsertShip : MonoBehaviour
 						data [9] = "3E+4";
 						data [10] = "0";
 						data [11] = "1";
+						data [12] = "1";
+						data [13] = "1";
+						data [14] = "0";
 						name = "Space Ship";
 				}
 				GUI.DragWindow ();
@@ -178,6 +181,8 @@ public class InsertShip : MonoBehaviour
 				data [5] = GUILayout.TextField (data [5], 20);
 				GUILayout.Label ("Mean Anomaly (deg)");
 				data [8] = GUILayout.TextField (data [8], 20);
+				GUILayout.Label ("Dry Mass (kg)");
+				data [13] = GUILayout.TextField (data [13], 20);
 
 				GUILayout.EndVertical ();
 
@@ -191,6 +196,11 @@ public class InsertShip : MonoBehaviour
 				data [6] = GUILayout.TextField (data [6], 20);
 				GUILayout.Label ("Perifocus (deg)");
 				data [7] = GUILayout.TextField (data [7], 20);
+				GUILayout.Label ("Isp");
+				data [12] = GUILayout.TextField (data [12], 20);
+				GUILayout.Label ("Fuel Mass (kg)");
+				data [14] = GUILayout.TextField (data [14], 20);
+
 				GUILayout.EndVertical ();
 				GUILayout.EndHorizontal ();
 
@@ -294,7 +304,7 @@ public class InsertShip : MonoBehaviour
 		{
 				//initialize both windows here
 				windowRect = new Rect (10, 105, 120, 50);
-				popUp = new Rect (10, 135, 280, 300);
+				popUp = new Rect (10, 135, 280, 350);
 				warning = new Rect (10, 135, 200, 80);
 		}
 
