@@ -123,7 +123,7 @@ public class SU_AsteroidFieldEditor : Editor {
 			EditorGUILayout.LabelField("Warning! Many asteroids may impact performance! Consider smaller range and fewer asteroids instead.", EditorStyles.wordWrappedMiniLabel);
 		}
 		range.floatValue = EditorGUILayout.Slider("Range", range.floatValue, _displayMinRange, _displayMaxRange);	
-		if (range.floatValue > Camera.mainCamera.farClipPlane) {
+		if (range.floatValue > Camera.main.farClipPlane) {
 			EditorGUILayout.LabelField("Warning! Main camera clipping plane is closer than asteroid range.", EditorStyles.wordWrappedMiniLabel);
 		}
 		EditorGUILayout.LabelField("Range is distance from the center to the edge of the asteroid field. If the transform of the AsteroidField moves, asteroids " +

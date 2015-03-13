@@ -47,8 +47,8 @@ public class DistantIcon : MonoBehaviour
 						//transform.localScale = scale;
 
 				}
-				renderer.enabled = IconActive;	//render the icon if it should be active (beyond distance)
-				collider.enabled = IconActive;	//collider is active if it should be active (beyond distance)
+				GetComponent<Renderer>().enabled = IconActive;	//render the icon if it should be active (beyond distance)
+				GetComponent<Collider>().enabled = IconActive;	//collider is active if it should be active (beyond distance)
 		}
 
 }

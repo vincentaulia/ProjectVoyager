@@ -84,7 +84,7 @@ public class SU_SpaceParticlesEditor : Editor {
 			EditorGUILayout.LabelField("Warning! Many particles may impact performance! Consider smaller range and fewer aprticles instead.", EditorStyles.wordWrappedMiniLabel);
 		}
 		range.floatValue = EditorGUILayout.Slider("Range", range.floatValue, _displayMinRange, _displayMaxRange);	
-		if (range.floatValue > Camera.mainCamera.farClipPlane) {
+		if (range.floatValue > Camera.main.farClipPlane) {
 			EditorGUILayout.LabelField("Warning! Main camera clipping plane is closer than particles range.", EditorStyles.wordWrappedMiniLabel);
 		}
 		EditorGUILayout.LabelField("Range is distance from the center to the edge of the particle system. If the transform of SpaceParticles moves, particles " +

@@ -54,9 +54,9 @@ public class SU_SpaceSceneCamera : MonoBehaviour {
 		
 		if (parentCamera == null) {
 			// No parent camera has been set, assume that main camera is used
-			if (Camera.mainCamera != null) {
+			if (Camera.main != null) {
 				// Set parent camera to main camera.
-				parentCamera = Camera.mainCamera;							
+				parentCamera = Camera.main;							
 			} else {				
 				// No main camera found - throw a fit...
 				Debug.LogWarning ("You have not specified a parent camera to the space background camera and there is no main camera in your scene. " +
@@ -77,7 +77,7 @@ public class SU_SpaceSceneCamera : MonoBehaviour {
 		if (_transformCacheParentCamera != null) {
 			// Update the rotation of the space camera so the background rotates		
 			_transformCache.rotation = _transformCacheParentCamera.rotation;
-			if (inheritFOV) camera.fov = parentCamera.fov;
+			if (inheritFOV) GetComponent<Camera>().fov = parentCamera.fov;
 			
 			// Update the relative position of the space camera so you can travel in the space scene if necessary
 			// Note! You will fly out of bounds of the space scene if your relative speed is high unless you restrict the movement in your own code.

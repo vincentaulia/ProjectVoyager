@@ -58,7 +58,7 @@ public class SU_Spaceship : MonoBehaviour {
 		}
 		
 		// Cache reference to rigidbody to improve performance
-		_cacheRigidbody = rigidbody;
+		_cacheRigidbody = GetComponent<Rigidbody>();
 		if (_cacheRigidbody == null) {
 			Debug.LogError("Spaceship has no rigidbody - the thruster scripts will fail. Add rigidbody component to the spaceship.");
 		}
@@ -91,7 +91,7 @@ public class SU_Spaceship : MonoBehaviour {
 			}
 			// Play sound effect when firing
 			if (soundEffectFire != null) {
-				audio.PlayOneShot(soundEffectFire);
+				GetComponent<AudioSource>().PlayOneShot(soundEffectFire);
 			}
 		}		
 	}

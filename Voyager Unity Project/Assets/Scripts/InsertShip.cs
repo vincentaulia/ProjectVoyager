@@ -29,6 +29,9 @@ public class InsertShip : MonoBehaviour
 		bool clickedAdd, clickedCancel;
 		bool showWarning;
 		string warningMsg;
+
+     
+
 		public GameObject orbitPrefab;
 		public Stopwatch stopwatch = new Stopwatch(); //for testing purposes only
 
@@ -67,7 +70,7 @@ public class InsertShip : MonoBehaviour
 			//Debug.Log ("two time: " + twoTime);
 					//Debug.Log (ship.transform.position.magnitude * Global.scale);
 				}
-
+               
 		}
 
 		void createShip (string[] parameters)
@@ -161,6 +164,8 @@ public class InsertShip : MonoBehaviour
 						name = "Space Ship";
 				}
 				GUI.DragWindow ();
+
+              
 		
 		}
 	
@@ -306,8 +311,11 @@ public class InsertShip : MonoBehaviour
 				windowRect = new Rect (10, 105, 120, 50);
 				popUp = new Rect (10, 135, 280, 350);
 				warning = new Rect (10, 135, 200, 80);
-		}
 
+        }
+
+        
+      
 		// Update is called once per frame
 		void Update ()
 		{

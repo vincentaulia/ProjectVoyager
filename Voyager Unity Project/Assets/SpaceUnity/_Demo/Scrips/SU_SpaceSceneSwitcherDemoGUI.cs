@@ -47,7 +47,7 @@ public class SU_SpaceSceneSwitcherDemoGUI : MonoBehaviour {
 		}
 		
 		// Switch Camera Follow mode
-		SU_CameraFollow _cameraFollow = Camera.mainCamera.GetComponent<SU_CameraFollow>();
+		SU_CameraFollow _cameraFollow = Camera.main.GetComponent<SU_CameraFollow>();
 		if (GUI.Button(new Rect(10,70,180,25), "Camera " + _cameraFollow.followMode.ToString())) {			
 			if (_cameraFollow.followMode == SU_CameraFollow.FollowMode.CHASE) {
 				// Set following spectator mode

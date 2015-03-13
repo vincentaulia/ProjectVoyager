@@ -54,28 +54,28 @@ public class SU_Thruster : MonoBehaviour {
 		_cacheTransform = transform;
 		
 		// Ensure that parent object (e.g. spaceship) has a rigidbody component so it can apply force.
-		if (transform.parent.rigidbody != null) {			
-			_cacheParentRigidbody = transform.parent.rigidbody;
+		if (transform.parent.GetComponent<Rigidbody>() != null) {			
+			_cacheParentRigidbody = transform.parent.GetComponent<Rigidbody>();
 		} else {
 			Debug.LogError("Thruster has no parent with rigidbody that it can apply the force to.");
 		}
 		
 		// Cache the light source to improve performance (also ensure that the light source in the prefab is intact.)
-		_cacheLight = transform.GetComponent<Light>().light;
+		_cacheLight = transform.GetComponent<Light>().GetComponent<Light>();
 		if (_cacheLight == null) {
 			Debug.LogError("Thruster prefab has lost its child light. Recreate the thruster using the original prefab.");
 		}
 		// Cache the particle system to improve performance (also ensure that the particle system in the rpefab is intact.)
-		_cacheParticleSystem = particleSystem;
+		_cacheParticleSystem = GetComponent<ParticleSystem>();
 		if (_cacheParticleSystem == null) {
 			Debug.LogError("Thruster has no particle system. Recreate the thruster using the original prefab.");
 		}
 		
 		// Start the audio loop playing but mute it. This is to avoid play/stop clicks and clitches that Unity may produce.
-		audio.loop = true;
-		audio.volume = soundEffectVolume;
-		audio.mute = true;
-		audio.Play();		
+		GetComponent<AudioSource>().loop = true;
+		GetComponent<AudioSource>().volume = soundEffectVolume;
+		GetComponent<AudioSource>().mute = true;
+		GetComponent<AudioSource>().Play();		
 	}	
 	
 	void Update () {
@@ -88,14 +88,14 @@ public class SU_Thruster : MonoBehaviour {
 		// If the thruster is active...
 		if (_isActive) {
 			// ...and if audio is muted...
-			if (audio.mute) {
+			if (GetComponent<AudioSource>().mute) {
 				// Unmute the audio
-				audio.mute=false;
+				GetComponent<AudioSource>().mute=false;
 			}
 			// If the audio volume is lower than the sound effect volume...
-			if (audio.volume < soundEffectVolume) {
+			if (GetComponent<AudioSource>().volume < soundEffectVolume) {
 				// ...fade in the sound (to avoid clicks if just played straight away)
-				audio.volume += 5f * Time.deltaTime;
+				GetComponent<AudioSource>().volume += 5f * Time.deltaTime;
 			}
 			
 			// If the particle system is intact...
@@ -105,12 +105,12 @@ public class SU_Thruster : MonoBehaviour {
 			}		
 		} else {
 			// The thruster is not active
-			if (audio.volume > 0.01f) {
+			if (GetComponent<AudioSource>().volume > 0.01f) {
 				// ...fade out volume
-				audio.volume -= 5f * Time.deltaTime;	
+				GetComponent<AudioSource>().volume -= 5f * Time.deltaTime;	
 			} else {
 				// ...and mute it when it has faded out
-				audio.mute = true;
+				GetComponent<AudioSource>().mute = true;
 			}
 			
 			// If the particle system is intact...
