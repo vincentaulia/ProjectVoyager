@@ -1,12 +1,13 @@
 # =============== #
 # Unity generated #
 # =============== #
-"Voyager Unity Project"/Temp/
-"Voyager Unity Project"/Obj/
-"Voyager Unity Project"/UnityGenerated/
-"Voyager Unity Project"/Library/
+
 /Voyager Unity Project/Library
 /Voyager Unity Project/Temp
+/Voyager Unity Project/game_Data
+/Voyager Unity Project/Assets/UnityVS
+/Voyager Unity Project/Assets/UnityVS.meta
+/Voyager Unity Project/*.exe
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
@@ -22,7 +23,7 @@ obj/
 *.user
 *.unityproj
 *.booproj
- 
+*.exe 
 # ============ #
 # OS generated #
 # ============ #
@@ -33,5 +34,6 @@ obj/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
 
 
