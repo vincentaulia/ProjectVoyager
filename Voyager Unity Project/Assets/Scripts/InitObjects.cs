@@ -60,7 +60,13 @@ public class InitObjects : MonoBehaviour
 						if (Global.body [i] == null) {
 								//create a moon object
 								Global.body [i] = (GameObject)Instantiate (GameObject.Find ("Bary Center").GetComponent<Global> ().moon_prefab);
-								
+
+								//create the texture for the moon
+								//access it from the Resources/Moons folder
+								//the file should have the same name as the moon's id
+								Renderer rend = Global.body [i].GetComponent<Renderer>();
+								rend.material.mainTexture = (Texture) Resources.Load("Moons/" + id);
+
 								//name the object
 								Global.body [i].name = id;
 						}
