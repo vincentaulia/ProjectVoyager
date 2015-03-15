@@ -30,7 +30,9 @@ public class InsertShip : MonoBehaviour
 		bool showWarning;
 		string warningMsg;
 
-     
+        GUIContent[] comboBoxList;
+        ComboBox comboBoxControl = new ComboBox();
+        GUIStyle listStyle = new GUIStyle();
 
 		public GameObject orbitPrefab;
 		public Stopwatch stopwatch = new Stopwatch(); //for testing purposes only
@@ -41,7 +43,11 @@ public class InsertShip : MonoBehaviour
 				if (!showEdit) {
 						windowRect = GUI.Window (0, windowRect, DoMyWindow, "Ships");
 				} else if (!showWarning) {
-						popUp = GUI.Window (1, popUp, popUpFunc, "Ship Features");
+                      //  int selectedItemIndex = comboBoxControl.GetSelectedItemIndex();
+                      //  selectedItemIndex = comboBoxControl.List(new Rect(popUp.xMax, popUp.y + 21, 100, 20), comboBoxList[selectedItemIndex].text, comboBoxList, listStyle);
+                       // GUI.Label(new Rect(popUp.xMax, popUp.y, 400, 21), "Ship Model Selection");   
+						
+                        popUp = GUI.Window (1, popUp, popUpFunc, "Ship Features");
 					
 				}
 				if (showWarning) {
@@ -162,6 +168,7 @@ public class InsertShip : MonoBehaviour
 						data [13] = "1";
 						data [14] = "0";
 						name = "Space Ship";
+
 				}
 				GUI.DragWindow ();
 
@@ -207,7 +214,16 @@ public class InsertShip : MonoBehaviour
 				data [14] = GUILayout.TextField (data [14], 20);
 
 				GUILayout.EndVertical ();
-				GUILayout.EndHorizontal ();
+                GUILayout.BeginVertical();
+                GUILayout.Label("Ship Model Selection");
+                int selectedItemIndex = comboBoxControl.GetSelectedItemIndex();
+                selectedItemIndex = comboBoxControl.List(new Rect(popUp.xMax-120, popUp.yMin -90 , 100, 20), comboBoxList[selectedItemIndex].text, comboBoxList, listStyle);
+
+               // Debug.Log("selected ship index:" + selectedItemIndex);
+
+                GUILayout.EndVertical();
+                
+                GUILayout.EndHorizontal ();
 
 				GUILayout.BeginHorizontal ();
 
@@ -218,6 +234,7 @@ public class InsertShip : MonoBehaviour
 
 				GUI.DragWindow ();
 
+               
 				if (clickedAdd) {
 						//set the warning message parameters in case it was called
 						warning.position = new Vector2 (popUp.x + 40, popUp.y + 80);
@@ -309,9 +326,26 @@ public class InsertShip : MonoBehaviour
 		{
 				//initialize both windows here
 				windowRect = new Rect (10, 105, 120, 50);
-				popUp = new Rect (10, 135, 280, 350);
+				popUp = new Rect (10, 135, 420, 350);
 				warning = new Rect (10, 135, 200, 80);
 
+
+                comboBoxList = new GUIContent[5];
+            	comboBoxList[0] = new GUIContent("Voyager 1");
+            	comboBoxList[1] = new GUIContent("ISS");
+            	comboBoxList[2] = new GUIContent("Shuttle");
+           	    comboBoxList[3] = new GUIContent("Space Lab");
+            	comboBoxList[4] = new GUIContent("Soyuz");
+            
+            	listStyle.normal.textColor = Color.white; 
+            	listStyle.onHover.background =
+            	listStyle.hover.background = new Texture2D(2, 2);
+            	listStyle.padding.left =
+            	listStyle.padding.right =
+            	listStyle.padding.top =
+            	listStyle.padding.bottom = 4;
+
+             
         }
 
         

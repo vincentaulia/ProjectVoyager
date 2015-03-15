@@ -1,8 +1,5 @@
-﻿/*
- * 
-// Popup list created by Eric Haines
+﻿// Popup list created by Eric Haines
 // ComboBox Extended by Hyungseok Seo.(Jerry) sdragoon@nate.com
-// this oop version of ComboBox is refactored by zhujiangbo jumbozhu@gmail.com
 // 
 // -----------------------------------------------
 // This code working like ComboBox Control.
@@ -12,43 +9,42 @@
 // -----------------------------------------------
 //
 // === usage ======================================
-using UnityEngine;
-using System.Collections;
- 
-public class ComboBoxTest : MonoBehaviour
-{
-	GUIContent[] ComboBoxList;
-	private ComboBox ComboBoxControl;// = new ComboBox();
-	private GUIStyle listStyle = new GUIStyle();
- 
-	private void Start()
-	{
-		ComboBoxList = new GUIContent[5];
-		ComboBoxList[0] = new GUIContent("Thing 1");
-		ComboBoxList[1] = new GUIContent("Thing 2");
-		ComboBoxList[2] = new GUIContent("Thing 3");
-		ComboBoxList[3] = new GUIContent("Thing 4");
-		ComboBoxList[4] = new GUIContent("Thing 5");
- 
-		listStyle.normal.textColor = Color.white; 
-		listStyle.onHover.background =
-		listStyle.hover.background = new Texture2D(2, 2);
-		listStyle.padding.left =
-		listStyle.padding.right =
-		listStyle.padding.top =
-		listStyle.padding.bottom = 4;
- 
-		ComboBoxControl = new ComboBox(new Rect(50, 100, 100, 20), ComboBoxList[0], ComboBoxList, "button", "box", listStyle);
-	}
- 
-	private void OnGUI () 
-	{
-		int selectedItemIndex = ComboBoxControl.Show();
-		GUI.Label( new Rect(50, 70, 400, 21), "dfdsfYou picked " + ComboBoxList[selectedItemIndex].text + "!" );
-	}
-}
- 
-*/
+//
+// public class SomeClass : MonoBehaviour
+// {
+//	GUIContent[] comboBoxList;
+//	private ComboBox comboBoxControl = new ComboBox();
+//	private GUIStyle listStyle = new GUIStyle();
+//
+//	private void Start()
+//	{
+//	    comboBoxList = new GUIContent[5];
+//	    comboBoxList[0] = new GUIContent("Thing 1");
+//	    comboBoxList[1] = new GUIContent("Thing 2");
+//	    comboBoxList[2] = new GUIContent("Thing 3");
+//	    comboBoxList[3] = new GUIContent("Thing 4");
+//	    comboBoxList[4] = new GUIContent("Thing 5");
+//
+//	    listStyle.normal.textColor = Color.white; 
+//	    listStyle.onHover.background =
+//	    listStyle.hover.background = new Texture2D(2, 2);
+//	    listStyle.padding.left =
+//	    listStyle.padding.right =
+//	    listStyle.padding.top =
+//	    listStyle.padding.bottom = 4;
+//	}
+//
+//	private void OnGUI () 
+//	{
+//	    int selectedItemIndex = comboBoxControl.GetSelectedItemIndex();
+//	    selectedItemIndex = comboBoxControl.List( 
+//			new Rect(50, 100, 100, 20), comboBoxList[selectedItemIndex].text, comboBoxList, listStyle );
+//          GUI.Label( new Rect(50, 70, 400, 21), 
+//			"You picked " + comboBoxList[selectedItemIndex].text + "!" );
+//	}
+// }
+//
+// =================================================
 
 using UnityEngine;
 
@@ -57,36 +53,26 @@ public class ComboBox
     private static bool forceToUnShow = false;
     private static int useControlID = -1;
     private bool isClickedComboButton = false;
+
     private int selectedItemIndex = 0;
 
-    private Rect rect;
-    private GUIContent buttonContent;
-    private GUIContent[] listContent;
-    private string buttonStyle;
-    private string boxStyle;
-    private GUIStyle listStyle;
-
-    public ComboBox(Rect rect, GUIContent buttonContent, GUIContent[] listContent, GUIStyle listStyle)
+    public int List(Rect rect, string buttonText, GUIContent[] listContent, GUIStyle listStyle)
     {
-        this.rect = rect;
-        this.buttonContent = buttonContent;
-        this.listContent = listContent;
-        this.buttonStyle = "button";
-        this.boxStyle = "box";
-        this.listStyle = listStyle;
+        return List(rect, new GUIContent(buttonText), listContent, "button", "box", listStyle);
     }
 
-    public ComboBox(Rect rect, GUIContent buttonContent, GUIContent[] listContent, string buttonStyle, string boxStyle, GUIStyle listStyle)
+    public int List(Rect rect, GUIContent buttonContent, GUIContent[] listContent, GUIStyle listStyle)
     {
-        this.rect = rect;
-        this.buttonContent = buttonContent;
-        this.listContent = listContent;
-        this.buttonStyle = buttonStyle;
-        this.boxStyle = boxStyle;
-        this.listStyle = listStyle;
+        return List(rect, buttonContent, listContent, "button", "box", listStyle);
     }
 
-    public int Show()
+    public int List(Rect rect, string buttonText, GUIContent[] listContent, GUIStyle buttonStyle, GUIStyle boxStyle, GUIStyle listStyle)
+    {
+        return List(rect, new GUIContent(buttonText), listContent, buttonStyle, boxStyle, listStyle);
+    }
+
+    public int List(Rect rect, GUIContent buttonContent, GUIContent[] listContent,
+                                    GUIStyle buttonStyle, GUIStyle boxStyle, GUIStyle listStyle)
     {
         if (forceToUnShow)
         {
@@ -139,18 +125,11 @@ public class ComboBox
         if (done)
             isClickedComboButton = false;
 
-        return selectedItemIndex;
+        return GetSelectedItemIndex();
     }
 
-    public int SelectedItemIndex
+    public int GetSelectedItemIndex()
     {
-        get
-        {
-            return selectedItemIndex;
-        }
-        set
-        {
-            selectedItemIndex = value;
-        }
+        return selectedItemIndex;
     }
 }
