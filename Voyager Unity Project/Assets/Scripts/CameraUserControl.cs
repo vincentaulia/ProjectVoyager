@@ -191,6 +191,10 @@ public class CameraUserControl : MonoBehaviour
 						}
 						lastClickTime = Time.time;
 				}
+				else if (Input.GetMouseButtonUp (1)){
+					Debug.Log("Clicked mouse right button");
+					// Do single right click things in here
+				}
 		}
 	
 		void LateUpdate ()
