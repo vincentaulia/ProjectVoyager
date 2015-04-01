@@ -27,7 +27,8 @@ public class Orbits : MonoBehaviour
 
 		/* Variables that store information related to the target body */
 		GameObject spaceObject;		// Store the gameobject of the object
-		GameObject parentObject;		//Store the object reference to the parent
+		GameObject parentObject;	//Store the object reference to the parent
+		Transform distantIcon;	//Store the planet's distantIcon.
 		string bodyID;			// Store the ID of the target body
 		string parentID;		// Store the ID of the parent object
 		float orbitalPeriod;	// Stores the time it takes for one orbit
@@ -75,6 +76,7 @@ public class Orbits : MonoBehaviour
 						Debug.LogError ("Object not found to create path" + body);
 						return;
 				}
+				distantIcon = spaceObject.transform.GetChild (1);
 
 				// Get the mass, radius and orbital period (using Kepler's Third Law) of the focus body
 				mass = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.massFocus;
@@ -210,10 +212,12 @@ public class Orbits : MonoBehaviour
 
 						}
 				}
-		//if the object is a moon
-		else {
+				//if the object is a moon
+				else {
 						if (Vector3.Distance (parentObject.transform.position, Camera.main.transform.position) > maxRendering) {
 								line.GetComponent<Renderer> ().enabled = false;
+								distantIcon.GetComponent<Renderer> ().enabled = false;
+					
 						} else {
 								line.GetComponent<Renderer> ().enabled = true;
 								setWidth (0.001f * Camera.main.GetComponent<CameraUserControl> ().distance);
