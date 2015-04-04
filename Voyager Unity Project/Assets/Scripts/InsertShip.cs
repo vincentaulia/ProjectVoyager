@@ -15,15 +15,16 @@ using System.Collections;
 using System.Diagnostics; //For testing purposes only
 using Debug = UnityEngine.Debug; //HUH
 
+
 public class InsertShip : MonoBehaviour
 {
-		public GameObject spaceShip;
+		public GameObject shipVoyager1, shipISS, shipOrbiter, shipSkyLab, shipHST;
 		public Rect popUp;
 		//controls the appearance of the ship customizer
 		bool showEdit = false;
 		string name;
 		//holds the data from the text fields
-		string[] data = new string[15];
+		string[] data = new string[16];
 		public Rect windowRect;
 		Rect warning;
 		bool clickedAdd, clickedCancel;
@@ -86,13 +87,38 @@ public class InsertShip : MonoBehaviour
 				int i = Global.ship.Count;
 				string mass, orbitingID;
 				string[] line, inputParameter;
-				//create a ship object
-				Global.ship.Add ((GameObject)Instantiate (spaceShip));
+				//create a ship object. Choice of ship model based on user selectino from drop down list.
+                float size = 0.0005f; //transform scaling factor. Needs to be adjusted for ISS, Orbiter, Skylab and HST
+
+                if(parameters[15] == "0"){
+                    Global.ship.Add((GameObject)Instantiate(shipVoyager1));
+                    size = 0.0005f;
+                }
+                else if(parameters[15] == "1"){
+                    Global.ship.Add((GameObject)Instantiate(shipISS));
+                    size = 0.00005f;
+                }     
+                else if (parameters[15] == "2"){
+                    Global.ship.Add((GameObject)Instantiate(shipOrbiter));
+                    size = 0.0005f;
+                }
+                else if (parameters[15] == "3"){
+                    Global.ship.Add((GameObject)Instantiate(shipSkyLab));
+                    size = 0.00005f;
+                }
+                else if (parameters[15] == "4"){
+                    Global.ship.Add((GameObject)Instantiate(shipHST));
+                    size = 0.00005f;
+                }
+                    
+            
 				//name the object
 				Global.ship [i].name = "Ship" + (i + 1).ToString ();
 
 				//read the object's id to get its mass
 				orbitingID = parameters [2];
+
+
 
 				string[] basic;
 				Object basicFile;
@@ -119,13 +145,14 @@ public class InsertShip : MonoBehaviour
 				if (!found) {
 						Debug.LogError ("ERROR [InsertShip]: Cannot find object in textfile.");
 				}
+                
 
 				//calculate the orbital elements for it
 				Global.ship [i].GetComponent<OrbitalElements> ().getElements (name, "0.1", string.Join (" ", parameters));
 				Elements el = Global.ship [i].GetComponent<OrbitalElements> ().orb_elements;
 				Global.ship [i].GetComponent<shipOEHistory> ().shipOEHistoryConstructor (el, Global.time, Global.ship [i]);  
 
-				float size = 0.0005f; //added this for the Voyager 1 probe. Should actually modify this to take the size/scale given on the prefab object
+			//	float size = 0.0005f; //added this for the Voyager 1 probe. Should actually modify this to take the size/scale given on the prefab object
 				Global.ship [i].transform.localScale = new Vector3 (size, size, size);
 				//place the ship in orbit around the planet
 				Global.ship [i].transform.position = Global.ship [i].GetComponent<shipOEHistory> ().findShipPos (Global.time);
@@ -167,6 +194,7 @@ public class InsertShip : MonoBehaviour
 						data [12] = "1";
 						data [13] = "1";
 						data [14] = "0";
+                        data[14] = "0";
 						name = "Space Ship";
 
 				}
@@ -218,7 +246,7 @@ public class InsertShip : MonoBehaviour
                 GUILayout.Label("Ship Model Selection");
                 int selectedItemIndex = comboBoxControl.GetSelectedItemIndex();
                 selectedItemIndex = comboBoxControl.List(new Rect(popUp.xMax-120, popUp.yMin -90 , 100, 20), comboBoxList[selectedItemIndex].text, comboBoxList, listStyle);
-
+                data[15] = selectedItemIndex.ToString();
                // Debug.Log("selected ship index:" + selectedItemIndex);
 
                 GUILayout.EndVertical();
@@ -333,9 +361,9 @@ public class InsertShip : MonoBehaviour
                 comboBoxList = new GUIContent[5];
             	comboBoxList[0] = new GUIContent("Voyager 1");
             	comboBoxList[1] = new GUIContent("ISS");
-            	comboBoxList[2] = new GUIContent("Shuttle");
-           	    comboBoxList[3] = new GUIContent("Space Lab");
-            	comboBoxList[4] = new GUIContent("Soyuz");
+            	comboBoxList[2] = new GUIContent("Orbiter");
+           	    comboBoxList[3] = new GUIContent("Sky Lab");
+            	comboBoxList[4] = new GUIContent("HST");
             
             	listStyle.normal.textColor = Color.white; 
             	listStyle.onHover.background =
