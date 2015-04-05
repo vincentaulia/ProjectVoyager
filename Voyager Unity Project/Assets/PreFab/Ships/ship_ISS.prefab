@@ -414,6 +414,7 @@ GameObject:
   - 114: {fileID: 11499000}
   - 114: {fileID: 11457104}
   - 114: {fileID: 11433104}
+  - 65: {fileID: 6570620}
   m_Layer: 0
   m_Name: ship_ISS
   m_TagString: Untagged
@@ -1539,8 +1540,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 138042}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -14.75}
+  m_LocalScale: {x: .00999999978, y: .00999999978, z: .00999999978}
   m_Children:
   - {fileID: 473482}
   - {fileID: 457214}
@@ -5443,6 +5444,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 142658}
   m_Mesh: {fileID: 4300088, guid: 483aa642acdad084e92e8e89c4718853, type: 3}
+--- !u!65 &6570620
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 138042}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 500, y: 200, z: 600}
+  m_Center: {x: -10, y: 20, z: 0}
 --- !u!95 &9569172
 Animator:
   serializedVersion: 3
