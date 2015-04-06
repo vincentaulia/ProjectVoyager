@@ -84,7 +84,7 @@ public class InfoWindows : MonoBehaviour
 						//if the information exist in file
 						string info = getInfo (focused);
 						if (info != null) {
-								myList.Add (new Rect (100, 100, 200, 150));
+								myList.Add (new Rect (Input.mousePosition.x, Screen.height - Input.mousePosition.y, 200, 150));
 								names.Add (focused);
 								data.Add (info);
 						}
