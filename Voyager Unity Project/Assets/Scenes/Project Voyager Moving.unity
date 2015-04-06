@@ -618,52 +618,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
---- !u!1001 &349706931
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 400000, guid: b2ddf3484a89bc9449841652bb1238ed, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -.221029282
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: b2ddf3484a89bc9449841652bb1238ed, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: b2ddf3484a89bc9449841652bb1238ed, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -11.499999
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: b2ddf3484a89bc9449841652bb1238ed, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: b2ddf3484a89bc9449841652bb1238ed, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: b2ddf3484a89bc9449841652bb1238ed, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: b2ddf3484a89bc9449841652bb1238ed, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: b2ddf3484a89bc9449841652bb1238ed, type: 2}
-      propertyPath: m_RootOrder
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 171438, guid: b2ddf3484a89bc9449841652bb1238ed, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: b2ddf3484a89bc9449841652bb1238ed, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &360526120
 GameObject:
   m_ObjectHideFlags: 0
@@ -2242,6 +2196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9742a64187ce4a4a8c67c1f9ed0bdbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rightClickDisplay: {fileID: 0}
   target: {fileID: 2054919827}
   xSpeed: 12
   ySpeed: 12
@@ -3283,12 +3238,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e6a4af2203db67448b1ee4c503c22d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  windowRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
+  myList: []
+  names: []
+  data: []
+  camera: {fileID: 0}
+  printedInfo:
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
 --- !u!114 &2087644003
 MonoBehaviour:
   m_ObjectHideFlags: 0
