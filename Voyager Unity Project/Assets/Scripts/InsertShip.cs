@@ -96,19 +96,19 @@ public class InsertShip : MonoBehaviour
                 }
                 else if(parameters[15] == "1"){
                     Global.ship.Add((GameObject)Instantiate(shipISS));
-                    size = 0.00005f;
+                    size = 0.00007f;
                 }     
                 else if (parameters[15] == "2"){
                     Global.ship.Add((GameObject)Instantiate(shipOrbiter));
-                    size = 0.0005f;
+                    size = 0.00007f;
                 }
                 else if (parameters[15] == "3"){
                     Global.ship.Add((GameObject)Instantiate(shipSkyLab));
-                    size = 0.00005f;
+                    size = 0.00007f;
                 }
                 else if (parameters[15] == "4"){
                     Global.ship.Add((GameObject)Instantiate(shipHST));
-                    size = 0.00005f;
+                    size = 0.0001f;
                 }
                     
             
