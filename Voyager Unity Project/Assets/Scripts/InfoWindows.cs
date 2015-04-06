@@ -10,8 +10,14 @@
  * Attached to: Bary Center
  * 
  * Files needed:	printedInfo.txt
+ *
+ * April 5, 2015
+ * Updates:
+ * - X button closes the info window for each planets
+ * - Right click on a planet object triggers the info window
  * 
  */
+
 using UnityEngine;
 using System.Collections;
 
@@ -21,45 +27,56 @@ using System.Collections.Generic;
 
 public class InfoWindows : MonoBehaviour
 {
-	
-		List<Rect> myList = new List<Rect> ();	//holds the windows
-		List<string>names = new List<string> ();	//holds the ids of the planets
-		List<string>data = new List<string> (); //holds the information on planets
-		string focused = "";							//holds the focus of the main camera
-		GameObject camera;
-		string[] InfoButton = {"Show", "Hide"};	//Text on the button alternate
-		string[] printedInfo = new string[10];	//holds the information of all planets
-		int InfoPresent;						//boolean. whether a window is displayed for this object
-		public Rect windowRect;					//to hold the coordinates of the window
+		
+		public List<Rect> myList = new List<Rect> ();	//holds the windows
+		public List<string>names = new List<string> ();	//holds the ids of the planets
+		public List<string>data = new List<string> (); //holds the information on planets
+		public GameObject camera;
+		//string[] InfoButton = {"Show", "Hide"};	//Text on the button alternate, no longer used after X button implementation
+		public string[] printedInfo = new string[10];	//holds the information of all planets
+		//int InfoPresent;						//boolean. whether a window is displayed for this object
+		//public Rect windowRect;					//to hold the coordinates of the window
 
-		void OnGUI ()
+		public void OnGUI ()
 		{
 
-				windowRect = GUI.Window (6, windowRect, windowFunc, "Information");
-
-
+				//windowRect = GUI.Window (6, windowRect, windowFunc, "Information");
 
 				//display all the windows that have been poped up
 				for (int i=0; i<myList.Count; i++) {
 						myList [i] = GUI.Window (int.Parse (names [i]), myList [i], DoMyWindow, data [i]);
 				}
+
 		}
 
 		//sets some properties for the pop up windows
-		void DoMyWindow (int windowID)
+		public void DoMyWindow (int windowID)
 		{
 				//GUI.DragWindow(new Rect(0, 0, 10000, 20)); //Only the top bar is dragable
+
+				// Closes the window and removes the planet from myList upon clicking on X button
+				if(GUI.Button (new Rect (145, 115, 25, 30), "X"))
+				{	
+					Debug.Log("Clicked on X, windowID is: " + windowID);
+					int i;
+					i = names.IndexOf (windowID.ToString());
+					names.RemoveAt (i);
+					myList.RemoveAt (i);
+					data.RemoveAt (i);
+				}
+
 				GUI.DragWindow (); //This makes the whole window dragable
+
 		}
 
 		//adds a window to the list if it doesn't exist
 		//or removes it if it exists
-		void CreateWindow ()
+		public void CreateWindow (string focused)
 		{
-				Debug.Log ("focused is: " + focused);
+				//Debug.Log ("focused is: " + focused);
 
 				//add the object if it is not in the list
-				//otherwise, remove it
+				//otherwise, do nothing
 				if (!names.Contains (focused)) {
 						//if the information exist in file
 						string info = getInfo (focused);
@@ -68,18 +85,25 @@ public class InfoWindows : MonoBehaviour
 								names.Add (focused);
 								data.Add (info);
 						}
-				} else {
+				}
+				else
+				{
+
+				}
+
+				// Removing window functionality is moved to the button implementation
+				/* else {
 						int i;
 						i = names.IndexOf (focused);
 						names.RemoveAt (i);
 						myList.RemoveAt (i);
 						data.RemoveAt (i);
-				}
+				}*/
 		}
 
 		//match the id of the planet to the information in file
 		//return the infomation to be displayed
-		string getInfo (string planet)
+		public string getInfo (string planet)
 		{
 				string[] info;
 				object infoFile;
@@ -95,13 +119,14 @@ public class InfoWindows : MonoBehaviour
 						if (line.StartsWith (planet)) {
 								//break down the information to separate lines
 								line = line.Replace ("$", "\n");	//splits the lines at the $ sign
-								break;
+								return line;
 						}
 				}
 				return line;
 		}
 
-		void windowFunc (int windowID)
+		// No longer needed after the close button
+		/*void windowFunc (int windowID)
 		{
 
 				//read the id of the object the camera is viewing
@@ -133,17 +158,12 @@ public class InfoWindows : MonoBehaviour
 				}
 
 				GUI.DragWindow ();
-		}
+		}*/
 
 		// Use this for initialization
 		void Start ()
 		{
-
-				windowRect = new Rect (10, 40, 150, 55);
-
-
-
-	
+				//windowRect = new Rect (10, 40, 150, 55);
 		}
 	
 		// Update is called once per frame

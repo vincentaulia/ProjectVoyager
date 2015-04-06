@@ -16,6 +16,10 @@
  */
 
 /* Update Notes:
+ * Mar 29, 2015
+ * Updates:
+ * - Right click on a planet object triggers the info window using InfoWindows script
+ *
  * Jan 7, 2015
  * Updates:
  * - The camera is jumping between planets now to a pre-set distance by using the GUI entry field
@@ -83,7 +87,7 @@ using System.Collections;
 [AddComponentMenu("Infinite Camera-Control/Mouse Orbit with zoom")]
 public class CameraUserControl : MonoBehaviour
 {
-	
+		public InfoWindows rightClickDisplay;
 		public Transform target;			//the initial target. Should be earth or the sun.
 		public float xSpeed = 12.0f;
 		public float ySpeed = 12.0f;
@@ -100,6 +104,7 @@ public class CameraUserControl : MonoBehaviour
 		public float smooth = 0.01f;		//the smoothing factor for the 'camera follow' motion
 		public float zoomSmooth = 0.01f;	//the smoothing factor for the 'zooming' motion
 		private float lastClickTime = 0f;	//the timestamp of the most recent mouse click
+		private float RlastClickTime = 0f;	//the timestamp of the most recent mouse right click
 		public float catchTime = 0.25f;		//the allowed time between clicks for a double click
 		public static string input = "";	//the input value in the 'jump to object' GUI window
 		public float standardDistance = 0.5f;		//this is a calculated value for the auto-position of a camera around a new target.
@@ -192,8 +197,35 @@ public class CameraUserControl : MonoBehaviour
 						lastClickTime = Time.time;
 				}
 				else if (Input.GetMouseButtonUp (1)){
-					Debug.Log("Clicked mouse right button");
-					// Do single right click things in here
+
+					if(Time.time - RlastClickTime < 1.0f)
+					{
+						Debug.Log("Single right click");
+						// Do single right click things in here
+						if(didHit)	// if we clicked on an object
+						{
+							if(!rayHitInfo.collider.CompareTag ("DistantPlanetIcon")) // if we didn't click on a distant blue idicator
+							{
+								Debug.Log("Clicked on a valid planet object");
+								rightClickDisplay = GameObject.Find("Bary Center").GetComponent<InfoWindows>(); 
+								rightClickDisplay.CreateWindow(rayHitInfo.collider.name);
+								rightClickDisplay.OnGUI();
+							}
+						}
+					}
+					else
+					{
+						// Do right click drag/hold things in here
+					}
+					
+				}
+				else if (Input.GetMouseButtonDown (1))
+				{
+					RlastClickTime = Time.time;
+				}
+				else
+				{
+
 				}
 		}
 	
