@@ -198,7 +198,7 @@ public class CameraUserControl : MonoBehaviour
 				}
 				else if (Input.GetMouseButtonUp (1)){
 
-					if(Time.time - RlastClickTime < 1.0f)
+					if(Time.time - RlastClickTime < catchTime)
 					{
 						Debug.Log("Single right click");
 						// Do single right click things in here
@@ -206,7 +206,7 @@ public class CameraUserControl : MonoBehaviour
 						{
 							if(!rayHitInfo.collider.CompareTag ("DistantPlanetIcon")) // if we didn't click on a distant blue idicator
 							{
-								Debug.Log("Clicked on a valid planet object");
+								Debug.Log("Clicked on a valid planet object: " + rayHitInfo.collider.name);
 								rightClickDisplay = GameObject.Find("Bary Center").GetComponent<InfoWindows>(); 
 								rightClickDisplay.CreateWindow(rayHitInfo.collider.name);
 								rightClickDisplay.OnGUI();

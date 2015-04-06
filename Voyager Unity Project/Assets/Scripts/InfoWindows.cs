@@ -52,10 +52,13 @@ public class InfoWindows : MonoBehaviour
 		//sets some properties for the pop up windows
 		public void DoMyWindow (int windowID)
 		{
-				//GUI.DragWindow(new Rect(0, 0, 10000, 20)); //Only the top bar is dragable
+				//The top bar's dimentsions are 200 wide and 20 tall. The borders are 2 wide all around.
+
+				GUI.DragWindow(new Rect(0, 0, 178, 20)); //Only the top bar is dragable
 
 				// Closes the window and removes the planet from myList upon clicking on X button
-				if(GUI.Button (new Rect (145, 115, 25, 30), "X"))
+				//if(GUI.Button (new Rect (145, 115, 25, 30), "X"))
+				if(GUI.Button (new Rect (178, 2, 20, 16), "X"))
 				{	
 					Debug.Log("Clicked on X, windowID is: " + windowID);
 					int i;
@@ -65,7 +68,7 @@ public class InfoWindows : MonoBehaviour
 					data.RemoveAt (i);
 				}
 
-				GUI.DragWindow (); //This makes the whole window dragable
+				//GUI.DragWindow (); //This makes the whole window dragable
 
 		}
 
