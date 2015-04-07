@@ -99,7 +99,6 @@ GameObject:
   - 135: {fileID: 16160054}
   - 23: {fileID: 16160053}
   - 114: {fileID: 16160057}
-  - 114: {fileID: 16160056}
   m_Layer: 0
   m_Name: 699
   m_TagString: Planet
@@ -168,18 +167,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 16160051}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &16160056
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 1a649b63e72944b4abb8192610dfe033,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 16160051}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &16160057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -364,7 +351,6 @@ GameObject:
   - 135: {fileID: 210271826}
   - 23: {fileID: 210271825}
   - 114: {fileID: 210271829}
-  - 114: {fileID: 210271828}
   m_Layer: 0
   m_Name: 399
   m_TagString: Planet
@@ -434,18 +420,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 210271823}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &210271828
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 1a649b63e72944b4abb8192610dfe033,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 210271823}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &210271829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1230,7 +1204,6 @@ GameObject:
   - 135: {fileID: 798406359}
   - 23: {fileID: 798406358}
   - 114: {fileID: 798406362}
-  - 114: {fileID: 798406361}
   m_Layer: 0
   m_Name: 499
   m_TagString: Planet
@@ -1299,18 +1272,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 798406356}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &798406361
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 1a649b63e72944b4abb8192610dfe033,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 798406356}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &798406362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1487,7 +1448,6 @@ GameObject:
   - 135: {fileID: 1078318713}
   - 23: {fileID: 1078318712}
   - 114: {fileID: 1078318716}
-  - 114: {fileID: 1078318715}
   m_Layer: 0
   m_Name: 799
   m_TagString: Planet
@@ -1556,18 +1516,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1078318710}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1078318715
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 1a649b63e72944b4abb8192610dfe033,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1078318710}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1078318716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1622,25 +1570,10 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1b687b78705dc0140a63aa4b9cd49488, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1155918611
-GameObject:
-  m_PrefabParentObject: {fileID: 100002, guid: cf15107d89d587e44bbd84dd05054c26, type: 2}
-  m_PrefabInternal: {fileID: 1658837643}
 --- !u!4 &1155918612
 Transform:
   m_PrefabParentObject: {fileID: 400002, guid: cf15107d89d587e44bbd84dd05054c26, type: 2}
   m_PrefabInternal: {fileID: 1658837643}
---- !u!114 &1155918613
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1155918611}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d34dbeb05ad777468f550ada1cda243, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1165966609
 GameObject:
   m_ObjectHideFlags: 0
@@ -1653,7 +1586,6 @@ GameObject:
   - 135: {fileID: 1165966612}
   - 23: {fileID: 1165966611}
   - 114: {fileID: 1165966615}
-  - 114: {fileID: 1165966614}
   m_Layer: 0
   m_Name: 199
   m_TagString: Planet
@@ -1722,18 +1654,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1165966609}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1165966614
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 1a649b63e72944b4abb8192610dfe033,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1165966609}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1165966615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1987,7 +1907,6 @@ GameObject:
   - 135: {fileID: 1259771503}
   - 23: {fileID: 1259771502}
   - 114: {fileID: 1259771500}
-  - 114: {fileID: 1259771501}
   m_Layer: 0
   m_Name: 999
   m_TagString: Planet
@@ -2020,18 +1939,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d6f8c9e26389074abb7e637d107fcd2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1259771501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 1a649b63e72944b4abb8192610dfe033,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1259771498}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!23 &1259771502
@@ -2092,7 +1999,6 @@ GameObject:
   - 135: {fileID: 1273041792}
   - 23: {fileID: 1273041791}
   - 114: {fileID: 1273041795}
-  - 114: {fileID: 1273041794}
   m_Layer: 0
   m_Name: 299
   m_TagString: Planet
@@ -2161,18 +2067,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1273041789}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1273041794
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 1a649b63e72944b4abb8192610dfe033,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1273041789}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1273041795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2218,8 +2112,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rightClickDisplay: {fileID: 0}
   target: {fileID: 2054919827}
-  xSpeed: 12
-  ySpeed: 12
+  xSpeed: 6
+  ySpeed: 6
   scrollSpeed: 10
   zoomMin: .100000001
   zoomMax: 100000
@@ -2652,7 +2546,6 @@ GameObject:
   - 135: {fileID: 1709550573}
   - 23: {fileID: 1709550572}
   - 114: {fileID: 1709550576}
-  - 114: {fileID: 1709550575}
   m_Layer: 0
   m_Name: 899
   m_TagString: Planet
@@ -2721,18 +2614,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1709550570}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1709550575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 1a649b63e72944b4abb8192610dfe033,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1709550570}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1709550576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3356,7 +3237,6 @@ GameObject:
   - 135: {fileID: 2108982649}
   - 23: {fileID: 2108982648}
   - 114: {fileID: 2108982652}
-  - 114: {fileID: 2108982651}
   m_Layer: 0
   m_Name: 599
   m_TagString: Planet
@@ -3425,18 +3305,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2108982646}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &2108982651
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 1a649b63e72944b4abb8192610dfe033,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2108982646}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2108982652
 MonoBehaviour:
   m_ObjectHideFlags: 0

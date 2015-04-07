@@ -231,6 +231,8 @@ public class CameraUserControl : MonoBehaviour
 	
 		void LateUpdate ()
 		{
+				//Camera.main.transform.LookAt (target);
+
 				// only update if the mousebutton is held down
 				if (Input.GetMouseButtonDown (1)) {
 						isActivated = true;
@@ -240,14 +242,14 @@ public class CameraUserControl : MonoBehaviour
 				if (Input.GetMouseButtonUp (1)) {
 						isActivated = false;	
 				} 
-		
+
 				// here we ensure that the camera moves with the target object
 				if (target) {
 						position = transform.position - target.position;
 						newPosition = -(transform.forward * distance) + target.position;
 						transform.position = Vector3.Lerp (transform.position, newPosition, smooth * Time.deltaTime);
 				}
-		
+
 				if (target && isActivated) { 
 						//  get the distance the mouse moved in the respective direction
 						x += Input.GetAxis ("Mouse X") * xSpeed;
