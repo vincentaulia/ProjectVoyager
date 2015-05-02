@@ -51,7 +51,8 @@ public class Orbits : MonoBehaviour
 		float[] distances = new float[4];	//stores the distances of the corners to a target body
 		float maxDistance;					//the max distance of the distances array
 
-		float maxRendering = 2000f;		//max rendering distance for moons
+		//float maxRendering = 2000f;		//max rendering distance for moons
+		float normal = 0;				//the distance normal to the orbit
 	
 
 		/* This function is called in order to construct a moon's orbit */
@@ -195,26 +196,40 @@ public class Orbits : MonoBehaviour
 	*/
 		void LateUpdate ()
 		{
-
+		Vector3 cameraPosition = Camera.main.transform.position;
 				//if the object is a planet
 				if (!isMoon) {
-						//if it's the focus body or if's the parent of the moon in focus
+						//if it's the focus body or if it's the parent of the moon in focus
 						if (Camera.main.GetComponent<CameraUserControl> ().target.name == bodyID || Camera.main.GetComponent<CameraUserControl> ().target.parent.name == bodyID) {
 								setWidth (0.0015f * Camera.main.GetComponent<CameraUserControl> ().distance);
 						}
-			//otherwise, calculate distances from four corners and compute the max distance
+						//otherwise, calculate distances from four corners and compute the max distance
 				else {
 								for (int i=0; i<4; i++) {
-										distances [i] = Vector3.Distance (Camera.main.transform.position, corners [i]);
+										distances [i] = Vector3.Distance (cameraPosition, corners [i]);
 								}
 								maxDistance = distances.Max ();
+
+				//if the camera is not very close to the planet
+								if(maxDistance > Vector3.Distance(spaceObject.transform.position, cameraPosition)*4){
+					setWidth (0.0015f * Vector3.Distance(spaceObject.transform.position, cameraPosition));
+				}else{
 								setWidth (0.001f * maxDistance);
+				}
 
 						}
 				}
 				//if the object is a moon
 				else {
-						if (Vector3.Distance (parentObject.transform.position, Camera.main.transform.position) > maxRendering) {
+			//get the normal of the orbit at an angle of 60 degrees from the edge
+			normal = (float)spaceObject.GetComponent<OrbitalElements>().orb_elements.axis * Mathf.Tan (Mathf.PI/3);
+			//scale it to Unity scale
+				normal /= (Global.scale * 1000);
+			//adjust the distance by trial and error
+			normal *= 25;
+
+						//if (Vector3.Distance (parentObject.transform.position, cameraPosition) > maxRendering) {
+			if (Vector3.Distance (parentObject.transform.position, cameraPosition) > normal) {
 								line.GetComponent<Renderer> ().enabled = false;
 								distantIcon.GetComponent<Renderer> ().enabled = false;
 					

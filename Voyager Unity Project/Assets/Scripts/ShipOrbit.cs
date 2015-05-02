@@ -22,11 +22,14 @@ public class ShipOrbit : MonoBehaviour {
 
 	bool localPause;		//make sure the game track has moved before the game is paused
 	GameObject ship;
+	GameObject parentPlanet;	//store the reference to the planet object
+
+	//float maxRendering = 2000f;		//max rendering distance for ships
 
 	public void createOrbit(long time, string shipName){
 		ship = GameObject.Find (shipName);
 		Elements el = ship.GetComponent<shipOEHistory> ().currentOE (time);
-		GameObject parentPlanet = GameObject.Find (el.IDFocus);
+		parentPlanet = GameObject.Find (el.IDFocus);
 
 		line = GetComponent<LineRenderer> ();
 		//set track width at the beginnig and at the end
@@ -78,6 +81,21 @@ public class ShipOrbit : MonoBehaviour {
 
 	}
 
+	// Set the width of the orbit
+	public void setWidth (float newWidth)
+	{
+		width = newWidth;
+		line = GetComponent<LineRenderer> ();
+		line.SetWidth (width, width);
+		return;
+	}
+	
+	// Get the width of the orbit
+	public float getWidth ()
+	{
+		return width;
+	}
+
 	// Use this for initialization
 	void Start () {
 	
@@ -89,7 +107,30 @@ public class ShipOrbit : MonoBehaviour {
 		if (!Global.time_doPause) {
 			localPause = false;
 		}
-		
+
+		//if the focus is the ship, use the camera's distance
+		if (Camera.main.GetComponent<CameraUserControl> ().target.name == ship.name) {
+						setWidth (0.0015f * Camera.main.GetComponent<CameraUserControl> ().distance);
+
+				} else {
+			float normal;
+			//get the normal of the orbit at an angle of 60 degrees from the edge
+			normal = (float)ship.GetComponent<OrbitalElements>().orb_elements.axis * Mathf.Tan(Mathf.PI/3);
+			//scale it to Unity scale
+			normal /= (Global.scale * 1000);
+			//adjust the distance by trial and error
+			normal *= 25;
+
+			if (Vector3.Distance (parentPlanet.transform.position, Camera.main.transform.position) > normal) {
+				line.GetComponent<Renderer> ().enabled = false;
+				
+			} else {
+				line.GetComponent<Renderer> ().enabled = true;
+				setWidth (0.001f * Vector3.Distance(Camera.main.transform.position, parentPlanet.transform.position));
+			}
+
+				}
+
 		//Need to update the orbit every frame
 		//if the game is not on Pause
 		if (!localPause) {
