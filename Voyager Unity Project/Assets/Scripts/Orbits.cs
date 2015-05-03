@@ -19,8 +19,8 @@ public class Orbits : MonoBehaviour
 		/* GLOBALLY REQUIRED VARIABLES */
 
 		/* Constant which stores the number of points used for the construction of the orbit */
-		private static int NUM_ORBIT_POINTS = 800;
-
+		private int NUM_ORBIT_POINTS;
+		
 		/* Variables needed to draw the line */
 		LineRenderer line;		// This stores the line of the orbit
 		float width;			// The width of the line that draws the orbit
@@ -66,7 +66,27 @@ public class Orbits : MonoBehaviour
 				bodyID = body;
 				parentID = parent;
 
-				// Get the position of the parent
+				//The semi major axis of the body, used to determine the number of points drawn. 
+				double axis = GameObject.Find (bodyID).GetComponent<OrbitalElements> ().orb_elements.axis;
+				if (axis < 149600000000 * 0.001) {
+						//Applies for Luna, Charon, Deimos, other moons.
+						NUM_ORBIT_POINTS = 50;
+				} else if (axis < 149600000000 * 0.05) {
+						//Applies for some moons with large orbital radii.
+						NUM_ORBIT_POINTS = 500;
+				} else if (axis < 149600000000 * 3) {
+						//Mercury, Venus, Earth, Mars
+						NUM_ORBIT_POINTS = 1600;
+				} else if (axis < 149600000000 * 20) {
+						//Saturn, Uranus. 
+						NUM_ORBIT_POINTS = 2000;
+				} else {
+						//Neptune, Pluto. 
+						NUM_ORBIT_POINTS = 5000;
+				}
+			
+		
+		// Get the position of the parent
 				parentObject = GameObject.Find (parentID);
 				Vector3 parentPosition = PcaPosition.findPos (parentObject.GetComponent<OrbitalElements> ().orb_elements, time, parentObject);
 
@@ -140,7 +160,25 @@ public class Orbits : MonoBehaviour
 				radius = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.axis;
 				orbitalPeriod = Mathf.Sqrt ((4 * Mathf.PI * Mathf.PI * Mathf.Pow (radius, 3)) / (6.67384e-11f * mass));
 
-				// Calculate the timeStep to get about 400 points
+		//The semi major axis of the body, used to determine the number of points drawn. 
+				if (radius < 149600000000 * 0.005) {
+						//Applies for Luna, Charon, Deimos, other moons.
+						NUM_ORBIT_POINTS = 200;
+				} else if (radius < 149600000000 * 0.05) {
+						//Applies for some moons with large orbital radii.
+						NUM_ORBIT_POINTS = 500;
+				} else if (radius < 149600000000 * 3) {
+						//Mercury, Venus, Earth, Mars
+						NUM_ORBIT_POINTS = 1600;
+				} else if (radius < 149600000000 * 20) {
+						//Saturn, Uranus. 
+						NUM_ORBIT_POINTS = 2000;
+				} else {
+						//Neptune, Pluto. 
+						NUM_ORBIT_POINTS = 5000;
+				}
+		
+		// Calculate the timeStep to get about 400 points
 				timeStep = (long)(orbitalPeriod / NUM_ORBIT_POINTS);
 
 				// Initialize the line element
