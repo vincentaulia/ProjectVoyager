@@ -53,6 +53,9 @@ public class Orbits : MonoBehaviour
 
 		//float maxRendering = 2000f;		//max rendering distance for moons
 		float normal = 0;				//the distance normal to the orbit
+
+		GameObject cameraObject;			//stores a reference to the object in focus
+		GameObject cameraParent;				//stores a reference to the parent of the object in focus
 	
 
 		/* This function is called in order to construct a moon's orbit */
@@ -86,7 +89,7 @@ public class Orbits : MonoBehaviour
 				}
 			
 		
-		// Get the position of the parent
+				// Get the position of the parent
 				parentObject = GameObject.Find (parentID);
 				Vector3 parentPosition = PcaPosition.findPos (parentObject.GetComponent<OrbitalElements> ().orb_elements, time, parentObject);
 
@@ -117,6 +120,9 @@ public class Orbits : MonoBehaviour
 
 				// The current position of the planet as required by the for loop
 				Vector3 current;
+				
+				//set the number of points in the array
+				line.SetVertexCount (NUM_ORBIT_POINTS+2);
 
 				// Keep adding points until the track is complete
 				for (int i = 0; i <= NUM_ORBIT_POINTS; i++) {
@@ -129,9 +135,16 @@ public class Orbits : MonoBehaviour
 						moonPositions.Add (PcaPosition.findPos (spaceObject.GetComponent<OrbitalElements> ().orb_elements, time, spaceObject));
 
 						// Increase the array of points by 1
-						line.SetVertexCount (i + 1);
+						//line.SetVertexCount (i + 1);
+
 						//	Include the new point in the array of points
 						line.SetPosition (i, current);
+
+						// set the last point the same as the first point to close the loop
+						if(i == 0){
+							line.SetPosition (NUM_ORBIT_POINTS+1, current);
+						}
+
 						// Increase the time step
 						time += timeStep;
 				}
@@ -160,7 +173,7 @@ public class Orbits : MonoBehaviour
 				radius = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.axis;
 				orbitalPeriod = Mathf.Sqrt ((4 * Mathf.PI * Mathf.PI * Mathf.Pow (radius, 3)) / (6.67384e-11f * mass));
 
-		//The semi major axis of the body, used to determine the number of points drawn. 
+				//The semi major axis of the body, used to determine the number of points drawn. 
 				if (radius < 149600000000 * 0.005) {
 						//Applies for Luna, Charon, Deimos, other moons.
 						NUM_ORBIT_POINTS = 200;
@@ -178,7 +191,7 @@ public class Orbits : MonoBehaviour
 						NUM_ORBIT_POINTS = 5000;
 				}
 		
-		// Calculate the timeStep to get about 400 points
+				// Calculate the timeStep to get about 400 points
 				timeStep = (long)(orbitalPeriod / NUM_ORBIT_POINTS);
 
 				// Initialize the line element
@@ -192,6 +205,9 @@ public class Orbits : MonoBehaviour
 				// The current position of the planet as required by the for loop
 				Vector3 current;
 
+				//set the number of points in the array
+				line.SetVertexCount (NUM_ORBIT_POINTS+2);
+
 				// Keep adding points until the track is complete
 				for (int i = 0; i <= NUM_ORBIT_POINTS; i++) {
 	
@@ -199,9 +215,14 @@ public class Orbits : MonoBehaviour
 						current = PcaPosition.findPos (spaceObject.GetComponent<OrbitalElements> ().orb_elements, time, spaceObject);
 
 						// Increase the array of points by 1
-						line.SetVertexCount (i + 1);
+						//line.SetVertexCount (i + 1);
+
 						// Include the new point in the array of points
 						line.SetPosition (i, current);
+						// set the last point the same as the first point to close the loop
+						if(i == 0){
+							line.SetPosition (NUM_ORBIT_POINTS+1, current);
+						}
 						// Increment the time STEP
 						time += timeStep;
 						if (i % (NUM_ORBIT_POINTS / 4 + 1) == 0) {
@@ -234,7 +255,35 @@ public class Orbits : MonoBehaviour
 	*/
 		void LateUpdate ()
 		{
-		Vector3 cameraPosition = Camera.main.transform.position;
+
+				//get the object of focus
+				cameraObject = GameObject.Find (Camera.main.GetComponent<CameraUserControl> ().target.name);
+				//get the parent of object of focus
+				cameraParent = GameObject.Find (cameraObject.transform.parent.name);
+
+				//if the object is not in focus
+				//and the camera is zooming in close to it
+				//turn other tracks off
+				if (cameraObject != spaceObject) {
+						if (Camera.main.GetComponent<CameraUserControl> ().distance < Camera.main.GetComponent<CameraUserControl> ().standardDistance / 1.5) {
+								line.GetComponent<Renderer> ().enabled = false;
+								//this is just here because sometimes distantIcon is null for some planets
+								if (distantIcon != null) {
+										distantIcon.GetComponent<Renderer> ().enabled = false;
+								}
+								return;
+						}
+			//if the camera is far, turn the tracks back on
+			else {
+								line.GetComponent<Renderer> ().enabled = true;
+						}
+				}
+		//turn the track on for the object in focus
+		else {
+						line.GetComponent<Renderer> ().enabled = true;
+				}
+
+				Vector3 cameraPosition = Camera.main.transform.position;
 				//if the object is a planet
 				if (!isMoon) {
 						//if it's the focus body or if it's the parent of the moon in focus
@@ -248,32 +297,40 @@ public class Orbits : MonoBehaviour
 								}
 								maxDistance = distances.Max ();
 
-				//if the camera is not very close to the planet
-								if(maxDistance > Vector3.Distance(spaceObject.transform.position, cameraPosition)*4){
-					setWidth (0.0015f * Vector3.Distance(spaceObject.transform.position, cameraPosition));
-				}else{
-								setWidth (0.001f * maxDistance);
-				}
+								//if the camera is not very close to the planet
+								if (maxDistance > Vector3.Distance (spaceObject.transform.position, cameraPosition) * 4) {
+										setWidth (0.0015f * Vector3.Distance (spaceObject.transform.position, cameraPosition));
+								} else {
+										setWidth (0.001f * maxDistance);
+								}
 
 						}
 				}
+
 				//if the object is a moon
 				else {
-			//get the normal of the orbit at an angle of 60 degrees from the edge
-			normal = (float)spaceObject.GetComponent<OrbitalElements>().orb_elements.axis * Mathf.Tan (Mathf.PI/3);
-			//scale it to Unity scale
-				normal /= (Global.scale * 1000);
-			//adjust the distance by trial and error
-			normal *= 25;
+						
+						//if the orbits are that of the moon of another planet, turn them off
+						if (spaceObject == cameraObject || parentObject == cameraObject || parentObject == cameraParent) {
+								//get the normal of the orbit at an angle of 60 degrees from the edge
+								normal = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.axis * Mathf.Tan (Mathf.PI / 3);
+								//scale it to Unity scale
+								normal /= (Global.scale * 1000);
+								//adjust the distance by trial and error
+								normal *= 25;
 
-						//if (Vector3.Distance (parentObject.transform.position, cameraPosition) > maxRendering) {
-			if (Vector3.Distance (parentObject.transform.position, cameraPosition) > normal) {
+								//if (Vector3.Distance (parentObject.transform.position, cameraPosition) > maxRendering) {
+								if (Vector3.Distance (parentObject.transform.position, cameraPosition) > normal) {
+										line.GetComponent<Renderer> ().enabled = false;
+										distantIcon.GetComponent<Renderer> ().enabled = false;
+					
+								} else {
+										line.GetComponent<Renderer> ().enabled = true;
+										setWidth (0.001f * Camera.main.GetComponent<CameraUserControl> ().distance);
+								}
+						} else {
 								line.GetComponent<Renderer> ().enabled = false;
 								distantIcon.GetComponent<Renderer> ().enabled = false;
-					
-						} else {
-								line.GetComponent<Renderer> ().enabled = true;
-								setWidth (0.001f * Camera.main.GetComponent<CameraUserControl> ().distance);
 						}
 				}
 
