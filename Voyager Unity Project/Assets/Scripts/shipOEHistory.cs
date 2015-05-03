@@ -47,8 +47,8 @@ public class shipOEHistory : MonoBehaviour
 			GameObject parentPlanet = GameObject.Find (current.IDFocus);  //GAME OBJECT CYRRENT FOCCUS
 			string IDF = null;
 			IDF = focusDown (currentPos, parentPlanet);
-			Debug.Log ("IDF1");
-			Debug.Log (IDF);
+//			Debug.Log ("IDF1");
+//			Debug.Log (IDF);
 			if (IDF != null)
 			{
 				//stopwatch.Stop(); // REMOVE LATER
@@ -56,8 +56,8 @@ public class shipOEHistory : MonoBehaviour
 				return IDF;
 			}
 			IDF = focusUp (currentPos, parentPlanet);
-			Debug.Log ("IDF2");
-			Debug.Log (IDF);
+//			Debug.Log ("IDF2");
+//			Debug.Log (IDF);
 			//stopwatch.Stop(); //REMOVE LATER
 			//Debug.Log (stopwatch.Elapsed.TotalMilliseconds); //REMOVE LATER
 			return IDF;

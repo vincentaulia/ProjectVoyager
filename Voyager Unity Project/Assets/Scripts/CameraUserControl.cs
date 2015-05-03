@@ -362,6 +362,47 @@ public class CameraUserControl : MonoBehaviour
 				distance = standardDistance;
 				return standardDistance;
 		}
+
+		// This function puts the camera in one of several standard location relative to the current target
+		// The viewAngle key is: 0 = radial, 1 = anti-radial, 2 = normal, 3 = anti-norm, 4 = tangential, 5 = anti-tan
+		public void cameraAngleSwitch(int viewAngle) {
+			Vector3 rad_unit = (target.position - target.parent.position).normalized;
+			//Vector3 tan_unit = velocityVector.normalized;
+			//Vector3 nor_unit = Vector3.Cross(rad_unit,tan_unit).normalized;
+			//Debug.Log ("rad_unit = " + rad_unit);
+
+			switch (viewAngle) {
+				case 0:
+					newPosition = -rad_unit*2f*standardDistance + target.position;
+					transform.position = newPosition;
+					position = newPosition;
+					//distance = 2f*standardDistance;
+					Debug.Log("move camara to radial view");
+					break;
+				case 1:
+					transform.position = rad_unit*standardDistance + target.position;
+					distance = standardDistance;
+					Debug.Log("move camara to anti-radial view");
+					break;
+				case 2:
+					Debug.Log("move camara to normal view");
+					break;
+				case 3:
+					Debug.Log("move camara to anti-normal view");
+					break;
+				case 4:
+					Debug.Log("move camara to tangential view");
+					break;
+				case 5:
+					Debug.Log("move camara to anti-tangential view");
+					break;
+				default:
+					Debug.Log ("viewAngle outside of expected value range");
+					break;
+			}
+			return;
+		}
+
 }
 
 

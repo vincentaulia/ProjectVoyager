@@ -1,5 +1,5 @@
 ﻿/*
- * Created by Jihad El Sheikh
+ * Created by Jihad El Sheikh, Joohyun, Zachary Fejes
  * 
  * This script handles the display of the information windows.
  * It reads the information from a file and stores them in an array.
@@ -53,11 +53,11 @@ public class InfoWindows : MonoBehaviour
 		public void DoMyWindow (int windowID)
 		{
 				//The top bar's dimentsions are 200 wide and 20 tall. The borders are 2 wide all around.
+				CameraUserControl cameraScript = Camera.main.GetComponent<CameraUserControl> ();	//cameraUserControl script attached to the main camera
 
 				GUI.DragWindow(new Rect(0, 0, 178, 20)); //Only the top bar is dragable
 
 				// Closes the window and removes the planet from myList upon clicking on X button
-				//if(GUI.Button (new Rect (145, 115, 25, 30), "X"))
 				if(GUI.Button (new Rect (178, 2, 20, 16), "X"))
 				{	
 					Debug.Log("Clicked on X, windowID is: " + windowID);
@@ -67,8 +67,30 @@ public class InfoWindows : MonoBehaviour
 					myList.RemoveAt (i);
 					data.RemoveAt (i);
 				}
-
-				//GUI.DragWindow (); //This makes the whole window dragable
+				// Creates a button to activate the "radial camera angle" script
+				if (GUI.Button (new Rect (30, 110, 45, 16), "rad")) {	//the 
+					cameraScript.cameraAngleSwitch(0);
+				}
+				// Creates a button to activate the "radial camera angle" script
+				if (GUI.Button (new Rect (30, 130, 45, 16), "arad")) {	//the 
+					cameraScript.cameraAngleSwitch(1);
+				}
+				// Creates a button to activate the "radial camera angle" script
+				if (GUI.Button (new Rect (80, 110, 45, 16), "nor")) {	//the 
+					cameraScript.cameraAngleSwitch(2);
+				}
+				// Creates a button to activate the "radial camera angle" script
+				if (GUI.Button (new Rect (80, 130, 45, 16), "anor")) {	//the 
+					cameraScript.cameraAngleSwitch(3);
+				}
+				// Creates a button to activate the "radial camera angle" script
+				if (GUI.Button (new Rect (130, 110, 45, 16), "tan")) {	//the 
+					cameraScript.cameraAngleSwitch(4);
+				}
+				// Creates a button to activate the "radial camera angle" script
+				if (GUI.Button (new Rect (130, 130, 45, 16), "atan")) {	//the 
+					cameraScript.cameraAngleSwitch(5);
+				}
 
 		}
 
