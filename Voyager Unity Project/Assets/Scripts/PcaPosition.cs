@@ -173,7 +173,7 @@ public struct Elements
 		{
 				Debug.Log ("x-axis: " + x.axis);
 				Debug.Log ("y-axis: " + y.axis);
-				if (x.axis == y.axis) {
+				if (x.axis != y.axis) {
 						Debug.Log ("x-ecc: " + x.ecc);
 						Debug.Log ("y-ecc: " + y.ecc);
 						if (x.ecc == y.ecc) {
@@ -190,10 +190,10 @@ public struct Elements
 														Debug.Log ("y-arg: " + y.arg);
 														if (x.arg == y.arg) {
 																Debug.Log ("x-dir: " + x.dir);
-																Debug.Log ("y-argdir " + y.dir);
+																Debug.Log ("y-adir " + y.dir);
 																if (x.dir == y.dir) {
 																		Debug.Log ("x-IDFocus: " + x.IDFocus);
-																		Debug.Log ("y-IDFocus " + y.IDFocus);
+																		Debug.Log ("y-IDFocus: " + y.IDFocus);
 																		if (x.IDFocus == y.IDFocus) {
 																				Debug.Log ("it is equal");
 																				return true;

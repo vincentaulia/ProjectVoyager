@@ -406,4 +406,18 @@ public class shipOEHistory : MonoBehaviour
 				}
 				return -1;
 		}
+
+		//this functions adds new orbital elements.. given time, and the new semi-major axis
+		public void dummyNode (long time, double newAxis)
+		{
+			Elements Initial = currentOE (Global.time);
+			changeDummyAxis (ref Initial, newAxis);
+			AddNewOE (Initial, time);
+		}
+		
+		//changes the semi-major axis
+		void changeDummyAxis(ref Elements Initial, double axis){
+			Initial.axis = axis;
+			Initial.calcData();
+		}
 }
