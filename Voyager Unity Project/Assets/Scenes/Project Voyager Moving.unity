@@ -3079,6 +3079,7 @@ GameObject:
   - 114: {fileID: 2087644006}
   - 114: {fileID: 2087644001}
   - 114: {fileID: 2087644007}
+  - 114: {fileID: 2087644008}
   m_Layer: 0
   m_Name: Bary Center
   m_TagString: Bary Center
@@ -3226,6 +3227,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fc9d2932ca01a04ab8b9423cf904cf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2087644008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2087643999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77bb07c3ea39379458e57eccca2e62e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  promptWindow:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  orbitsWindow:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
 --- !u!1 &2108982646
 GameObject:
   m_ObjectHideFlags: 0

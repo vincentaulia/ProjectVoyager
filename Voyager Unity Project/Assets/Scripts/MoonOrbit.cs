@@ -166,7 +166,15 @@ public class MoonOrbit : MonoBehaviour
 	*/
 		void LateUpdate ()
 		{
-		
+
+				//if the the user is taking control and toggle is off
+				if (!VisualizeOrbits.auto && !VisualizeOrbits.moonOrbits) {
+					//turn tracks off and exit
+					line.GetComponent<Renderer> ().enabled = false;
+					distantIcon.GetComponent<Renderer> ().enabled = false;
+					return;
+				}
+
 				//get the object of focus
 				cameraObject = GameObject.Find (Camera.main.GetComponent<CameraUserControl> ().target.name);
 				//get the parent of object of focus
@@ -232,6 +240,12 @@ public class MoonOrbit : MonoBehaviour
 			
 						// Update the current time of the object's new position
 						currentTime += timeStep;
+				}
+
+				//if the the user is taking control and toggle is off
+				if (!VisualizeOrbits.auto) {
+					//keep tracks on
+					line.GetComponent<Renderer> ().enabled = true;
 				}
 		}
 }

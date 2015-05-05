@@ -143,6 +143,14 @@ public class ShipOrbit : MonoBehaviour
 		// Update is called once per frame
 		void LateUpdate ()
 		{
+
+				//if the the user is taking control and toggle is off
+				if (!VisualizeOrbits.auto && !VisualizeOrbits.shipOrbits) {
+					//turn tracks off
+					line.GetComponent<Renderer> ().enabled = false;
+					return;
+				}
+
 				//if the game is playing, then unflag localPause
 				if (!Global.time_doPause) {
 						localPause = false;
@@ -199,6 +207,12 @@ public class ShipOrbit : MonoBehaviour
 						//make another orbit for them
 						makeAnotherOrbit (ship.GetComponent<shipOEHistory> ().shipT [orbits]);
 						orbits++;
+				}
+
+				//if the the user is taking control
+				if (!VisualizeOrbits.auto) {
+					//keep tracks on
+					line.GetComponent<Renderer> ().enabled = true;
 				}
 		}
 }
