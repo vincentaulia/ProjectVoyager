@@ -370,8 +370,8 @@ Transform:
   m_Children:
   - {fileID: 937009267}
   - {fileID: 485265471}
-  - {fileID: 1259074048}
   - {fileID: 1324707526}
+  - {fileID: 1259074048}
   m_Father: {fileID: 2087644000}
   m_RootOrder: 2
 --- !u!23 &210271825
@@ -1851,7 +1851,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 210271824}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!23 &1259074049
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2773,7 +2773,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 436052, guid: 1b687b78705dc0140a63aa4b9cd49488, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1b687b78705dc0140a63aa4b9cd49488, type: 2}

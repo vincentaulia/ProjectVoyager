@@ -166,9 +166,10 @@ public class MoonOrbit : MonoBehaviour
 	*/
 		void LateUpdate ()
 		{
+				bool auto = VisualizeOrbits.auto;
 
 				//if the the user is taking control and toggle is off
-				if (!VisualizeOrbits.auto && !VisualizeOrbits.moonOrbits) {
+				if (!auto && !VisualizeOrbits.moonOrbits) {
 					//turn tracks off and exit
 					line.GetComponent<Renderer> ().enabled = false;
 					distantIcon.GetComponent<Renderer> ().enabled = false;
@@ -187,7 +188,7 @@ public class MoonOrbit : MonoBehaviour
 				//if the object is a planet
 			
 				//if the orbits are that of the moon of another planet, turn them off
-				if (spaceObject == cameraObject || parentObject == cameraObject || parentObject == cameraParent) {
+				if (spaceObject == cameraObject || parentObject == cameraObject || parentObject == cameraParent || !auto) {
 						//get the normal of the orbit at an angle of 60 degrees from the edge
 						normal = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.axis * Mathf.Tan (Mathf.PI / 3);
 						//scale it to Unity scale
@@ -195,7 +196,7 @@ public class MoonOrbit : MonoBehaviour
 						//adjust the distance by trial and error
 						normal *= 25;
 				
-						if (Vector3.Distance (parentObject.transform.position, cameraPosition) > normal) {
+						if (auto && Vector3.Distance (parentObject.transform.position, cameraPosition) > normal) {
 								line.GetComponent<Renderer> ().enabled = false;
 								distantIcon.GetComponent<Renderer> ().enabled = false;
 					
@@ -240,12 +241,6 @@ public class MoonOrbit : MonoBehaviour
 			
 						// Update the current time of the object's new position
 						currentTime += timeStep;
-				}
-
-				//if the the user is taking control and toggle is off
-				if (!VisualizeOrbits.auto) {
-					//keep tracks on
-					line.GetComponent<Renderer> ().enabled = true;
 				}
 		}
 }

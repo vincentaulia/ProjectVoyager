@@ -144,8 +144,10 @@ public class ShipOrbit : MonoBehaviour
 		void LateUpdate ()
 		{
 
+				bool auto = VisualizeOrbits.auto;
+
 				//if the the user is taking control and toggle is off
-				if (!VisualizeOrbits.auto && !VisualizeOrbits.shipOrbits) {
+				if (!auto && !VisualizeOrbits.shipOrbits) {
 					//turn tracks off
 					line.GetComponent<Renderer> ().enabled = false;
 					return;
@@ -169,7 +171,7 @@ public class ShipOrbit : MonoBehaviour
 						//adjust the distance by trial and error
 						normal *= 25;
 
-						if (Vector3.Distance (parentPlanet.transform.position, Camera.main.transform.position) > normal) {
+						if (auto && Vector3.Distance (parentPlanet.transform.position, Camera.main.transform.position) > normal) {
 								line.GetComponent<Renderer> ().enabled = false;
 				
 						} else {
@@ -207,12 +209,6 @@ public class ShipOrbit : MonoBehaviour
 						//make another orbit for them
 						makeAnotherOrbit (ship.GetComponent<shipOEHistory> ().shipT [orbits]);
 						orbits++;
-				}
-
-				//if the the user is taking control
-				if (!VisualizeOrbits.auto) {
-					//keep tracks on
-					line.GetComponent<Renderer> ().enabled = true;
 				}
 		}
 }
