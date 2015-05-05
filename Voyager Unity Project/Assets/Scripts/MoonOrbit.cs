@@ -193,7 +193,7 @@ public class MoonOrbit : MonoBehaviour
 						normal = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.axis * Mathf.Tan (Mathf.PI / 3);
 						//scale it to Unity scale
 						normal /= (Global.scale * 1000);
-						//adjust the distance by trial and error
+						//value determiend by trial and error
 						normal *= 25;
 				
 						if (auto && Vector3.Distance (parentObject.transform.position, cameraPosition) > normal) {

@@ -161,6 +161,7 @@ public class ShipOrbit : MonoBehaviour
 				//if the focus is the ship, use the camera's distance
 				if (Camera.main.GetComponent<CameraUserControl> ().target.name == ship.name) {
 						setWidth (0.0015f * Camera.main.GetComponent<CameraUserControl> ().distance);
+						line.GetComponent<Renderer> ().enabled = true;
 
 				} else {
 						float normal;
@@ -168,7 +169,7 @@ public class ShipOrbit : MonoBehaviour
 						normal = (float)ship.GetComponent<OrbitalElements> ().orb_elements.axis * Mathf.Tan (Mathf.PI / 3);
 						//scale it to Unity scale
 						normal /= (Global.scale * 1000);
-						//adjust the distance by trial and error
+						//value determiend by trial and error
 						normal *= 25;
 
 						if (auto && Vector3.Distance (parentPlanet.transform.position, Camera.main.transform.position) > normal) {
