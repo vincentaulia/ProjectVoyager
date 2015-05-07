@@ -69,8 +69,8 @@ public class Orbits : MonoBehaviour
 				//The semi major axis of the body, used to determine the number of points drawn. 
 				double axis = GameObject.Find (bodyID).GetComponent<OrbitalElements> ().orb_elements.axis;
 				if (axis < 149600000000 * 0.001) {
-						//Applies for Luna, Charon, Deimos, other moons.
-						NUM_ORBIT_POINTS = 50;
+						//Applies for Charon, Deimos, Phobos and some other moons.
+						NUM_ORBIT_POINTS = 150;
 				} else if (axis < 149600000000 * 0.05) {
 						//Applies for some moons with large orbital radii.
 						NUM_ORBIT_POINTS = 500;
@@ -89,35 +89,39 @@ public class Orbits : MonoBehaviour
 		// Get the position of the parent
 				parentObject = GameObject.Find (parentID);
 				Vector3 parentPosition = PcaPosition.findPos (parentObject.GetComponent<OrbitalElements> ().orb_elements, time, parentObject);
-
-
+				
+				
 				// Make sure that the space object exists
 				spaceObject = GameObject.Find (body);
 				if (spaceObject == null) {
 						Debug.LogError ("Object not found to create path" + body);
 						return;
 				}
-				distantIcon = spaceObject.transform.GetChild (1);
-
+				
+				//This will stop working if moons get more child objects before the distant icon. I think it's less robust, so it's commented out.
+				//distantIcon = spaceObject.transform.GetChild (1); 
+				//This will stop working if moon distant Icon object name is changed
+				distantIcon = spaceObject.transform.Find ("Planet Distance Icon");	
+				
 				// Get the mass, radius and orbital period (using Kepler's Third Law) of the focus body
 				mass = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.massFocus;
 				radius = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.axis;
 				orbitalPeriod = Mathf.Sqrt ((4 * Mathf.PI * Mathf.PI * Mathf.Pow (radius, 3)) / (6.67384e-11f * mass));
-
+				
 				// Calculate the timeStep to get about 400 points
 				timeStep = (long)(orbitalPeriod / NUM_ORBIT_POINTS);
-
+				
 				// Initialize the line element
 				if (time == 0)
 						line = GetComponent<LineRenderer> ();
-		
+				
 				// Obtain the width of the object and set it as the width of the line
 				width = spaceObject.transform.lossyScale.x;
 				line.SetWidth (width, width);
-
+				
 				// The current position of the planet as required by the for loop
 				Vector3 current;
-
+				
 				// Keep adding points until the track is complete
 				for (int i = 0; i <= NUM_ORBIT_POINTS; i++) {
 	
@@ -163,7 +167,7 @@ public class Orbits : MonoBehaviour
 		//The semi major axis of the body, used to determine the number of points drawn. 
 				if (radius < 149600000000 * 0.005) {
 						//Applies for Luna, Charon, Deimos, other moons.
-						NUM_ORBIT_POINTS = 200;
+						NUM_ORBIT_POINTS = 100;
 				} else if (radius < 149600000000 * 0.05) {
 						//Applies for some moons with large orbital radii.
 						NUM_ORBIT_POINTS = 500;
@@ -175,7 +179,7 @@ public class Orbits : MonoBehaviour
 						NUM_ORBIT_POINTS = 2000;
 				} else {
 						//Neptune, Pluto. 
-						NUM_ORBIT_POINTS = 5000;
+						NUM_ORBIT_POINTS = 4000;
 				}
 		
 		// Calculate the timeStep to get about 400 points
@@ -234,7 +238,7 @@ public class Orbits : MonoBehaviour
 	*/
 		void LateUpdate ()
 		{
-		Vector3 cameraPosition = Camera.main.transform.position;
+				Vector3 cameraPosition = Camera.main.transform.position;
 				//if the object is a planet
 				if (!isMoon) {
 						//if it's the focus body or if it's the parent of the moon in focus
@@ -242,39 +246,47 @@ public class Orbits : MonoBehaviour
 								setWidth (0.0015f * Camera.main.GetComponent<CameraUserControl> ().distance);
 						}
 						//otherwise, calculate distances from four corners and compute the max distance
-				else {
+						else {
 								for (int i=0; i<4; i++) {
 										distances [i] = Vector3.Distance (cameraPosition, corners [i]);
 								}
 								maxDistance = distances.Max ();
 
-				//if the camera is not very close to the planet
+								//if the camera is not very close to the planet
 								if(maxDistance > Vector3.Distance(spaceObject.transform.position, cameraPosition)*4){
-					setWidth (0.0015f * Vector3.Distance(spaceObject.transform.position, cameraPosition));
-				}else{
-								setWidth (0.001f * maxDistance);
-				}
+										setWidth (0.0015f * Vector3.Distance(spaceObject.transform.position, cameraPosition));
+								}else{
+										setWidth (0.001f * maxDistance);
+								}
 
 						}
+
+
 				}
 				//if the object is a moon
 				else {
-			//get the normal of the orbit at an angle of 60 degrees from the edge
-			normal = (float)spaceObject.GetComponent<OrbitalElements>().orb_elements.axis * Mathf.Tan (Mathf.PI/3);
-			//scale it to Unity scale
-				normal /= (Global.scale * 1000);
-			//adjust the distance by trial and error
-			normal *= 25;
+					//get the normal of the orbit at an angle of 60 degrees from the edge
+					normal = (float)spaceObject.GetComponent<OrbitalElements>().orb_elements.axis * Mathf.Tan (Mathf.PI/3);
+					//scale it to Unity scale
+					normal /= (Global.scale * 1000);
+					//adjust the distance by trial and error
+					normal *= 25;
 
-						//if (Vector3.Distance (parentObject.transform.position, cameraPosition) > maxRendering) {
-			if (Vector3.Distance (parentObject.transform.position, cameraPosition) > normal) {
+					//if (Vector3.Distance (parentObject.transform.position, cameraPosition) > maxRendering) {
+					if (Vector3.Distance (parentObject.transform.position, cameraPosition) > normal) {
+								//We are far away enough to stop rendering the line, which means the distantIcon should also not be rendering.
+
+								//Stop rendering the distantIcons. 
 								line.GetComponent<Renderer> ().enabled = false;
-								distantIcon.GetComponent<Renderer> ().enabled = false;
-					
-						} else {
+								distantIcon.GetComponent<Renderer> ().enabled = false;	
+
+					} else {
+								//We are close enough to be rendering the line, and should not be rendering planet. 
+								//But we may or may not want to see the distantIcon, so don't worry about that in here.
 								line.GetComponent<Renderer> ().enabled = true;
+								
 								setWidth (0.001f * Camera.main.GetComponent<CameraUserControl> ().distance);
-						}
+					}
 				}
 
 				//	If the game is playing, then unflag localPause
