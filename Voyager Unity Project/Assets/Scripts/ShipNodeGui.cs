@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using System.Collections;
 using System;
 using System.Text.RegularExpressions;
@@ -47,7 +48,7 @@ public class ShipNodeGui : MonoBehaviour
 			{
 			//	(float.Parse (a4))*Mathf.PI/180  // ths is the radian version of the degree entry in the field
 				open *= -1;
-				this.gameObject.GetComponent<shipOEHistory> ().deltaVAdd(double.Parse (a4));
+				this.gameObject.GetComponent<shipOEHistory> ().deltaVAdd((double.Parse (a4))*Mathf.PI/180);
 
 			/*	Vector3 a = new Vector3 (0, 0, float.Parse(a1)); //normal
 				Vector3 b = new Vector3 (0, float.Parse(a2), 0); //tangential
