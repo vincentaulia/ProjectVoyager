@@ -92,8 +92,12 @@ public class MoonOrbit : MonoBehaviour
 						Debug.LogError ("Object not found to create path" + body);
 						return;
 				}
-				distantIcon = spaceObject.transform.GetChild (1);
-		
+				
+				//This will stop working if moons get more child objects before the distant icon. I think it's less robust, so it's commented out.
+				//distantIcon = spaceObject.transform.GetChild (1); 
+				//This will stop working if moon distant Icon object name is changed
+				distantIcon = spaceObject.transform.Find ("Planet Distance Icon");
+
 				// Get the mass, radius and orbital period (using Kepler's Third Law) of the focus body
 				mass = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.massFocus;
 				radius = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.axis;
