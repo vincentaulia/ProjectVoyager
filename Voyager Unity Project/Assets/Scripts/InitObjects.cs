@@ -19,6 +19,7 @@ public class InitObjects : MonoBehaviour
 {
 		string[] basic;
 		public GameObject orbitPreFab;
+		public GameObject moonOrbitPreFab;
 		int count;
 		//Count the nmber of orbits for the moons
 		int countMoon;
@@ -121,11 +122,11 @@ public class InitObjects : MonoBehaviour
 						if (Global.body [i].name != "10" && (int.Parse (Global.body [i].name) % 100 != 99)) {
 								countMoon = Global.orbitsMoon.Count;
 				
-								Global.orbitsMoon.Add ((GameObject)Instantiate (orbitPreFab));
+								Global.orbitsMoon.Add ((GameObject)Instantiate (moonOrbitPreFab));
 								Global.orbitsMoon [countMoon].name = "Orbit" + Global.body [i].name;
 								Global.orbitsMoon [countMoon].transform.parent = GameObject.Find ("OrbitsBody").transform;
 								//calculate the points of the orbit
-								Global.orbitsMoon [countMoon].GetComponent<Orbits> ().makeMoonOrbit (0, Global.body [i].name, Global.body [i].GetComponent<OrbitalElements> ().orb_elements.IDFocus);
+								Global.orbitsMoon [countMoon].GetComponent<MoonOrbit> ().makeMoonOrbit (0, Global.body [i].name, Global.body [i].GetComponent<OrbitalElements> ().orb_elements.IDFocus);
 						}
 				}
 		}

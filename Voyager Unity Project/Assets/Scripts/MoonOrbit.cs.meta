@@ -1,12 +1,10 @@
 fileFormatVersion: 2
-guid: 8610a9776c3fa1d45950367da2332358
-timeCreated: 1430689002
+guid: d08bf7e1aa7baca4b811a6e5f30080e4
+timeCreated: 1430686197
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences:
-  - orbitPreFab: {instanceID: 0}
-  - moonOrbitPreFab: {instanceID: 0}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

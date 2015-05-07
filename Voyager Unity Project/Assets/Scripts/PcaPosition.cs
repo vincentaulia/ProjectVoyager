@@ -1,4 +1,4 @@
-﻿/*  
+/*  
  * 
  * This file contains the definitions of findPos and the struct Elements
  * 
@@ -141,6 +141,7 @@ public struct Elements
 		//(the other orbital elements won't be changing for planets, but they will be for ships).
 		public Vector3 P;
 		public Vector3 Q;
+		public Vector3 W;
 		public double n;
 	
 		public void calcData ()
@@ -163,6 +164,13 @@ public struct Elements
 				double Qz = Math.Sin (incl) * Math.Cos (arg);
 				//*********LOSS OF PRECISION HERE BY CONVERTING TO FLOATS.
 				Q = new Vector3 ((float)Qx, (float)Qy, (float)Qz);
+
+				//Calculating W
+				double Wx = Math.Sin(incl) * Math.Sin(asc);
+				double Wy = -1 * Math.Sin(incl) * Math.Cos(asc);
+				double Wz = Math.Cos(incl);
+				//*********LOSS OF PRECISION HERE BY CONVERTING TO FLOATS.
+				W = new Vector3 ((float)Wx, (float)Wy, (float)Wz);
 		
 				// Calculating n
 				n = Math.Sqrt ((6.67384e-11) * (mass + massFocus) / (axis * axis * axis)) * dir;
@@ -173,7 +181,7 @@ public struct Elements
 		{
 				Debug.Log ("x-axis: " + x.axis);
 				Debug.Log ("y-axis: " + y.axis);
-				if (x.axis == y.axis) {
+				if (x.axis != y.axis) {
 						Debug.Log ("x-ecc: " + x.ecc);
 						Debug.Log ("y-ecc: " + y.ecc);
 						if (x.ecc == y.ecc) {
@@ -190,10 +198,10 @@ public struct Elements
 														Debug.Log ("y-arg: " + y.arg);
 														if (x.arg == y.arg) {
 																Debug.Log ("x-dir: " + x.dir);
-																Debug.Log ("y-argdir " + y.dir);
+																Debug.Log ("y-adir " + y.dir);
 																if (x.dir == y.dir) {
 																		Debug.Log ("x-IDFocus: " + x.IDFocus);
-																		Debug.Log ("y-IDFocus " + y.IDFocus);
+																		Debug.Log ("y-IDFocus: " + y.IDFocus);
 																		if (x.IDFocus == y.IDFocus) {
 																				Debug.Log ("it is equal");
 																				return true;
