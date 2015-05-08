@@ -148,9 +148,9 @@ public class ShipOrbit : MonoBehaviour
 
 				//if the the user is taking control and toggle is off
 				if (!auto && !VisualizeOrbits.shipOrbits) {
-					//turn tracks off
-					line.GetComponent<Renderer> ().enabled = false;
-					return;
+						//turn tracks off
+						line.GetComponent<Renderer> ().enabled = false;
+						return;
 				}
 
 				//if the game is playing, then unflag localPause
@@ -205,11 +205,15 @@ public class ShipOrbit : MonoBehaviour
 						}
 				}
 
+
 				//if new orbital elements are added
-				if (ship.GetComponent<shipOEHistory> ().getNumberOfElements () > orbits) {
+				//if (ship.GetComponent<shipOEHistory> ().getNumberOfElements () > orbits) {
+				if (ship.GetComponent<shipOEHistory> ().updateOrbit) {
 						//make another orbit for them
 						makeAnotherOrbit (ship.GetComponent<shipOEHistory> ().shipT [orbits]);
 						orbits++;
+						//turn the flag off again
+						ship.GetComponent<shipOEHistory> ().updateOrbit = false;
 				}
 		}
 }

@@ -29,6 +29,7 @@ public class shipOEHistory : MonoBehaviour
 		private string a2 = "0";
 		private string a3 = "0";
 		public Stopwatch stopwatch = new Stopwatch(); //for testing purposes only
+		public bool updateOrbit = false;
 	
 		/* Constructor, takes the first OE of a ship, the GamObject ship and the time at which it is created
         NOTE: ship GameObject is only needed for PcaPosition.findPos */
@@ -492,6 +493,8 @@ public class shipOEHistory : MonoBehaviour
 			}
 			if (GUI.Button(new Rect(10, 240, 100, 20),"Done"))
 			{
+				//flag to update visualizing the tracks
+				updateOrbit = true;
 				deltaVGui = false; 
 			}
 			GUI.EndGroup ();
