@@ -81,26 +81,17 @@ public class Orbits : MonoBehaviour
 				radius = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.axis;
 				orbitalPeriod = (float)(2 * Math.PI * Math.Sqrt((Math.Pow(radius, 3)) / (6.67384e-11f * mass)));
 				Debug.Log ("Orbits.cs: Body " + body + ", m=" + mass + ", r=" + radius + ", orbPeriod=" + orbitalPeriod);
-
-				//The semi major axis of the body, used to determine the number of points drawn. 
-				if (radius < 149600000000 * 0.005) {
-						//Applies for Luna, Charon, Deimos, other moons.
-						NUM_ORBIT_POINTS = 200;
-				} else if (radius < 149600000000 * 0.05) {
-						//Applies for some moons with large orbital radii.
-						NUM_ORBIT_POINTS = 500;
-				} else if (radius < 149600000000 * 3) {
-						//Mercury, Venus, Earth, Mars
-						NUM_ORBIT_POINTS = 1600;
-				} else if (radius < 149600000000 * 20) {
-						//Saturn, Uranus. 
-						NUM_ORBIT_POINTS = 2000;
-				} else {
-						//Neptune, Pluto. 
-						NUM_ORBIT_POINTS = 5000;
-				}
+	
+				
+				double major_axis = GameObject.Find (bodyID).GetComponent<OrbitalElements> ().orb_elements.axis;
+				double ecc = GameObject.Find (bodyID).GetComponent<OrbitalElements> ().orb_elements.ecc;
+				double minor_axis = Math.Sqrt ((major_axis * major_axis) + Math.Pow (major_axis * ecc, 2));
+				
+				NUM_ORBIT_POINTS = (int)(0.0002959568 * (major_axis + minor_axis)*1000000 + 1252);
+				
 		
-				// Calculate the timeStep to get about 400 points
+		
+		// Calculate the timeStep to get about 400 points
 				timeStep = (long)(orbitalPeriod / NUM_ORBIT_POINTS);
 
 				// Initialize the line element
