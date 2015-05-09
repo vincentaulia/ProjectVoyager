@@ -85,6 +85,7 @@ public class OrbitalElements : MonoBehaviour
 
 						//for the Ships
 						if (split.Length > 12) {
+				Debug.Log("OE.cs("+split[0]+")");
 							orb_elements.dryMass = double.Parse (split [13], CultureInfo.InvariantCulture);
 							orb_elements.fuelMass = double.Parse (split [14], CultureInfo.InvariantCulture);
 							orb_elements.Isp = double.Parse (split [12], CultureInfo.InvariantCulture);

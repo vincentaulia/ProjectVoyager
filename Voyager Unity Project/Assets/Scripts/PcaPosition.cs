@@ -35,7 +35,7 @@ public class PcaPosition : MonoBehaviour
 			
 				} while (Math.Abs(Enext - E) > epsilon && count < 15);
 		
-				if (count == 15) {
+				if (count == 50) {
 						Debug.Log ("Epsilon Crash: " + body.name);
 				}
 		
