@@ -7,6 +7,10 @@
  * 
  * Files needed:	orbit_info.txt
  * 
+ * May 8 2015:
+ * - Modified file to accomodate comets and asteroids.
+ * - For now, use the older version of basic_info & orbit_info with this updated code,
+ *   (as in the one with planets+moons only) because some comets are breaking Orbits.cs.
  */
 using UnityEngine;
 using System.Collections;
@@ -53,7 +57,11 @@ public class OrbitalElements : MonoBehaviour
 						//Name of the body
 						orb_elements.name = name;
 						//Mass of the planet.
-						orb_elements.mass = double.Parse (split [1], CultureInfo.InvariantCulture);
+						if (split[1].Contains("?")) {
+							orb_elements.mass = (double)0;
+						} else {
+							orb_elements.mass = double.Parse (split [1], CultureInfo.InvariantCulture);
+						}
 						//Mass of the object the planet's orbiting.
 						orb_elements.massFocus = double.Parse (split [3], CultureInfo.InvariantCulture);
 						//The semi-major axis (in meters)
@@ -100,7 +108,8 @@ public class OrbitalElements : MonoBehaviour
 								orb_elements.radiusx = float.Parse (radius.Substring (0, j [0])) * 1000;
 								orb_elements.radiusy = float.Parse (radius.Substring (j [0] + 1, j [1] - j [0] - 1)) * 1000;
 								orb_elements.radiusz = float.Parse (radius.Substring (j [1] + 1)) * 1000;
-
+						} else if (radius.Contains("?")) {
+								orb_elements.radiusx = orb_elements.radiusy = orb_elements.radiusz = (float)0;
 						} else {
 								//convert from km to m
 								orb_elements.radiusx = orb_elements.radiusy = orb_elements.radiusz = float.Parse (radius) * 1000;

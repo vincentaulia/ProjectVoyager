@@ -142,7 +142,7 @@ public class MovePca : MonoBehaviour
 		public void Paws ()
 		{
 				//Debug.Log ("I GOT PAWS");
-				//Pauses the game //reduendant after Reuben's code
+				//Pauses the game //redundant after Reuben's code
 				//doPaws = !doPaws;
 				//toggles the play and pause pics on the button
 				pic += 1;

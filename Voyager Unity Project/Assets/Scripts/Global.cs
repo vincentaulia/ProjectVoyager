@@ -6,6 +6,11 @@
  * 
  * Files needed:	None
  * 
+ * May 8 2015:
+ * - Modified file to accomodate comets and asteroids.
+ * - For now, use the older version of basic_info & orbit_info with this updated code,
+ *   (as in the one with planets+moons only) because some comets are breaking Orbits.cs.
+ * 
  */
 using UnityEngine;
 using System.Collections;
@@ -34,6 +39,12 @@ public class Global : MonoBehaviour
 
 		//holds a list of ship orbits in the game
 		public static List <GameObject> orbitsShip = new List<GameObject> ();
+
+		// list of asteroid orbits
+		public static List <GameObject> orbitsAsteroid = new List<GameObject> ();
+	
+		// list of meteor orbits
+		public static List <GameObject> orbitsMeteor = new List<GameObject> ();
 
 		// m to AU - output.txt coordinates are in meters
 		public const double CONVFACTOR = 149597870.700 * 1000;
@@ -65,5 +76,7 @@ public class Global : MonoBehaviour
 		public static bool time_doPause = true;
 		public GameObject planet_prefab;
 		public GameObject moon_prefab;
+		public GameObject asteroid_prefab;
+		public GameObject comet_prefab;
 
 }
