@@ -415,6 +415,7 @@ GameObject:
   - 114: {fileID: 11457104}
   - 114: {fileID: 11433104}
   - 65: {fileID: 6570620}
+  - 114: {fileID: 11446566}
   m_Layer: 0
   m_Name: ship_ISS
   m_TagString: Untagged
@@ -5488,6 +5489,18 @@ MonoBehaviour:
   a2: 0
   a3: 0
   a4: 0
+--- !u!114 &11446566
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 138042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa727fcc655f1ba41bff4c34a2ce22f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deltaVBudget: 0
 --- !u!114 &11457104
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5511,7 +5524,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shipT: 
+  shipA: []
   shipObject: {fileID: 0}
+  updateOrbit: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

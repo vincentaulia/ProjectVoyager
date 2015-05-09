@@ -166,6 +166,7 @@ public class shipOEHistory : MonoBehaviour
 			CalcTangentialDeltaV (ref prev, tangent, mAnom);
 			CalcRadialDeltaV (ref prev, radial, mAnom);
 			shipOE [j + 1] = prev;
+			GetComponent<ShipMissionFunctions> ().update_deltaV_budget (normal + tangent + radial);
 		}
 		
 		public int indexFinder (long time)
