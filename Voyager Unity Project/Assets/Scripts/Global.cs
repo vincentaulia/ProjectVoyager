@@ -41,10 +41,10 @@ public class Global : MonoBehaviour
 		public static List <GameObject> orbitsShip = new List<GameObject> ();
 
 		// list of asteroid orbits
-		//public static List <GameObject> orbitsAsteroid = new List<GameObject> ();
+		public static List <GameObject> orbitsAsteroid = new List<GameObject> ();
 	
 		// list of meteor orbits
-		//public static List <GameObject> orbitsMeteor = new List<GameObject> ();
+		public static List <GameObject> orbitsMeteor = new List<GameObject> ();
 
 		// m to AU - output.txt coordinates are in meters
 		public const double CONVFACTOR = 149597870.700 * 1000;

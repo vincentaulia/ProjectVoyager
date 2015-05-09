@@ -9,7 +9,6 @@
  */
 using UnityEngine;
 using System.Collections;
-using System;
 using System.Collections.Generic;
 
 //used to get max number in an array
@@ -74,21 +73,12 @@ public class Orbits : MonoBehaviour
 				}
 
 				//get distantIcon of the planet
-				if (body.Length > 3) {
-						distantIcon = GameObject.Find("Planet Distance Icon").transform;
-				} else {
-						distantIcon = spaceObject.transform.GetChild (2);
-				}
+				distantIcon = spaceObject.transform.GetChild (2);
 
 				// Get the mass, radius and orbital period (using Kepler's Third Law) of the focus body
 				mass = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.massFocus;
 				radius = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.axis;
-<<<<<<< HEAD
-				//orbitalPeriod = 2 * Mathf.PI * Mathf.Sqrt((Mathf.Pow(radius, 3)) / (6.67384e-11f * mass));
-				orbitalPeriod = (float) (2 * System.Math.PI * System.Math.Sqrt((System.Math.Pow((double)radius, 3))/(6.67384E-11*(double)mass)));
-=======
-				orbitalPeriod = (float)(2 * Math.PI * Math.Sqrt((Math.Pow(radius, 3)) / (6.67384e-11f * mass)));
->>>>>>> origin/master
+				orbitalPeriod = 2 * Mathf.PI * Mathf.Sqrt((Mathf.Pow(radius, 3)) / (6.67384e-11f * mass));
 				Debug.Log ("Orbits.cs: Body " + body + ", m=" + mass + ", r=" + radius + ", orbPeriod=" + orbitalPeriod);
 
 				//The semi major axis of the body, used to determine the number of points drawn. 
@@ -115,10 +105,6 @@ public class Orbits : MonoBehaviour
 				// Initialize the line element
 				if (time == 0)
 						line = GetComponent<LineRenderer> ();
-
-				if (line == null) {
-					Debug.Log("Line is null for object " + body + " at time " + time);
-				}
 		
 				// Obtain the width of the object and set it as the width of the line
 				width = spaceObject.transform.lossyScale.x;
@@ -178,45 +164,13 @@ public class Orbits : MonoBehaviour
 		void LateUpdate ()
 		{
 
-<<<<<<< HEAD
-			//if the the user is taking control and toggle is off
-			if (!VisualizeOrbits.auto && !VisualizeOrbits.planetOrbits) {
-				//turn tracks off and exit
-				line.GetComponent<Renderer> ().enabled = false;
-				distantIcon.GetComponent<Renderer> ().enabled = false;
-				return;
-			}
-
-			//get the object of focus
-			cameraObject = GameObject.Find (Camera.main.GetComponent<CameraUserControl> ().target.name);
-			//get the parent of object of focus
-			cameraParent = GameObject.Find (cameraObject.transform.parent.name);
-
-			//if the object is not in focus
-			//and the camera is close to it
-			//turn other tracks off
-			if (cameraObject != spaceObject) {
-				if (Camera.main.GetComponent<CameraUserControl> ().distance < Camera.main.GetComponent<CameraUserControl> ().standardDistance * 10) {
-					line.GetComponent<Renderer> ().enabled = false;
-					distantIcon.GetComponent<Renderer> ().enabled = false;
-					return;
-				}
-			//if the camera is far, turn the tracks back on
-				else {
-					line.GetComponent<Renderer> ().enabled = true;
-				}
-			}
-			//turn the track on for the object in focus
-			else {
-				line.GetComponent<Renderer> ().enabled = true;
-=======
-				//if the the user is taking control and toggle is off
-				if (!VisualizeOrbits.auto && !VisualizeOrbits.planetOrbits) {
-					//turn tracks off and exit
-					line.GetComponent<Renderer> ().enabled = false;
-					distantIcon.GetComponent<Renderer> ().enabled = false;
-					return;
-				}
+		//if the the user is taking control and toggle is off
+		if (!VisualizeOrbits.auto && !VisualizeOrbits.planetOrbits) {
+			//turn tracks off and exit
+			line.GetComponent<Renderer> ().enabled = false;
+			distantIcon.GetComponent<Renderer> ().enabled = false;
+			return;
+		}
 
 				//get the object of focus
 				cameraObject = GameObject.Find (Camera.main.GetComponent<CameraUserControl> ().target.name);
@@ -233,65 +187,65 @@ public class Orbits : MonoBehaviour
 								return;
 						}
 			//if the camera is far, turn the tracks back on
-					else {
+			else {
 								line.GetComponent<Renderer> ().enabled = true;
-					}
-		
+						}
 				}
 		//turn the track on for the object in focus
-			else {
+		else {
 						line.GetComponent<Renderer> ().enabled = true;
->>>>>>> origin/master
-			}
-
-			Vector3 cameraPosition = Camera.main.transform.position;
-
-			//if it's the focus body or if it's the parent of the moon in focus
-			if (Camera.main.GetComponent<CameraUserControl> ().target.name == bodyID || Camera.main.GetComponent<CameraUserControl> ().target.parent.name == bodyID) {
-				setWidth (0.0015f * Camera.main.GetComponent<CameraUserControl> ().distance);
-			}
-			//otherwise, calculate distances from four corners and compute the max distance
-			else {
-				for (int i=0; i<4; i++) {
-					distances [i] = Vector3.Distance (cameraPosition, corners [i]);
-				}
-				maxDistance = distances.Max ();
-
-				//if the camera is not very close to the planet
-				if (maxDistance > Vector3.Distance (spaceObject.transform.position, cameraPosition) * 4) {
-					setWidth (0.0015f * Vector3.Distance (spaceObject.transform.position, cameraPosition));
-				} else {
-					setWidth (0.001f * maxDistance);
-				}
-			}
-
-			//	If the game is playing, then unflag localPause
-			if (!Global.time_doPause) {
-				localPause = false;
-			}
-
-			// If the planet has finished one round of its current orbit, then create a new orbit
-			// in order to improve track accuracy
-			if (!localPause) {
-			// If the planet has finished the current orbit, recalculate the orbit at the current time
-			// in order to improve track accuracy
-				if (currentTime == lastTime) {
-					makeOrbit (currentTime, bodyID);
 				}
 
-				if (Global.time_doPause) {
-					localPause = true;
+				Vector3 cameraPosition = Camera.main.transform.position;
+
+				//if it's the focus body or if it's the parent of the moon in focus
+				if (Camera.main.GetComponent<CameraUserControl> ().target.name == bodyID || Camera.main.GetComponent<CameraUserControl> ().target.parent.name == bodyID) {
+						setWidth (0.0015f * Camera.main.GetComponent<CameraUserControl> ().distance);
+				}
+						//otherwise, calculate distances from four corners and compute the max distance
+				else {
+						for (int i=0; i<4; i++) {
+								distances [i] = Vector3.Distance (cameraPosition, corners [i]);
+						}
+						maxDistance = distances.Max ();
+
+						//if the camera is not very close to the planet
+						if (maxDistance > Vector3.Distance (spaceObject.transform.position, cameraPosition) * 4) {
+								setWidth (0.0015f * Vector3.Distance (spaceObject.transform.position, cameraPosition));
+						} else {
+								setWidth (0.001f * maxDistance);
+						}
+
 				}
 
-				// Update the current time of the object's new position
-				currentTime += timeStep;
-			}
+				//	If the game is playing, then unflag localPause
+				if (!Global.time_doPause) {
+						localPause = false;
+				}
 
-			//if the the user is taking control
-			if (!VisualizeOrbits.auto) {
-				//keep tracks on
-				line.GetComponent<Renderer> ().enabled = true;
-			}
+				// If the planet has finished one round of its current orbit, then create a new orbit
+				// in order to improve track accuracy
+				if (!localPause) {
+
+						// If the planet has finished the current orbit, recalculate the orbit at the current time
+						// in order to improve track accuracy
+						if (currentTime == lastTime) {
+								makeOrbit (currentTime, bodyID);
+						}
+
+						if (Global.time_doPause) {
+								localPause = true;
+						}
+
+						// Update the current time of the object's new position
+						currentTime += timeStep;
+				}
+
+				//if the the user is taking control
+				if (!VisualizeOrbits.auto) {
+					//keep tracks on
+					line.GetComponent<Renderer> ().enabled = true;
+				}
 
 		}
 }
