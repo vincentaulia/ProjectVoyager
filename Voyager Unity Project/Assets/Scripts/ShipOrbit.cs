@@ -28,8 +28,12 @@ public class ShipOrbit : MonoBehaviour
 
 		Vector3 parentPosition; //holds the position of the parent planet
 
+        public List<long> timePoint = new List<long>();  //stores the time for each point
+
 		//float maxRendering = 2000f;		//max rendering distance for ships
 
+        //this method creates the primary orbit for the ship
+        //it is called upon the creation of the ship (in the script 'InsertShip')
 		public void createOrbit (long time, string shipName)
 		{
 				ship = GameObject.Find (shipName);
@@ -58,6 +62,8 @@ public class ShipOrbit : MonoBehaviour
 				points.Add (ship.GetComponent<shipOEHistory> ().findShipPos (time));
 				//ship's position is parents position + ship's position relative to the parent
 				origin = parentPosition + points [0];
+                //store the time for the point
+                timePoint.Add(time);
 		
 				//increase the array of points by 1
 				line.SetVertexCount (i + 1);
@@ -77,14 +83,19 @@ public class ShipOrbit : MonoBehaviour
 						//increase the array of points by 1
 						line.SetVertexCount (i + 1);
 						//include the new point in the array of points
-						line.SetPosition (i++, current);
+						line.SetPosition (i, current);
+                        //store the time for the point
+                        timePoint.Add(localTime);
 						//increase the time step
 						localTime += time_step;
+                        //increment
+                        i++;
 				}
 
 		}
 
-		public void makeAnotherOrbit (long time)
+        //old method to creat orbits after nodes
+		/*public void makeAnotherOrbit (long time)
 		{
 				Elements el = ship.GetComponent<shipOEHistory> ().shipOE [orbits];
 
@@ -117,7 +128,69 @@ public class ShipOrbit : MonoBehaviour
 						localTime += time_step;
 				}
 
-		}
+		}*/
+
+        //this method creates the orbits after a node is added
+        //it stops visualizing the old orbit after the node and
+        //only visualizes the new orbit
+        public void makeAnotherOrbit(long time)
+        {
+            Elements el = ship.GetComponent<shipOEHistory>().shipOE[orbits];
+
+            //get the semi-major axis
+            radius = (float)el.axis;
+            //calculate the orbital period using Kepler's third law
+            orbital_period = Mathf.Sqrt((4 * Mathf.PI * Mathf.PI * Mathf.Pow(radius, 3)) / (6.67384e-11f * mass));
+
+            //calculate the time_step to get about 400 points
+            time_step = (long)(orbital_period / 400);
+
+            localTime = time;
+
+            //store the current position of i
+            int prev_i = i;
+
+            //figure out where to start the second orbit
+            while (timePoint[--i] > localTime);
+            i++;
+            int j = i + 401;
+
+            if(prev_i > j){
+                Debug.Log("ERROR[ShipOrbit]: The new number of points is smaller than the previous one");
+            }
+
+            //keep adding points until the track is complete
+            while (i != j)
+            {
+
+                //add the point to the list
+                if (i < prev_i)
+                {
+                    points[i] = (ship.GetComponent<shipOEHistory>().findShipPos(localTime));
+                    //store the time for the point
+                    timePoint[i] = localTime;
+                }
+                else
+                {
+                    points.Add(ship.GetComponent<shipOEHistory>().findShipPos(localTime));
+                    //increase the array of points by 1
+                    line.SetVertexCount(i + 1);
+                    //store the time for the point
+                    timePoint.Add(localTime);
+                }
+                
+                //ship's position is parents position + ship's position relative to the parent
+                current = parentPosition + points[i];
+                //include the new point in the array of points
+                line.SetPosition(i, current);
+                //increase the time step
+                localTime += time_step;
+                //increment
+                i++;
+            }
+
+
+        }
 
 		// Set the width of the orbit
 		public void setWidth (float newWidth)
