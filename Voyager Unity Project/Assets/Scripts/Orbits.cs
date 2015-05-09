@@ -9,6 +9,7 @@
  */
 using UnityEngine;
 using System.Collections;
+using System;
 using System.Collections.Generic;
 
 //used to get max number in an array
@@ -82,29 +83,24 @@ public class Orbits : MonoBehaviour
 				// Get the mass, radius and orbital period (using Kepler's Third Law) of the focus body
 				mass = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.massFocus;
 				radius = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.axis;
+<<<<<<< HEAD
 				//orbitalPeriod = 2 * Mathf.PI * Mathf.Sqrt((Mathf.Pow(radius, 3)) / (6.67384e-11f * mass));
 				orbitalPeriod = (float) (2 * System.Math.PI * System.Math.Sqrt((System.Math.Pow((double)radius, 3))/(6.67384E-11*(double)mass)));
+=======
+				orbitalPeriod = (float)(2 * Math.PI * Math.Sqrt((Math.Pow(radius, 3)) / (6.67384e-11f * mass)));
+>>>>>>> origin/master
 				Debug.Log ("Orbits.cs: Body " + body + ", m=" + mass + ", r=" + radius + ", orbPeriod=" + orbitalPeriod);
-
-				//The semi major axis of the body, used to determine the number of points drawn. 
-				if (radius < 149600000000 * 0.005) {
-						//Applies for Luna, Charon, Deimos, other moons.
-						NUM_ORBIT_POINTS = 200;
-				} else if (radius < 149600000000 * 0.05) {
-						//Applies for some moons with large orbital radii.
-						NUM_ORBIT_POINTS = 500;
-				} else if (radius < 149600000000 * 3) {
-						//Mercury, Venus, Earth, Mars
-						NUM_ORBIT_POINTS = 1600;
-				} else if (radius < 149600000000 * 20) {
-						//Saturn, Uranus. 
-						NUM_ORBIT_POINTS = 2000;
-				} else {
-						//Neptune, Pluto. 
-						NUM_ORBIT_POINTS = 5000;
-				}
+	
+				
+				double major_axis = GameObject.Find (bodyID).GetComponent<OrbitalElements> ().orb_elements.axis;
+				double ecc = GameObject.Find (bodyID).GetComponent<OrbitalElements> ().orb_elements.ecc;
+				double minor_axis = Math.Sqrt ((major_axis * major_axis) + Math.Pow (major_axis * ecc, 2));
+				
+				NUM_ORBIT_POINTS = (int)(0.0002959568 * (major_axis + minor_axis)*1000000 + 1252);
+				
 		
-				// Calculate the timeStep to get about 400 points
+		
+		// Calculate the timeStep to get about 400 points
 				timeStep = (long)(orbitalPeriod / NUM_ORBIT_POINTS);
 
 				// Initialize the line element
@@ -173,6 +169,7 @@ public class Orbits : MonoBehaviour
 		void LateUpdate ()
 		{
 
+<<<<<<< HEAD
 			//if the the user is taking control and toggle is off
 			if (!VisualizeOrbits.auto && !VisualizeOrbits.planetOrbits) {
 				//turn tracks off and exit
@@ -203,6 +200,39 @@ public class Orbits : MonoBehaviour
 			//turn the track on for the object in focus
 			else {
 				line.GetComponent<Renderer> ().enabled = true;
+=======
+				//if the the user is taking control and toggle is off
+				if (!VisualizeOrbits.auto && !VisualizeOrbits.planetOrbits) {
+					//turn tracks off and exit
+					line.GetComponent<Renderer> ().enabled = false;
+					distantIcon.GetComponent<Renderer> ().enabled = false;
+					return;
+				}
+
+				//get the object of focus
+				cameraObject = GameObject.Find (Camera.main.GetComponent<CameraUserControl> ().target.name);
+				//get the parent of object of focus
+				cameraParent = GameObject.Find (cameraObject.transform.parent.name);
+
+				//if the object is not in focus
+				//and the camera is close to it
+				//turn other tracks off
+				if (cameraObject != spaceObject) {
+						if (Camera.main.GetComponent<CameraUserControl> ().distance < Camera.main.GetComponent<CameraUserControl> ().standardDistance * 10) {
+								line.GetComponent<Renderer> ().enabled = false;
+								distantIcon.GetComponent<Renderer> ().enabled = false;
+								return;
+						}
+			//if the camera is far, turn the tracks back on
+					else {
+								line.GetComponent<Renderer> ().enabled = true;
+					}
+		
+				}
+		//turn the track on for the object in focus
+			else {
+						line.GetComponent<Renderer> ().enabled = true;
+>>>>>>> origin/master
 			}
 
 			Vector3 cameraPosition = Camera.main.transform.position;
