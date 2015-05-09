@@ -233,9 +233,11 @@ public class MoonOrbit : MonoBehaviour
 						Vector3 parentPosition = parent.position;
 			
 						//	Update all points on the moon's orbit relative to parent's new position
-						for (int i = 0; i <= NUM_ORBIT_POINTS; i++) {
+						for (int i = 0; i < NUM_ORBIT_POINTS+1; i++) {
 								line.SetPosition (i, parentPosition + moonPositions [i]);
 						}
+                        //manually fix the last point to equal the first point in order to close the track
+                        line.SetPosition(NUM_ORBIT_POINTS+1, parentPosition + moonPositions[0]);
 			
 						//	This allows the Update method to run once after the game is paused in order to
 						//	ensure that the moons are at the same timeStep as the planets
