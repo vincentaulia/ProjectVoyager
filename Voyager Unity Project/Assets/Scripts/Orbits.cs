@@ -9,6 +9,7 @@
  */
 using UnityEngine;
 using System.Collections;
+using System;
 using System.Collections.Generic;
 
 //used to get max number in an array
@@ -78,7 +79,7 @@ public class Orbits : MonoBehaviour
 				// Get the mass, radius and orbital period (using Kepler's Third Law) of the focus body
 				mass = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.massFocus;
 				radius = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.axis;
-				orbitalPeriod = 2 * Mathf.PI * Mathf.Sqrt((Mathf.Pow(radius, 3)) / (6.67384e-11f * mass));
+				orbitalPeriod = (float)(2 * Math.PI * Math.Sqrt((Math.Pow(radius, 3)) / (6.67384e-11f * mass)));
 				Debug.Log ("Orbits.cs: Body " + body + ", m=" + mass + ", r=" + radius + ", orbPeriod=" + orbitalPeriod);
 
 				//The semi major axis of the body, used to determine the number of points drawn. 
@@ -164,13 +165,13 @@ public class Orbits : MonoBehaviour
 		void LateUpdate ()
 		{
 
-		//if the the user is taking control and toggle is off
-		if (!VisualizeOrbits.auto && !VisualizeOrbits.planetOrbits) {
-			//turn tracks off and exit
-			line.GetComponent<Renderer> ().enabled = false;
-			distantIcon.GetComponent<Renderer> ().enabled = false;
-			return;
-		}
+				//if the the user is taking control and toggle is off
+				if (!VisualizeOrbits.auto && !VisualizeOrbits.planetOrbits) {
+					//turn tracks off and exit
+					line.GetComponent<Renderer> ().enabled = false;
+					distantIcon.GetComponent<Renderer> ().enabled = false;
+					return;
+				}
 
 				//get the object of focus
 				cameraObject = GameObject.Find (Camera.main.GetComponent<CameraUserControl> ().target.name);
@@ -187,14 +188,15 @@ public class Orbits : MonoBehaviour
 								return;
 						}
 			//if the camera is far, turn the tracks back on
-			else {
+					else {
 								line.GetComponent<Renderer> ().enabled = true;
-						}
+					}
+		
 				}
 		//turn the track on for the object in focus
-		else {
+			else {
 						line.GetComponent<Renderer> ().enabled = true;
-				}
+			}
 
 				Vector3 cameraPosition = Camera.main.transform.position;
 

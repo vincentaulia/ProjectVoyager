@@ -10,9 +10,12 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
 //used to get max number in an array
 using System.Linq;
+//used for Math instead of Mathf. 
+using System;
+
+
 
 public class MoonOrbit : MonoBehaviour
 {
@@ -62,25 +65,15 @@ public class MoonOrbit : MonoBehaviour
 				parentID = parent;
 		
 				//The semi major axis of the body, used to determine the number of points drawn. 
-				double axis = GameObject.Find (bodyID).GetComponent<OrbitalElements> ().orb_elements.axis;
-				if (axis < 149600000000 * 0.001) {
-						//Applies for Luna, Charon, Deimos, other moons.
-						NUM_ORBIT_POINTS = 50;
-				} else if (axis < 149600000000 * 0.05) {
-						//Applies for some moons with large orbital radii.
-						NUM_ORBIT_POINTS = 500;
-				} else if (axis < 149600000000 * 3) {
-						//Mercury, Venus, Earth, Mars
-						NUM_ORBIT_POINTS = 1600;
-				} else if (axis < 149600000000 * 20) {
-						//Saturn, Uranus. 
-						NUM_ORBIT_POINTS = 2000;
-				} else {
-						//Neptune, Pluto. 
-						NUM_ORBIT_POINTS = 5000;
+				double major_axis = GameObject.Find (bodyID).GetComponent<OrbitalElements> ().orb_elements.axis;
+				double ecc = GameObject.Find (bodyID).GetComponent<OrbitalElements> ().orb_elements.ecc;
+				double minor_axis = Math.Sqrt ((major_axis * major_axis) + Math.Pow (major_axis * ecc, 2));
+
+				NUM_ORBIT_POINTS = (int)(90.483 * Math.Log((major_axis + minor_axis)/1000000) - 191.67);
+				if (NUM_ORBIT_POINTS < 100) {
+					NUM_ORBIT_POINTS = 100;
 				}
-		
-		
+
 				// Get the position of the parent
 				parentObject = GameObject.Find (parentID);
 				Vector3 parentPosition = PcaPosition.findPos (parentObject.GetComponent<OrbitalElements> ().orb_elements, time, parentObject);
