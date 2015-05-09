@@ -11,6 +11,7 @@ public class DistantIcon : MonoBehaviour
 	public Vector3 scale;
 	public float renderDistanceMod = 30.72205695702f;
 	public Vector3 parentScale;
+	private Transform parentTransform;
 	
 	// Initializing the object variables
 	void Start ()
@@ -24,6 +25,7 @@ public class DistantIcon : MonoBehaviour
 		standardTargetDistance = (parentRadius / Mathf.Tan (Mathf.PI / 6)) / 20000000;		// determine standard zoom distance
 		IconActive = true;
 		parentScale = transform.GetComponentInParent<Transform> ().lossyScale;
+		parentTransform = transform.parent;
 	}
 
 
@@ -49,6 +51,17 @@ public class DistantIcon : MonoBehaviour
 		}
 		GetComponent<Renderer>().enabled = IconActive;	//render the icon if it should be active (beyond distance)
 		GetComponent<Collider>().enabled = IconActive;	//collider is active if it should be active (beyond distance)
+
+		//If Icon should be active, then planet should  be inactive and vice versa. 
+		parentTransform.GetComponent<Renderer>().enabled = !IconActive;	//Changing planet renderer
+		parentTransform.GetComponent<Collider>().enabled = !IconActive;	//Changing planet collider
+		if (parentTransform.Find ("Planet Atmosphere") != null) {
+			//If the planet has an atmosphere, change renderer and collider for that too.
+			parentTransform.Find ("Planet Atmosphere").GetComponent<Renderer> ().enabled = !IconActive;
+			parentTransform.Find ("Planet Atmosphere").GetComponent<Collider> ().enabled = !IconActive;
+
+		}
+
 	}
 }
 

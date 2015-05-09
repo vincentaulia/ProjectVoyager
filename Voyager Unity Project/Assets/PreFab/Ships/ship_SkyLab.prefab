@@ -66,6 +66,7 @@ GameObject:
   - 114: {fileID: 11443626}
   - 136: {fileID: 13631620}
   - 65: {fileID: 6594324}
+  - 114: {fileID: 11403774}
   m_Layer: 0
   m_Name: ship_SkyLab
   m_TagString: Untagged
@@ -596,6 +597,18 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &11403774
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 138394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa727fcc655f1ba41bff4c34a2ce22f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deltaVBudget: 0
 --- !u!114 &11404198
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -608,7 +621,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shipT: 
+  shipA: []
   shipObject: {fileID: 0}
+  updateOrbit: 0
 --- !u!114 &11422414
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -651,7 +666,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shipT: 
+  shipA: []
   shipObject: {fileID: 0}
+  updateOrbit: 0
 --- !u!114 &11475834
 MonoBehaviour:
   m_ObjectHideFlags: 1

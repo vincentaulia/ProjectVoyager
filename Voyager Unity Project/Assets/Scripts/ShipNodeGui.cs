@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using System.Collections;
 using System;
 using System.Text.RegularExpressions;
@@ -41,12 +42,13 @@ public class ShipNodeGui : MonoBehaviour
 
 			GUI.Label (new Rect (10, 210, 100, 20), "Mean Anomalyr");
 			a4 = GUI.TextField (new Rect (10, 240, 80, 20), a4, 8);
-			a4 = Regex.Replace (a4, "[^0-9]", "");
+			a4 = Regex.Replace (a4, "[^.0-9]", "");
 
 			if (GUI.Button(new Rect(10, 270, 100, 20),"Add New Node"))
 			{
 			//	(float.Parse (a4))*Mathf.PI/180  // ths is the radian version of the degree entry in the field
-			//	this.gameObject.GetComponent<shipOEHistory> ().somehow give the mean anomaly (a4);
+				open *= -1;
+				this.gameObject.GetComponent<shipOEHistory> ().deltaVAdd((double.Parse (a4))*Mathf.PI/180);
 
 			/*	Vector3 a = new Vector3 (0, 0, float.Parse(a1)); //normal
 				Vector3 b = new Vector3 (0, float.Parse(a2), 0); //tangential
@@ -56,7 +58,7 @@ public class ShipNodeGui : MonoBehaviour
 				Debug.Log (b.ToString("F4"));
 				Debug.Log (c.ToString("F4"));
 				this.gameObject.GetComponent<shipOEHistory> ().deltavChange(long.Parse (a4), a, b, c) ; */
-				open *= -1;
+
 			}
 			GUI.EndGroup ();
 		} 

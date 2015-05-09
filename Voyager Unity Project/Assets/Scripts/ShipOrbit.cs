@@ -143,6 +143,16 @@ public class ShipOrbit : MonoBehaviour
 		// Update is called once per frame
 		void LateUpdate ()
 		{
+
+				bool auto = VisualizeOrbits.auto;
+
+				//if the the user is taking control and toggle is off
+				if (!auto && !VisualizeOrbits.shipOrbits) {
+						//turn tracks off
+						line.GetComponent<Renderer> ().enabled = false;
+						return;
+				}
+
 				//if the game is playing, then unflag localPause
 				if (!Global.time_doPause) {
 						localPause = false;
@@ -151,6 +161,7 @@ public class ShipOrbit : MonoBehaviour
 				//if the focus is the ship, use the camera's distance
 				if (Camera.main.GetComponent<CameraUserControl> ().target.name == ship.name) {
 						setWidth (0.0015f * Camera.main.GetComponent<CameraUserControl> ().distance);
+						line.GetComponent<Renderer> ().enabled = true;
 
 				} else {
 						float normal;
@@ -158,10 +169,10 @@ public class ShipOrbit : MonoBehaviour
 						normal = (float)ship.GetComponent<OrbitalElements> ().orb_elements.axis * Mathf.Tan (Mathf.PI / 3);
 						//scale it to Unity scale
 						normal /= (Global.scale * 1000);
-						//adjust the distance by trial and error
+						//value determiend by trial and error
 						normal *= 25;
 
-						if (Vector3.Distance (parentPlanet.transform.position, Camera.main.transform.position) > normal) {
+						if (auto && Vector3.Distance (parentPlanet.transform.position, Camera.main.transform.position) > normal) {
 								line.GetComponent<Renderer> ().enabled = false;
 				
 						} else {
@@ -194,11 +205,15 @@ public class ShipOrbit : MonoBehaviour
 						}
 				}
 
+
 				//if new orbital elements are added
-				if (ship.GetComponent<shipOEHistory> ().getNumberOfElements () > orbits) {
+				//if (ship.GetComponent<shipOEHistory> ().getNumberOfElements () > orbits) {
+				if (ship.GetComponent<shipOEHistory> ().updateOrbit) {
 						//make another orbit for them
 						makeAnotherOrbit (ship.GetComponent<shipOEHistory> ().shipT [orbits]);
 						orbits++;
+						//turn the flag off again
+						ship.GetComponent<shipOEHistory> ().updateOrbit = false;
 				}
 		}
 }

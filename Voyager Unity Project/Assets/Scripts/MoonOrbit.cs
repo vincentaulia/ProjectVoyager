@@ -92,8 +92,12 @@ public class MoonOrbit : MonoBehaviour
 						Debug.LogError ("Object not found to create path" + body);
 						return;
 				}
-				distantIcon = spaceObject.transform.GetChild (1);
-		
+				
+				//This will stop working if moons get more child objects before the distant icon. I think it's less robust, so it's commented out.
+				//distantIcon = spaceObject.transform.GetChild (1); 
+				//This will stop working if moon distant Icon object name is changed
+				distantIcon = spaceObject.transform.Find ("Planet Distance Icon");
+
 				// Get the mass, radius and orbital period (using Kepler's Third Law) of the focus body
 				mass = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.massFocus;
 				radius = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.axis;
@@ -166,7 +170,16 @@ public class MoonOrbit : MonoBehaviour
 	*/
 		void LateUpdate ()
 		{
-		
+				bool auto = VisualizeOrbits.auto;
+
+				//if the the user is taking control and toggle is off
+				if (!auto && !VisualizeOrbits.moonOrbits) {
+					//turn tracks off and exit
+					line.GetComponent<Renderer> ().enabled = false;
+					distantIcon.GetComponent<Renderer> ().enabled = false;
+					return;
+				}
+
 				//get the object of focus
 				cameraObject = GameObject.Find (Camera.main.GetComponent<CameraUserControl> ().target.name);
 				//get the parent of object of focus
@@ -179,15 +192,15 @@ public class MoonOrbit : MonoBehaviour
 				//if the object is a planet
 			
 				//if the orbits are that of the moon of another planet, turn them off
-				if (spaceObject == cameraObject || parentObject == cameraObject || parentObject == cameraParent) {
+				if (spaceObject == cameraObject || parentObject == cameraObject || parentObject == cameraParent || !auto) {
 						//get the normal of the orbit at an angle of 60 degrees from the edge
 						normal = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.axis * Mathf.Tan (Mathf.PI / 3);
 						//scale it to Unity scale
 						normal /= (Global.scale * 1000);
-						//adjust the distance by trial and error
+						//value determiend by trial and error
 						normal *= 25;
 				
-						if (Vector3.Distance (parentObject.transform.position, cameraPosition) > normal) {
+						if (auto && Vector3.Distance (parentObject.transform.position, cameraPosition) > normal) {
 								line.GetComponent<Renderer> ().enabled = false;
 								distantIcon.GetComponent<Renderer> ().enabled = false;
 					

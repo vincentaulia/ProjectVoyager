@@ -72,6 +72,9 @@ public class Orbits : MonoBehaviour
 						return;
 				}
 
+				//get distantIcon of the planet
+				distantIcon = spaceObject.transform.GetChild (2);
+
 				// Get the mass, radius and orbital period (using Kepler's Third Law) of the focus body
 				mass = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.massFocus;
 				radius = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.axis;
@@ -161,6 +164,14 @@ public class Orbits : MonoBehaviour
 		void LateUpdate ()
 		{
 
+		//if the the user is taking control and toggle is off
+		if (!VisualizeOrbits.auto && !VisualizeOrbits.planetOrbits) {
+			//turn tracks off and exit
+			line.GetComponent<Renderer> ().enabled = false;
+			distantIcon.GetComponent<Renderer> ().enabled = false;
+			return;
+		}
+
 				//get the object of focus
 				cameraObject = GameObject.Find (Camera.main.GetComponent<CameraUserControl> ().target.name);
 				//get the parent of object of focus
@@ -172,6 +183,7 @@ public class Orbits : MonoBehaviour
 				if (cameraObject != spaceObject) {
 						if (Camera.main.GetComponent<CameraUserControl> ().distance < Camera.main.GetComponent<CameraUserControl> ().standardDistance * 10) {
 								line.GetComponent<Renderer> ().enabled = false;
+								distantIcon.GetComponent<Renderer> ().enabled = false;
 								return;
 						}
 			//if the camera is far, turn the tracks back on
@@ -228,5 +240,12 @@ public class Orbits : MonoBehaviour
 						// Update the current time of the object's new position
 						currentTime += timeStep;
 				}
+
+				//if the the user is taking control
+				if (!VisualizeOrbits.auto) {
+					//keep tracks on
+					line.GetComponent<Renderer> ().enabled = true;
+				}
+
 		}
 }
