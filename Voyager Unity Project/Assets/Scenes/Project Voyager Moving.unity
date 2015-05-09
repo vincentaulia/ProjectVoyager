@@ -2274,6 +2274,8 @@ Transform:
 Transform:
   m_PrefabParentObject: {fileID: 436052, guid: 1b687b78705dc0140a63aa4b9cd49488, type: 2}
   m_PrefabInternal: {fileID: 1114226647}
+<<<<<<< HEAD
+=======
 --- !u!1 &1445873599
 GameObject:
   m_ObjectHideFlags: 0
@@ -2301,6 +2303,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
+>>>>>>> origin/master
 --- !u!4 &1534627716 stripped
 Transform:
   m_PrefabParentObject: {fileID: 436052, guid: 1b687b78705dc0140a63aa4b9cd49488, type: 2}
