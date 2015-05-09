@@ -41,10 +41,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   points: []
-  timePoint: 
-  nodePrefab: {fileID: 142716, guid: 7860eca1e8c01cc47b4937ee2cb096fd, type: 2}
-  nodes: []
-  linkNodes: 
 --- !u!120 &12000000
 LineRenderer:
   m_ObjectHideFlags: 1
