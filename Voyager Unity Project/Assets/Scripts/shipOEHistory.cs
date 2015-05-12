@@ -148,9 +148,14 @@ public class shipOEHistory : MonoBehaviour
 
 		public int deltavChange (double mAnom)
 		{
-			Elements Initial = currentOE (Global.time);
-			int i = indexFinder (Global.time);
-			//double period = 2 * Math.PI * Math.Sqrt (Initial.axis / 6.67384e-11 * (Initial.mass + Initial.massFocus));
+            //Elements Initial = currentOE (Global.time);
+			//int i = indexFinder (Global.time);
+
+			//Get the latest OE and time isntrad of using the current one
+            Elements Initial = shipOE[shipOE.Count - 1];
+            int i = shipOE.Count - 1;
+            
+            //double period = 2 * Math.PI * Math.Sqrt (Initial.axis / 6.67384e-11 * (Initial.mass + Initial.massFocus));
 			//double currMAnom = ((Global.time - shipT[i]) * Initial.n ) - shipA[i];
 			long timeInOrbit = (long)((mAnom)/Initial.n);  //LOSS OF PRECISSION, Change need anom where orbit started
 			Debug.Log ("Time in Orbit");
