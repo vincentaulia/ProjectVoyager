@@ -73,28 +73,39 @@ public class Orbits : MonoBehaviour
 				}
 
 				//get distantIcon of the planet
-				distantIcon = spaceObject.transform.GetChild (2);
+				if (body.Length > 3) {
+						distantIcon = GameObject.Find("Planet Distance Icon").transform;
+				} else {
+						distantIcon = spaceObject.transform.GetChild (2);
+				}
 
 				// Get the mass, radius and orbital period (using Kepler's Third Law) of the focus body
 				mass = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.massFocus;
 				radius = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.axis;
-				orbitalPeriod = 2 * Mathf.PI * Mathf.Sqrt((Mathf.Pow(radius, 3)) / (6.67384e-11f * mass));
-				Debug.Log ("Orbits.cs: Body " + body + ", m=" + mass + ", r=" + radius + ", orbPeriod=" + orbitalPeriod);
+				orbitalPeriod = (float) (2 * System.Math.PI * System.Math.Sqrt((System.Math.Pow((double)radius, 3))/(6.67384E-11*(double)mass)));
+				//Debug.Log ("Orbits.cs: Body " + body + ", m=" + mass + ", r=" + radius + ", orbPeriod=" + orbitalPeriod);
 
 				double major_axis = GameObject.Find (bodyID).GetComponent<OrbitalElements> ().orb_elements.axis;
 				double ecc = GameObject.Find (bodyID).GetComponent<OrbitalElements> ().orb_elements.ecc;
 				double minor_axis = System.Math.Sqrt ((major_axis * major_axis) + System.Math.Pow (major_axis * ecc, 2));
-				//Calculating number of points based on circumference of orbit.
-				NUM_ORBIT_POINTS = (int)(0.0002959568 * (major_axis + minor_axis)/1000000 + 1252);
 
+				//Calculating number of points based on circumference of orbit.
+				NUM_ORBIT_POINTS = (int)(0.0002959568 * (major_axis + minor_axis) / 1000000 + 1252);
 		
 				// Calculate the timeStep to get about 400 points
 				timeStep = (long)(orbitalPeriod / NUM_ORBIT_POINTS);
+				
+				if (body.StartsWith ("1") && body.Length > 3) {
+						Debug.Log ("Orbits.cs: " + body + "~ orbP = " + orbitalPeriod + ", #OrbPts = " + NUM_ORBIT_POINTS + ", tStep = " + timeStep + ", minor-axis = " + minor_axis/1E+12 + ", major-axis = " + major_axis/1E+12);
+				}
 
 				// Initialize the line element
-				if (time == 0)
+				if (time == 0) {
 						line = GetComponent<LineRenderer> ();
-		
+				}
+				if (line == null) {
+						Debug.Log("Line is null for object " + body + " at time " + time);
+				}
 				// Obtain the width of the object and set it as the width of the line
 				width = spaceObject.transform.lossyScale.x;
 				line.SetWidth (width, width);

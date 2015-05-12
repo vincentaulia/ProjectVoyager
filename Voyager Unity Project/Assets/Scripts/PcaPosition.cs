@@ -33,9 +33,9 @@ public class PcaPosition : MonoBehaviour
 						E = Enext;
 						Enext = E - ((E - el.ecc * Math.Sin (E) - anom) / (1 - el.ecc * Math.Cos (E)));
 			
-				} while (Math.Abs(Enext - E) > epsilon && count < 15);
+				} while (Math.Abs(Enext - E) > epsilon && count < 50);
 		
-				if (count == 15) {
+				if (count == 50) {
 						Debug.Log ("Epsilon Crash: " + body.name);
 				}
 		
