@@ -217,6 +217,7 @@ public class shipOEHistory : MonoBehaviour
 		{
 				shipT.RemoveAt (pos);
 				shipOE.RemoveAt (pos);
+                shipA.RemoveAt(pos);
 		}
 	
 		public void removeOEtime (long time)
@@ -260,7 +261,6 @@ public class shipOEHistory : MonoBehaviour
 			for (int i=0; i < shipOE.Count; i++) {
 				if(shipOE[i] == el){
 					return shipT[i];
-					break;
 				}	
 			}
 			return -1;
@@ -485,24 +485,34 @@ public class shipOEHistory : MonoBehaviour
 			GUI.Box (new Rect (0, 0, 120, 300), "Maneuver Node");
 						GUI.Label (new Rect (10, 30, 100, 20), "Normal");
 			a1 = GUI.TextField (new Rect (10, 60, 80, 20), a1, 8);
-			a1 = Regex.Replace (a1, "[^.0-9]", "");
+            a1 = Regex.Replace(a1, "[?+-][^.0-9]", "");
 			GUI.Label (new Rect (10, 90, 100, 20), "Tangential");
 			a2 = GUI.TextField (new Rect (10, 120, 80, 20), a2, 8);
-			a2 = Regex.Replace (a2, "[^.0-9]", "");
+			a2 = Regex.Replace (a2, "[?+-][^.0-9]", "");
 			GUI.Label (new Rect (10, 150, 100, 20), "Radial");
 			a3 = GUI.TextField (new Rect (10, 180, 80, 20), a3, 8);
-			a3 = Regex.Replace (a3, "[^.0-9]", ""); 
+            a3 = Regex.Replace(a3, "[?+-][^.0-9]", ""); 
 			
 			if (GUI.Button(new Rect(10, 210, 100, 20),"Change DV"))
 			{
-				this.gameObject.GetComponent<shipOEHistory> ().deltaVInput(double.Parse (a1), double.Parse (a2), double.Parse (a3)) ; 
+				this.gameObject.GetComponent<shipOEHistory> ().deltaVInput(double.Parse (a1), double.Parse (a2), double.Parse (a3)) ;
+                updateOrbit = true;
+                deltaVGui = false;
 			}
-			if (GUI.Button(new Rect(10, 240, 100, 20),"Done"))
-			{
+            //this button should be added when we can test Change DV before applying it
+			//if (GUI.Button(new Rect(10, 240, 100, 20),"Done"))
+			//{
 				//flag to update visualizing the tracks
-				updateOrbit = true;
-				deltaVGui = false; 
-			}
+				//updateOrbit = true;
+				//deltaVGui = false; 
+			//}
+
+            //canel adding the node and delete the inserted parameters
+            if (GUI.Button(new Rect(10, 240, 100, 20),"Cancel"))
+            {
+                deltaVGui = false;
+                removeOEpos(shipA.Count - 1);
+            }
 			GUI.EndGroup ();
 		} 
 	}
