@@ -93,6 +93,82 @@ public class PcaPosition : MonoBehaviour
 				return R;
 		}
 
+	public static double[] findPosDouble (Elements el, long time, GameObject body)
+	{
+		//This function finds the position of a planet given a bunch of orbital parameters and some other stuff.
+		
+		double anom = el.anom + el.n * time;
+		double E = anom;
+		double Enext = E;
+		//Normally epsilon should be much smaller than this, but for now the program takes too long with small epsilons. 
+		double epsilon = Math.Pow (10, -10);
+		int count = 0;
+		
+		do {
+			count ++;
+			E = Enext;
+			Enext = E - ((E - el.ecc * Math.Sin (E) - anom) / (1 - el.ecc * Math.Cos (E)));
+			
+		} while (Math.Abs(Enext - E) > epsilon && count < 15);
+		
+		if (count == 15) {
+			Debug.Log ("Epsilon Crash: " + body.name);
+		}
+		
+		double[] R = {0,0,0};
+		//*********LOSS OF PRECISION HERE BY CONVERTING TO FLOATS.
+		R[0] = (el.axis * (Math.Cos (E) - el.ecc)) * el.P_Vector[0] + (el.axis * Math.Sqrt (1 - el.ecc * el.ecc) * Math.Sin (E)) * el.Q_Vector[0];
+		R[1] = (el.axis * (Math.Cos (E) - el.ecc)) * el.P_Vector[2] + (el.axis * Math.Sqrt (1 - el.ecc * el.ecc) * Math.Sin (E)) * el.Q_Vector[2];
+		R[2] = (el.axis * (Math.Cos (E) - el.ecc)) * el.P_Vector[1] + (el.axis * Math.Sqrt (1 - el.ecc * el.ecc) * Math.Sin (E)) * el.Q_Vector[1];
+		
+		
+		//scales down R to fit the program. The extra 1000 is for converting from m to km
+		R[0] = R[0] / (Global.scale * 1000f);
+		R[1] = R[1] / (Global.scale * 1000f);
+		R[2] = R[2] / (Global.scale * 1000f);
+		
+		GameObject orbiting;
+		
+		//if it's a ship, get the id of it's orbit focus
+		//if (body.name.Contains ("Ship")) {
+		
+		//orbiting = GameObject.Find (el.IDFocus);
+		//R += orbiting.transform.position; 
+		
+		//}
+		//Don't need this anymore. Will make moons children of planets
+		/*else {
+
+
+
+						//this is to add the vector to the object it is orbiting
+						int objectID = int.Parse (body.name);
+							
+						//if the id ends with 99, then it orbits the sun (10)
+						//if the id is something else, then it orbits a planet
+						if (objectID == 10)
+								;
+						else if (objectID % 100 == 99) {
+			
+								orbiting = GameObject.Find ("10");
+								//Debug.Log (body.name + ": " + orbiting.name);
+								R += orbiting.transform.position;
+						} else {
+								int orbiting_id;
+			
+								orbiting_id = (objectID / 100) * 100 + 99;
+								orbiting = GameObject.Find (orbiting_id.ToString ());
+								//Debug.Log (body.name + ": " + orbiting.name);
+								R += orbiting.transform.position;
+			
+						}
+
+
+				}*/
+		
+		return R;
+	}
+
 
 }
 
@@ -142,6 +218,10 @@ public struct Elements
 		public Vector3 P;
 		public Vector3 Q;
 		public Vector3 W;
+
+		public double[] P_Vector;
+		public double[] Q_Vector;
+		
 		public double n;
 	
 		public void calcData ()
@@ -156,14 +236,21 @@ public struct Elements
 		
 				//*********LOSS OF PRECISION HERE BY CONVERTING TO FLOATS.
 				P = new Vector3 ((float)Px, (float)Py, (float)Pz);
-		
-		
+
+				P_Vector[0] = Px;
+				P_Vector[1] = Py;
+				P_Vector[2] = Pz;
+
 				//Calculating Q
 				double Qx = -Math.Sin (arg) * Math.Cos (asc) - Math.Cos (arg) * Math.Cos (incl) * Math.Sin (asc);
 				double Qy = -Math.Sin (arg) * Math.Sin (asc) + Math.Cos (arg) * Math.Cos (incl) * Math.Cos (asc);
 				double Qz = Math.Sin (incl) * Math.Cos (arg);
 				//*********LOSS OF PRECISION HERE BY CONVERTING TO FLOATS.
 				Q = new Vector3 ((float)Qx, (float)Qy, (float)Qz);
+				
+				Q_Vector[0] = Qx;
+				Q_Vector[1] = Qy;
+				Q_Vector[2] = Qz;
 
 				//Calculating W
 				double Wx = Math.Sin(incl) * Math.Sin(asc);

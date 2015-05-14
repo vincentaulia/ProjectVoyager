@@ -81,6 +81,8 @@ public class OrbitalElements : MonoBehaviour
 						//the id of the body it is orbiting
 						orb_elements.IDFocus = split [2];
 						//sphere of influence
+						orb_elements.P_Vector = new double[3];
+						orb_elements.Q_Vector = new double[3];
 						orb_elements.soi = orb_elements.axis * Math.Pow ((orb_elements.mass / orb_elements.massFocus), (2.0/5));
 
 						//for the Ships

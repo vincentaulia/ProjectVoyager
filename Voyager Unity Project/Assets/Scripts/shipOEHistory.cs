@@ -164,16 +164,67 @@ public class shipOEHistory : MonoBehaviour
 			AddNewOE (Initial, (shipT[i] + timeInOrbit) );
 			return i;
 		}
-		public void deltaVInput(double normal, double tangent, double radial)
+	public void deltaVInput(double normal, double tangent, double radial)
+	{
+		Elements prev = shipOE [j];
+		CalcNormalDeltaV (ref prev, normal, mAnom);
+		CalcTangentialDeltaV (ref prev, tangent, mAnom);
+		CalcRadialDeltaV (ref prev, radial, mAnom);
+		GetComponent<ShipMissionFunctions> ().update_deltaV_budget (normal + tangent + radial);
+		double[] velocityVector = GetComponent<ShipMissionFunctions> ().calc_current_velocity_double (prev.ecc);
+		double[] positionVector = findShipPosDouble (shipT[j+1]);
+		//Debug.Log ("PositionVectors");
+		//Debug.Log (velocityVector);
+		//Debug.Log ("dotted");
+		double dot = dotProduct (velocityVector, positionVector);
+		//Debug.Log (dot);
+		dot = dot / magnitude(velocityVector) / magnitude(positionVector);
+		//Debug.Log (dot);
+		
+		double angle = Math.Acos (dot) - (Math.PI/2);  //Real Flight Angle 
+		//Debug.Log (angle);
+		double inter = (((((prev.axis * (1 - Math.Pow (prev.ecc, 2))) / (magnitude (positionVector) * Global.scale * 1000)) - 1) / prev.ecc));
+		if (inter > 1.0) 
 		{
-			Elements prev = shipOE [j];
-			CalcNormalDeltaV (ref prev, normal, mAnom);
-			CalcTangentialDeltaV (ref prev, tangent, mAnom);
-			CalcRadialDeltaV (ref prev, radial, mAnom);
-			shipOE [j + 1] = prev;
-			GetComponent<ShipMissionFunctions> ().update_deltaV_budget (normal + tangent + radial);
+			inter = 1.0;
+			Debug.Log ("Warning!!! value greater then 1");
+		}
+		if (inter < -1.0) 
+		{
+			inter = -1.0;
+			Debug.Log ("Warning!!! value less then -1");
+		}
+		double solution1 = Math.Acos(inter);
+		double solution2 = Math.PI * 2 - solution1;
+		//Debug.Log (((((prev.axis * (1 - Math.Pow(prev.ecc,2))) / (magnitude(positionVector) * Global.scale *1000)) - 1) / prev.ecc));
+		//Debug.Log ((((((prev.axis * (1 - Math.Pow(prev.ecc,2))) / (magnitude(positionVector) * Global.scale *1000)) - 1) / prev.ecc)));
+		//Debug.Log ("Sollutions");
+		//Debug.Log (solution1);
+		//Debug.Log (solution2);
+		//Debug.Log (prev.ecc);
+		//Debug.Log (prev.axis);
+		//Debug.Log (positionVector.magnitude* Global.scale *1000);
+		double flightAngle1 = Math.Atan (((prev.ecc * Math.Sin(solution1))/(1 + (prev.ecc * Math.Cos(solution1)))));
+		double flightAngle2 = Math.Atan (((prev.ecc * Math.Sin(solution2))/(1 + (prev.ecc * Math.Cos(solution2)))));
+		double trueValue = (Math.Abs (flightAngle1 - angle) > Math.Abs (flightAngle2 - angle)) ? solution2 : solution1;
+		double eccentricAnom = Math.Acos (((prev.ecc + Math.Cos(trueValue))/(1 + prev.ecc*Math.Cos(trueValue))));
+		double initialMeanAnom = (eccentricAnom - prev.ecc * Math.Sin(eccentricAnom));
+		prev.anom = initialMeanAnom;
+		//Debug.Log ("Initial Mean Anom");
+		//Debug.Log (initialMeanAnom);
+		shipOE [j + 1] = prev;
+	}
+		
+		public double dotProduct (double[] V1, double[] V2)
+		{
+			return ((V1 [0] * V2 [0]) + (V1 [1] * V2 [1]) + (V1 [2] * V2 [2]));
 		}
 		
+		public double magnitude (double[] V)
+		{
+			return (Math.Sqrt(Math.Pow (V[0], 2) + Math.Pow (V[1], 2) + Math.Pow (V[2], 2)));
+		}
+
 		public int indexFinder (long time)
 	   {
 			if (currentTimePos >= 1 && (currentTimePos + 1) < shipT.Count) 
@@ -225,7 +276,12 @@ public class shipOEHistory : MonoBehaviour
 				int pos = timePosFind (time);
 				removeOEpos (pos);
 		}
-	
+
+		public double[] findShipPosDouble (long time)
+		{
+			return PcaPosition.findPosDouble (currentOE (time), (time - shipT[indexFinder (time)]), shipObject);
+		}
+
 		public Vector3 findShipPos (long time)
 		{
 			return PcaPosition.findPos (currentOE (time), (time - shipT[indexFinder (time)]), shipObject);

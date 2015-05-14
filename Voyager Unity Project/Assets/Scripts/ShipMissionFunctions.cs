@@ -8,6 +8,7 @@
 
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class ShipMissionFunctions : MonoBehaviour
 {
@@ -42,6 +43,26 @@ public class ShipMissionFunctions : MonoBehaviour
 
         return V;
     }
+	
+
+	//returns a double array which contains the velocity of the target object w.r.t. it's parent object
+	//Input arguments is the eccentric anomaly E in radians
+	public double[] calc_current_velocity_double(double E)
+	{
+		Elements CurrentOE = GetComponent<shipOEHistory>().currentOE(Global.time);
+		double Mu = G * (CurrentOE.mass + CurrentOE.massFocus);
+		double a = CurrentOE.axis;
+		double e = CurrentOE.ecc;
+		double[] P = CurrentOE.P_Vector;
+		double[] Q = CurrentOE.Q_Vector;
+
+		double[] V = new double[3];
+		V[0] = (Math.Sqrt(Mu / a)) * ((-e * Math.Sin(E) * P[0]) + (Math.Sqrt(1 - Math.Pow(e, 2))) * Math.Cos(E) * Q[0]) / (1 - e * Math.Cos(E));
+		V[1] = (Math.Sqrt(Mu / a)) * ((-e * Math.Sin(E) * P[1]) + (Math.Sqrt(1 - Math.Pow(e, 2))) * Math.Cos(E) * Q[1]) / (1 - e * Math.Cos(E));
+		V[2] = (Math.Sqrt(Mu / a)) * ((-e * Math.Sin(E) * P[2]) + (Math.Sqrt(1 - Math.Pow(e, 2))) * Math.Cos(E) * Q[2]) / (1 - e * Math.Cos(E));
+		
+		return V;
+	}
 
 
     //Determines the amount of DeltaV required in total, and returns that value as a scalar float value in [m/s]. 
