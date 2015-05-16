@@ -203,7 +203,7 @@ public class ShipOrbit : MonoBehaviour
         }
         
         //place the node at the appropriate place
-        nodes[count].transform.position = parentPosition + points[linkNodes[count]];
+       nodes[count].transform.position = parentPosition + points[linkNodes[count]];
 
 
     }
