@@ -179,7 +179,18 @@ public class shipOEHistory : MonoBehaviour
 		CalcTangentialDeltaV (ref prev, tangent, mAnom);
 		CalcRadialDeltaV (ref prev, radial, mAnom);
 		GetComponent<ShipMissionFunctions> ().update_deltaV_budget (normal + tangent + radial);
-		double[] velocityVector = GetComponent<ShipMissionFunctions> ().calc_current_velocity_double (prev.ecc);
+
+		double bigE = 1;
+		double new_bigE;
+		for (int i = 0; i < 50; i++) {
+			new_bigE = bigE - ((bigE-prev.ecc*Math.Sin(bigE)-mAnom)/(1-prev.ecc*Math.Cos(bigE)));
+			bigE = new_bigE;
+		}
+		Debug.Log ("Approximation");
+		Debug.Log (mAnom);
+		Debug.Log (prev.ecc);
+		Debug.Log (bigE);
+		double[] velocityVector = GetComponent<ShipMissionFunctions> ().calc_current_velocity_double (bigE);
 		double[] positionVector = findShipPosDouble (shipT[j+1]);
 		Debug.Log ("Time");
 		Debug.Log (shipT[j+1]);
