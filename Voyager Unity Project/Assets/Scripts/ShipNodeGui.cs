@@ -21,7 +21,7 @@ public class ShipNodeGui : MonoBehaviour
     public string a4 = "0";
 
     private int open = 1;
-
+    public bool showButton = true;  //condition to show the DV button
 
     void OnGUI()
     {
@@ -67,12 +67,14 @@ public class ShipNodeGui : MonoBehaviour
             }
             GUI.EndGroup();
         }
-        else
+        else if(showButton)
         {
             if (GUI.Button(new Rect(Screen.width - 160, Screen.height - 80, 120, 40), "Add DV Node"))
             {
                 a4 = Global.time.ToString();
                 open *= -1;
+                //hide the button
+                showButton = false;
             }
         }
 
