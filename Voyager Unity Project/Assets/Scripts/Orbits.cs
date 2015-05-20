@@ -95,9 +95,9 @@ public class Orbits : MonoBehaviour
 				// Calculate the timeStep to get about 400 points
 				timeStep = (long)(orbitalPeriod / NUM_ORBIT_POINTS);
 				
-				if (body.StartsWith ("1") && body.Length > 3) {
-						Debug.Log ("Orbits.cs: " + body + "~ orbP = " + orbitalPeriod + ", #OrbPts = " + NUM_ORBIT_POINTS + ", tStep = " + timeStep + ", minor-axis = " + minor_axis/1E+12 + ", major-axis = " + major_axis/1E+12);
-				}
+				 //if (body.StartsWith ("1") && body.Length > 3) {
+						//Debug.Log ("Orbits.cs: " + body + "~ orbP = " + orbitalPeriod + ", #OrbPts = " + NUM_ORBIT_POINTS + ", tStep = " + timeStep + ", minor-axis = " + minor_axis/1E+12 + ", major-axis = " + major_axis/1E+12);
+				//}
 
 				// Initialize the line element
 				if (time == 0) {

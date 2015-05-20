@@ -270,6 +270,10 @@ public class shipOEHistory : MonoBehaviour
         return ((V1[0] * V2[0]) + (V1[1] * V2[1]) + (V1[2] * V2[2]));
     }
 
+    public double dotProduct(Vector3d v1, Vector3d v2)
+    {
+        return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+    }
 
     public double magnitude(double[] V)
     {
@@ -692,6 +696,7 @@ public class shipOEHistory : MonoBehaviour
         Vector3 temp_r2 = findShipPos(shipT[j + 1], j);
 
         //convert to vector3d for more accuracy
+        //switch coordinates to go from Unity to normal x,y,z
         Vector3d r1, r2;
         r1.x = temp_r1.x;
         r1.y = temp_r1.z;
@@ -750,6 +755,10 @@ public class shipOEHistory : MonoBehaviour
         //calculate f and g
         double f, g, f1, g1;
         long t = shipT[j + 1] - shipT[j];
+        Debug.Log("Calc f");
+        Debug.Log("el.axis: "+ el.axis);
+        Debug.Log("cosE: "+ Math.Cos(E));
+        Debug.Log("r1: "+ r1.magnitude );
 
         f = 1 - el.axis * (1 - Math.Cos(E)) / r1.magnitude;
         g = t - Math.Sqrt(Math.Pow(el.axis, 3) / Mu) * (E - Math.Sin(E));
@@ -776,8 +785,12 @@ public class shipOEHistory : MonoBehaviour
         vel = vel2 * factor;
 
         Debug.Log("vel1: " + vel1);
+        Debug.Log("mag: " + vel1.magnitude);
         Debug.Log("vel2: " + vel2);
+        Debug.Log("mag: " + vel2.magnitude);
+        Debug.Log("factor: " + factor);
         Debug.Log("vel: " + vel);
+        Debug.Log("mag: " + vel.magnitude);
 
         //now calculate the orbital elements of the new orbit
 
@@ -787,11 +800,15 @@ public class shipOEHistory : MonoBehaviour
         h.y = r2.z * vel.x - r2.x * vel.z;
         h.z = r2.x * vel.y - r2.y * vel.x;
 
+        Debug.Log("h: " + h);
+
         //calculate the node vector
         Vector3d n;
         n.x = -h.y;
         n.y = h.x;
         n.z = 0;
+
+        Debug.Log("n: " + n);
 
         //calculating the vector e
         Vector3d e;
@@ -801,11 +818,58 @@ public class shipOEHistory : MonoBehaviour
 
         e = (coeff1 * r2 - coeff2 * vel) / Mu;
 
+        Debug.Log("e: " + e);
+
         el.axis = 1 / (2 / r2.magnitude - Math.Pow(vel.magnitude, 2) / Mu);
         el.ecc = e.magnitude;
 
         Debug.Log("new axis: " + el.axis);
         Debug.Log("new ecc: " + el.ecc);
+
+        //calculate inclination
+        Debug.Log("old inc: " + el.incl);
+
+        el.incl = Math.Acos(h.z / h.magnitude);
+        Debug.Log("inc: " + el.incl);
+
+        //calculate longitude of ascending node
+        Debug.Log("old asc: " + el.asc);
+        Debug.Log("old arg: " + el.arg);
+
+        //if the inclination is zero, the ascending node is undefined
+        //for computation purposes, it is set to zero
+        //argument of periapsis
+        if (n.magnitude == 0)
+        {
+            el.asc = 0;
+            //if the ascending node is undefined
+            //then this equation is used
+            el.arg = Math.Atan2(e.y, e.x);
+            Debug.Log("n = 0");
+        }
+        else
+        {
+            el.asc = Math.Acos(n.x / n.magnitude);
+            el.arg = Math.Acos((dotProduct(n, e)) / (n.magnitude * el.ecc));
+            Debug.Log("n != 0");
+
+            //if n.y > 0 then asc is less than 180 degrees
+            if (n.y <= 0 && el.asc != 0)
+            {
+                el.asc = 2 * Math.PI - el.asc;
+                Debug.Log("adjust ascending node");
+            }
+
+            //if e.z > 0, then arg is less than 180 degrees
+            if (e.z <= 0 && el.arg != 0)
+            {
+                el.arg = 2 * Math.PI - el.arg;
+                Debug.Log("adjust argument of periapsis");
+            }
+        }
+
+        Debug.Log("asc node: " + el.asc);
+        Debug.Log("arg: " + el.arg);
 
         //update the other parameters
         el.calcData();
@@ -813,11 +877,21 @@ public class shipOEHistory : MonoBehaviour
         //calculate the mean anomaly at the start of the new orbit
         Debug.Log("start of new orbit");
         //true anomaly
-        v = Math.Acos(((el.axis * (1 - Math.Pow(el.ecc, 2))) / r2.magnitude - 1) / el.ecc);
-        Debug.Log("v: " + v);
+        //v = Math.Acos(((el.axis * (1 - Math.Pow(el.ecc, 2))) / r2.magnitude - 1)) / el.ecc;
+        v = Math.Acos((dotProduct(e,r2))/(el.ecc * r2.magnitude));
         //eccentric anomaly
-        E = Math.Acos( (el.ecc + Math.Cos (v)) / (1 + el.ecc * Math.Cos(v)) );
+        E = Math.Acos((el.ecc + Math.Cos(v)) / (1 + el.ecc * Math.Cos(v)));
+        
+        //if r2 dot v is smaller than zero, then v is bigger than 180 degrees
+        //if (dotProduct(r2, vel) <= 0)
+        //{
+          //  v = 2 * Math.PI - v;
+            //E = 2 * Math.PI - E;
+            //Debug.Log("adjusting v and E");
+        //}
+        Debug.Log("v: " + v);
         Debug.Log("E: " + E);
+
         //mean anomaly
         el.anom = E - el.ecc * Math.Sin(E);
         Debug.Log("anomaly: " + el.anom);
