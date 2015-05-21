@@ -89,6 +89,8 @@ public class CameraUserControl : MonoBehaviour
 {
 		public InfoWindows rightClickDisplay;
 		public Transform target;			//the initial target. Should be earth or the sun.
+		public Transform hoverTarget;		//what the mouse is currently hovering over (transform)
+		Animator anim;
 		public float xSpeed = 12.0f;
 		public float ySpeed = 12.0f;
 		public float scrollSpeed = 10.0f;	//the standard scrolling speed
@@ -155,17 +157,23 @@ public class CameraUserControl : MonoBehaviour
 		bool didHit = Physics.Raycast (mouseRay, out rayHitInfo, Mathf.Infinity);
 
 		// Do mouse hover things here
-		if (didHit) {
+		if (didHit) {/*
 			if (rayHitInfo.collider.CompareTag("DistantPlanetIcon")) {
 				//Debug.Log ("Mousing Over " + rayHitInfo.collider.transform.parent.name);
+				hoverTarget = rayHitInfo.collider.transform.parent.transform;
 			}
 			else {
 				//Debug.Log ("Mousing Over " + rayHitInfo.collider.name);
-		   }
+				hoverTarget = rayHitInfo.collider.transform;
+		   	}
+			anim = hoverTarget.Find ("target_icon").GetComponent<Animator>();
+			anim.SetBool ("IsHover",true);*/
 		}
 		else {
 			//Debug.Log ("");
-		}
+			/*if(anim)
+				anim.SetBool ("IsHover",false);*/
+			}
 
 
 				if (Input.GetMouseButtonDown (0)) {
