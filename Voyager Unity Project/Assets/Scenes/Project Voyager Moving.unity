@@ -3256,8 +3256,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orbitPreFab: {fileID: 100000, guid: 24a4e8eb5e63697459154c8f47cb1208, type: 2}
   moonOrbitPreFab: {fileID: 190426, guid: 547097b8ac00c03448f8f40bd887410b, type: 2}
-  cometOrbitPreFab: {fileID: 100000, guid: 24a4e8eb5e63697459154c8f47cb1208, type: 2}
-  asteroidOrbitPreFab: {fileID: 100000, guid: 24a4e8eb5e63697459154c8f47cb1208, type: 2}
+  cometOrbitPreFab: {fileID: 129058, guid: e1106dc539f3173409febd78621e84ad, type: 2}
+  asteroidOrbitPreFab: {fileID: 143770, guid: ea01ac43f83c177458641544cdcffdd6, type: 2}
 --- !u!114 &2087644004
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -151,7 +151,7 @@ public class InitObjects : MonoBehaviour
 			if ((Global.body [i].name.StartsWith("1")) && (Global.body [i].name.Length > 3)) { // a comet
 				count = Global.orbits.Count;
 				//create a orbit object
-				Global.orbits.Add ((GameObject)Instantiate (orbitPreFab));
+				Global.orbits.Add ((GameObject)Instantiate (cometOrbitPreFab));
 				Global.orbits [count].name = "Orbit" + Global.body [i].name;
 				Global.orbits [count].transform.parent = GameObject.Find ("OrbitsBody").transform;
 				//calculate the points of the orbit
@@ -161,7 +161,7 @@ public class InitObjects : MonoBehaviour
 			if ((Global.body [i].name.StartsWith("2")) && (Global.body [i].name.Length > 3)) { // an asteroid
 				count = Global.orbits.Count;
 				//create a orbit object
-				Global.orbits.Add ((GameObject)Instantiate (orbitPreFab));
+				Global.orbits.Add ((GameObject)Instantiate (asteroidOrbitPreFab));
 				Global.orbits [count].name = "Orbit" + Global.body [i].name;
 				Global.orbits [count].transform.parent = GameObject.Find ("OrbitsBody").transform;
 				//calculate the points of the orbit

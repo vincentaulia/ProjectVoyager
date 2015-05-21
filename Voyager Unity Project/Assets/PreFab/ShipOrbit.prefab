@@ -55,7 +55,7 @@ LineRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: 6dbecf84a2a69f445ae4e4ebe0b9919d, type: 2}
+  - {fileID: 2100000, guid: 84562a463416f3341841a2653f3dd39a, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
