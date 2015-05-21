@@ -352,15 +352,16 @@ public class shipOEHistory : MonoBehaviour
             Debug.Log("buffer: " + curr.anom / curr.n);
             debug = false;
         }
-        return PcaPosition.findPos(curr, (long)(time - shipT[indexFinder(time)] + (curr.anom / curr.n)), shipObject);
-        //return PcaPosition.findPos(curr, (long)(time - shipT[indexFinder(time)]), shipObject);//
+        //return PcaPosition.findPos(curr, (long)(time - shipT[indexFinder(time)] + (curr.anom / curr.n)), shipObject);
+        return PcaPosition.findPos(curr, (long)(time - shipT[indexFinder(time)]), shipObject);//
     }
 
     //overLoad method for findShipPos to manually specify a certain orbit
     public Vector3 findShipPos(long time, int i)
     {
         Elements curr = shipOE[i];
-        return PcaPosition.findPos(curr, (long)(time - shipT[i] + (curr.anom / curr.n)), shipObject);
+        //return PcaPosition.findPos(curr, (long)(time - shipT[i] + (curr.anom / curr.n)), shipObject);
+        return PcaPosition.findPos(curr, (long)(time - shipT[i]), shipObject);
     }
 
     private int timePosFind(long time)
@@ -830,6 +831,12 @@ public class shipOEHistory : MonoBehaviour
         Debug.Log("old inc: " + el.incl);
 
         el.incl = Math.Acos(h.z / h.magnitude);
+        //if the inclination is 180 degrees, make it zero
+        if (Math.Abs(el.incl - Math.PI) < 0.0001)
+        {
+            el.incl = 0;
+            Debug.Log("adjusting inclination");
+        }
         Debug.Log("inc: " + el.incl);
 
         //calculate longitude of ascending node
