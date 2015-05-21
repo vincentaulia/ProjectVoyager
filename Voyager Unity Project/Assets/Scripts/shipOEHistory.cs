@@ -832,6 +832,8 @@ public class shipOEHistory : MonoBehaviour
 
         el.incl = Math.Acos(h.z / h.magnitude);
         //if the inclination is 180 degrees, make it zero
+        //this means it's a retrograde orbit
+        //this seems to be an edge case
         if (Math.Abs(el.incl - Math.PI) < 0.0001)
         {
             el.incl = 0;

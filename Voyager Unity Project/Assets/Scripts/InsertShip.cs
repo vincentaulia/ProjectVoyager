@@ -196,7 +196,7 @@ public class InsertShip : MonoBehaviour
 						data [3] = "5.97219E+24";
 						data [4] = "0";
 						data [5] = "0";
-						data [6] = "20";
+						data [6] = "0";
 						data [7] = "0";
 						data [8] = "0";
 						data [9] = "3E+4";
@@ -323,8 +323,8 @@ public class InsertShip : MonoBehaviour
 								establishWarning ("a number between 0 and 360 inclusive", "ascending Node");
 								return;
 						}
-						if (!(float.TryParse (data [5], out f) && f >= 0 && f <= 360)) {
-								establishWarning ("a number between 0 and 360 inclusive", "inclination");
+						if (!(float.TryParse (data [5], out f) && f >= 0 && f <= 180)) {
+								establishWarning ("a number between 0 and 180 inclusive", "inclination");
 								return;
 						}
 						if (!(float.TryParse (data [7], out f) && f >= 0 && f <= 360)) {
