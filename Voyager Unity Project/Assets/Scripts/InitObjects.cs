@@ -6,10 +6,17 @@
 * 
 * Files needed:	basic_info.txt
 * 
-* May 8 2015:
+* May 8 2015 (-Reuben):
 * - Modified file to accomodate comets and asteroids.
 * - For now, use the older version of basic_info & orbit_info with this updated code,
 *   (as in the one with planets+moons only) because some comets are breaking Orbits.cs.
+* 
+* May 22 2015 (-Reuben):
+* - Edited file to dynamically modify asteroid prefab meshes upon awakening.
+* - Okay, the current problem is that asteroids in basic_info.txt without radius values will appear invisible.
+*   (because NASA/JPL don't actually have values for a lot of them).
+* - A possible solution - just assign a custom radius values to these missing radii so that they appear in the game
+*   (bearing in mind that these are only placeholder values until NASA has official numbers).
 */
 using UnityEngine;
 using System.Collections;
@@ -74,6 +81,19 @@ public class InitObjects : MonoBehaviour
 				}
 				else if ((id.StartsWith("2")) && (id.Length == 7)) { // an asteroid
 					Global.body [i] = (GameObject)Instantiate (GameObject.Find ("Bary Center").GetComponent<Global> ().asteroid_prefab);
+
+					// Ceres and Vesta both get their own spherical textures for now. They're the only ones I can find.
+					if (id.EndsWith("1") || id.EndsWith("4")) {
+						Renderer rnd = Global.body[i].GetComponent<Renderer>();
+						rnd.material.mainTexture = (Texture)Resources.Load("Asteroids_textures/"+id);
+					}
+					// Ather asteroids use the default Unity asteroid models for now. Again, this is until someone finds/creates better models.
+					// That, or either NASA releases better models/textures.
+					else {
+						MeshFilter mf = Global.body[i].GetComponent<MeshFilter>();
+						mf.mesh = Resources.Load<Mesh>("Asteroids_models/Asteroid-001-HighPoly");	
+					}
+
 				}
 				else {
 					//create a moon object
