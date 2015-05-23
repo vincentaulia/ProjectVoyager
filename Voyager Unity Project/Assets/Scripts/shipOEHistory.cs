@@ -815,14 +815,23 @@ public class shipOEHistory : MonoBehaviour
         Vector3d e;
         double coeff1, coeff2;
         coeff1 = Math.Pow(vel.magnitude, 2) - Mu / r2.magnitude;
-        coeff2 = r2.x * vel.x + r2.y * vel.y + r2.z * vel.z;
+        //coeff2 = r2.x * vel.x + r2.y * vel.y + r2.z * vel.z;
+        coeff2 = dotProduct(r2, vel);
 
         e = (coeff1 * r2 - coeff2 * vel) / Mu;
 
         Debug.Log("e: " + e);
 
         el.axis = 1 / (2 / r2.magnitude - Math.Pow(vel.magnitude, 2) / Mu);
+        if (el.axis < 0)
+        {
+            Debug.Log("ERROR: semi-major axis is negative");
+        }
         el.ecc = e.magnitude;
+
+        if(el.ecc > 1 || el.ecc < 0){
+            Debug.Log("ERROR: eccentricity is out of range");
+        }
 
         Debug.Log("new axis: " + el.axis);
         Debug.Log("new ecc: " + el.ecc);
@@ -854,6 +863,11 @@ public class shipOEHistory : MonoBehaviour
             //if the ascending node is undefined
             //then this equation is used
             el.arg = Math.Atan2(e.y, e.x);
+            if (el.arg < 0)
+            {
+                el.arg += 2 * Math.PI;
+                Debug.Log("saving arg from negative");
+            }
             Debug.Log("n = 0");
         }
         else

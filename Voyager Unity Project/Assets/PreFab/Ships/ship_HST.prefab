@@ -125,6 +125,7 @@ MonoBehaviour:
   shipA: []
   shipObject: {fileID: 0}
   updateOrbit: 0
+  debug: 0
 --- !u!114 &11426438
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -140,6 +141,7 @@ MonoBehaviour:
   a2: 0
   a3: 0
   a4: 0
+  showButton: 1
 --- !u!114 &11464456
 MonoBehaviour:
   m_ObjectHideFlags: 1

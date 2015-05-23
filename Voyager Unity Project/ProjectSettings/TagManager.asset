@@ -22,6 +22,13 @@ TagManager:
   - Rendering
   - Ship
   - Bary Center
+  - Comet
+  - Asteroid
+  - OrbitPlanet
+  - OrbitMoon
+  - OrbitShip
+  - OrbitComet
+  - OrbitAsteroid
   layers:
   - Default
   - TransparentFX

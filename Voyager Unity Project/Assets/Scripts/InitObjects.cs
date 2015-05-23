@@ -147,43 +147,51 @@ public class InitObjects : MonoBehaviour
 			}
 
 			//Show the orbits of the planets
-			if (Global.body [i].name != "10" && (int.Parse (Global.body [i].name) % 100 == 99) && (Global.body [i].name.Length <= 3)) {
+			//if (Global.body [i].name != "10" && (int.Parse (Global.body [i].name) % 100 == 99) && (Global.body [i].name.Length <= 3)) {
+            if(Global.body[i].tag == "Planet"){
 				count = Global.orbits.Count;
 				//create a orbit object
 				Global.orbits.Add ((GameObject)Instantiate (orbitPreFab));
 				Global.orbits [count].name = "Orbit" + Global.body [i].name;
 				Global.orbits [count].transform.parent = GameObject.Find ("OrbitsBody").transform;
+                Global.orbits[count].tag = "OrbitPlanet";
 				//calculate the points of the orbit
 				Global.orbits [count].GetComponent<Orbits> ().makeOrbit (0, Global.body [i].name);
 			}
 
 			//Detect if an object is a moon
-			if (Global.body [i].name != "10" && (int.Parse (Global.body [i].name) % 100 != 99) && (Global.body [i].name.Length <= 3)) {
+			//if (Global.body [i].name != "10" && (int.Parse (Global.body [i].name) % 100 != 99) && (Global.body [i].name.Length <= 3)) {
+            else if(Global.body[i].tag == "Moon"){
 				countMoon = Global.orbitsMoon.Count;
 
 				Global.orbitsMoon.Add ((GameObject)Instantiate (moonOrbitPreFab));
 				Global.orbitsMoon [countMoon].name = "Orbit" + Global.body [i].name;
 				Global.orbitsMoon [countMoon].transform.parent = GameObject.Find ("OrbitsBody").transform;
+                Global.orbitsMoon[countMoon].tag = "OrbitMoon";
 				//calculate the points of the orbit
 				Global.orbitsMoon [countMoon].GetComponent<MoonOrbit> ().makeMoonOrbit (0, Global.body [i].name, Global.body [i].GetComponent<OrbitalElements> ().orb_elements.IDFocus);
 			}
 
-			if ((Global.body [i].name.StartsWith("1")) && (Global.body [i].name.Length > 3)) { // a comet
+			//if ((Global.body [i].name.StartsWith("1")) && (Global.body [i].name.Length > 3)) { // a comet
+            else if (Global.body[i].tag == "Comet"){
 				count = Global.orbits.Count;
 				//create a orbit object
 				Global.orbits.Add ((GameObject)Instantiate (cometOrbitPreFab));
 				Global.orbits [count].name = "Orbit" + Global.body [i].name;
 				Global.orbits [count].transform.parent = GameObject.Find ("OrbitsBody").transform;
+                Global.orbits[count].tag = "OrbitComet";
 				//calculate the points of the orbit
 				Global.orbits [count].GetComponent<Orbits> ().makeOrbit (0, Global.body [i].name);
 			}
 
-			if ((Global.body [i].name.StartsWith("2")) && (Global.body [i].name.Length > 3)) { // an asteroid
+			//if ((Global.body [i].name.StartsWith("2")) && (Global.body [i].name.Length > 3)) { // an asteroid
+            else if(Global.body[i].tag == "Asteroid"){
 				count = Global.orbits.Count;
 				//create a orbit object
 				Global.orbits.Add ((GameObject)Instantiate (asteroidOrbitPreFab));
 				Global.orbits [count].name = "Orbit" + Global.body [i].name;
 				Global.orbits [count].transform.parent = GameObject.Find ("OrbitsBody").transform;
+                Global.orbits[count].tag = "OrbitAsteroid";
 				//calculate the points of the orbit
 				Global.orbits [count].GetComponent<Orbits> ().makeOrbit (0, Global.body [i].name);
 			}

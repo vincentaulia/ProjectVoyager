@@ -10,6 +10,7 @@ public class VisualizeOrbits : MonoBehaviour {
 	public static bool planetOrbits = true;
 	public static bool moonOrbits = true;
 	public static bool asteroidOrbits = true;
+    public static bool cometOrbits = true;
 	public static bool shipOrbits = true;
 
 	public static bool auto = true;			//toggles control butween user and interface
@@ -42,7 +43,8 @@ public class VisualizeOrbits : MonoBehaviour {
 
 		planetOrbits = GUILayout.Toggle (planetOrbits, "Planets");
 		moonOrbits = GUILayout.Toggle (moonOrbits, "Moons");
-		asteroidOrbits = GUILayout.Toggle (asteroidOrbits, "Asteroids & Comets");
+		asteroidOrbits = GUILayout.Toggle (asteroidOrbits, "Asteroids");
+        cometOrbits = GUILayout.Toggle(cometOrbits, "Comets");
 		shipOrbits = GUILayout.Toggle (shipOrbits, "Ships");
 
 		//enables the button
@@ -59,7 +61,7 @@ public class VisualizeOrbits : MonoBehaviour {
 	void Start () {
 		//initialize the windows
 		promptWindow = new Rect (Screen.width - 140, 40, 130, 50);
-		orbitsWindow = new Rect (Screen.width - 200, 40, 160, 170);
+		orbitsWindow = new Rect (Screen.width - 200, 40, 160, 180);
 	}
 	
 	// Update is called once per frame
