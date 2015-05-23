@@ -156,10 +156,11 @@ public class shipOEHistory : MonoBehaviour
         Elements Initial = shipOE[shipOE.Count - 1];
         int i = shipOE.Count - 1;
         Debug.Log("DeltaVChange");
-        Debug.Log(i);
-        Debug.Log(shipT[i]);
-        Debug.Log(Initial.n);
-        Debug.Log(mAnom);
+        Debug.Log("i: " + i);
+        Debug.Log("shipT: " + shipT[i]);
+        Debug.Log("Initial.n: " + Initial.n);
+        Debug.Log("mAnom: " + mAnom);
+        Debug.Log("intial.anom: " + Initial.anom);
 
         //double period = 2 * Math.PI * Math.Sqrt (Initial.axis / 6.67384e-11 * (Initial.mass + Initial.massFocus));
         //double currMAnom = ((Global.time - shipT[i]) * Initial.n ) - shipA[i];
@@ -273,6 +274,15 @@ public class shipOEHistory : MonoBehaviour
     public double dotProduct(Vector3d v1, Vector3d v2)
     {
         return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+    }
+
+    public Vector3d crossProduct(Vector3d v1, Vector3d v2)
+    {
+        Vector3d v;
+        v.x = v1.y * v2.z - v1.z * v2.y;
+        v.y = v1.z * v2.x - v1.x * v2.z;
+        v.z = v1.x * v2.y - v1.y * v2.x;
+        return v;
     }
 
     public double magnitude(double[] V)
@@ -773,17 +783,63 @@ public class shipOEHistory : MonoBehaviour
         Debug.Log("g1: " + g1);
 
         //calculate the velocities
-        Vector3d vel1, vel2, vel;
+        Vector3d vel1, vel2, vel, new_vel;
         vel1 = (r2 - f * r1) / g;
 
         vel2 = f1 * r1 + g1 * vel1;
 
-        //the components of the new velocity scale by the same factor
-        //compute this factor
-        double factor;
-        factor = (vel2.magnitude + tangent) / vel2.magnitude;
+        double factor = 0;
+        //compute the tangential burn
+        if (tangent != 0)
+        {
+            //the components of the new velocity scale by the same factor
+            //compute this factor
+            factor = (vel2.magnitude + tangent) / vel2.magnitude;
 
-        vel = vel2 * factor;
+            vel = vel2 * factor;
+        }
+        else
+        {
+            //set this up to use for other burns
+            vel = vel2;
+        }
+
+        //compute the radial burn
+        if (radial != 0)
+        {
+            //we have the position vector
+            //determine the required scaling for the
+            //needed radial velocity vector
+            factor = r2.magnitude / radial;
+
+            //scale the position vector down to get the velocity
+            //vector in the same direction, with the required magnitude
+            //the negative sign is because the position vector points outward
+            //but the radial velocity vector should point to the focus point
+            new_vel = -r2 / factor;  //velocity vector associated with the radial burn
+            Debug.Log("new vel: " + new_vel);
+            Debug.Log("mag: " + new_vel.magnitude);
+
+            vel += new_vel;         //add both velocity vectors
+        }
+
+        //compute the normal burn
+        if (normal != 0)
+        {
+            //get the cross product of the position vecotr
+            //with the velocity vector
+            //to get a vector perpendicular to both (will be normal to orbit)
+            new_vel = crossProduct(r2, vel2);
+
+            //get the factor between the computed vector and the required
+            //normal velocity
+            factor = new_vel.magnitude / normal;
+
+            //scale down the velocity vector to the required scale
+            new_vel /= factor;
+
+            vel += new_vel;     //add both velocity vectors
+        }
 
         Debug.Log("vel1: " + vel1);
         Debug.Log("mag: " + vel1.magnitude);
@@ -797,10 +853,7 @@ public class shipOEHistory : MonoBehaviour
 
         //calculate the specific angular momentum
         Vector3d h;
-        h.x = r2.y * vel.z - r2.z * vel.y;
-        h.y = r2.z * vel.x - r2.x * vel.z;
-        h.z = r2.x * vel.y - r2.y * vel.x;
-
+        h = crossProduct(r2, vel);
         Debug.Log("h: " + h);
 
         //calculate the node vector
