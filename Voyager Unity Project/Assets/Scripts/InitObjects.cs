@@ -17,9 +17,20 @@
 *   (because NASA/JPL don't actually have values for a lot of them).
 * - A possible solution - just assign a custom radius values to these missing radii so that they appear in the game
 *   (bearing in mind that these are only placeholder values until NASA has official numbers).
+* 
+* May 24 2015 (-Reuben):
+* - OKAAAAAY, so I looked up the NASA database again, and I actually found proper radius values for all
+*   eight asteroids we're currently using. I have absolutely no goddamn clue how I missed these numbers 
+*   in the first place.
+* - I'm still keeping the placeholder code in, because there are plenty of well known asteroids out there
+*   that REALLY DO NOT HAVE OFFICIAL RADII (yes, I actually checked properly it this time).
+*   Eg: Look up the Monty Python asteroids.
+* - The problem still holds for comets. Now a lot of these things don't have radii & masses.
+*   Eg: The Kobayashi-Berger-Milon comet (1001161).
 */
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 //needed to catch the exception
 //using System.IO;
@@ -42,10 +53,11 @@ public class InitObjects : MonoBehaviour
 	int countAsteroid;
 	Object basicFile;
 
+	private float placeholder_asteroid_radius = 0F;
+
 	// Use this for initialization
 	void Awake ()
 	{
-
 		try {
 			basicFile = Resources.Load (Global.BASIC_FILENAME);
 			//split the file into lines and store it in an array
@@ -55,7 +67,6 @@ public class InitObjects : MonoBehaviour
 			return;
 			//NEED TO EXIT HERE
 		}
-
 
 		//make sure the position and rotation of the bary center are set to zero
 		this.transform.position = Vector3.zero;
@@ -83,7 +94,9 @@ public class InitObjects : MonoBehaviour
 					Global.body [i] = (GameObject)Instantiate (GameObject.Find ("Bary Center").GetComponent<Global> ().asteroid_prefab);
 
 					// Ceres and Vesta both get their own spherical textures for now. They're the only ones I can find.
-					if (id.EndsWith("1") || id.EndsWith("4")) {
+					// NOTE: I'm using a simple if statement for now since only 2 asteroids have their own textures.
+					// Change this to a proper array-checking function if the list gets bigger.
+					if ((id=="2000001") || (id=="2000004")) {
 						Renderer rnd = Global.body[i].GetComponent<Renderer>();
 						rnd.material.mainTexture = (Texture)Resources.Load("Asteroids_textures/"+id);
 					}
@@ -91,7 +104,10 @@ public class InitObjects : MonoBehaviour
 					// That, or either NASA releases better models/textures.
 					else {
 						MeshFilter mf = Global.body[i].GetComponent<MeshFilter>();
-						mf.mesh = Resources.Load<Mesh>("Asteroids_models/Asteroid-001-HighPoly");	
+						mf.mesh = Resources.Load<Mesh>("Asteroids_models/Asteroid-001-HighPoly");
+
+						Renderer rnd = Global.body[i].GetComponent<Renderer>();
+						rnd.material.mainTexture = (Texture)Resources.Load("Asteroids_textures/generic");
 					}
 
 				}
@@ -125,8 +141,17 @@ public class InitObjects : MonoBehaviour
 
 				//order of diameters is changed because the axis orientation in Unity is different
 				Global.body [i].transform.localScale = new Vector3 (diameters [0], diameters [2], diameters [1]);
-			} else if (line[3].Contains("?")) { // some meteors and asteroids don't have radii
+			} else if (line[3].Contains("?") && id.StartsWith("1") && (id.Length==7)) { // comets
 				Global.body[i].transform.localScale = new Vector3 ((float)2.0, (float)2.0, (float)2.0);
+
+			} else if (line[3].Contains("?") && id.StartsWith("2") && (id.Length == 7)) {
+				// For all future asteroids with missing radii, we'll assign them the min of
+				// those that actually have official NASA radii.
+				float tmp = placeholder_asteroid_radius / Global.scale;
+				tmp *= 2; // convert to diameter
+				//Debug.Log("tmp=" + tmp + ", min rad placeholder="+ placeholder_asteroid_radius);
+				Global.body[i].transform.localScale = new Vector3(tmp, tmp, tmp);
+
 			} else {
 				//scale down the radius
 				diameter = float.Parse (line [3]) / Global.scale;
@@ -134,6 +159,13 @@ public class InitObjects : MonoBehaviour
 				diameter *= 2;
 				//set the dimentions of the moon
 				Global.body [i].transform.localScale = new Vector3 (diameter, diameter, diameter);
+
+				if (id.StartsWith("2") && (id.Length==7)) {
+					float spam = float.Parse(line[3]);
+					if ((placeholder_asteroid_radius == 0F) || (placeholder_asteroid_radius >= spam)) {
+						placeholder_asteroid_radius = spam;
+					}
+				}
 			}
 			//calculate the orbital elements for it
 			if (Global.body [i].name == "10") {
