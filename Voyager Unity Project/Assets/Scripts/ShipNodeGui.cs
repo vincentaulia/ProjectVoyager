@@ -45,15 +45,16 @@ public class ShipNodeGui : MonoBehaviour
                         a3 = GUI.TextField (new Rect (10, 180, 80, 20), a3, 8);
                         a3 = Regex.Replace (a3, "[^.0-9]", ""); */
 
-            GUI.Label(new Rect(10, 210, 100, 20), "Mean Anomalyr");
-            a4 = GUI.TextField(new Rect(10, 240, 80, 20), a4, 8);
+            GUI.Label(new Rect(10, 180, 100, 20), "Mean Anomaly");
+            a4 = GUI.TextField(new Rect(10, 210, 80, 20), a4, 8);
             a4 = Regex.Replace(a4, "[^.0-9]", "");
 
-            if (GUI.Button(new Rect(10, 270, 100, 20), "Add New Node"))
+            if (GUI.Button(new Rect(10, 240, 100, 20), "Add New Node"))
             {
                 //	(float.Parse (a4))*Mathf.PI/180  // ths is the radian version of the degree entry in the field
                 open *= -1;
                 this.gameObject.GetComponent<shipOEHistory>().deltaVAdd((double.Parse(a4)) * Mathf.PI / 180);
+               
 
                 /*	Vector3 a = new Vector3 (0, 0, float.Parse(a1)); //normal
                     Vector3 b = new Vector3 (0, float.Parse(a2), 0); //tangential
@@ -65,6 +66,11 @@ public class ShipNodeGui : MonoBehaviour
                     this.gameObject.GetComponent<shipOEHistory> ().deltavChange(long.Parse (a4), a, b, c) ; */
 
             }
+            if(GUI.Button(new Rect(10, 270, 100, 20), "Cancel")){
+                open *= -1;
+                showButton = true;
+            }
+
             GUI.EndGroup();
         }
         else if(showButton)

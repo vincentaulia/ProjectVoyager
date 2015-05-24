@@ -126,6 +126,15 @@ public class shipOEHistory : MonoBehaviour
     public void deltaVAdd(double mAnom)
     {
         j = deltavChange(mAnom);
+        //if the place of the new node is before the previous node
+        if (j == -1)
+        {
+            Debug.Log("new node before previous node");
+            //show the DV button again
+            this.GetComponent<ShipNodeGui>().showButton = true;
+            //this.GetComponent<ShipNodeGui>().open
+            return;
+        }
         this.mAnom = mAnom;
         deltaVGui = true;
     }
@@ -161,6 +170,12 @@ public class shipOEHistory : MonoBehaviour
         Debug.Log("Initial.n: " + Initial.n);
         Debug.Log("mAnom: " + mAnom);
         Debug.Log("intial.anom: " + Initial.anom);
+
+        if (mAnom <= Initial.anom)
+        {
+            //if the place of the new node is before the previous node
+            return -1;
+        }
 
         //double period = 2 * Math.PI * Math.Sqrt (Initial.axis / 6.67384e-11 * (Initial.mass + Initial.massFocus));
         //double currMAnom = ((Global.time - shipT[i]) * Initial.n ) - shipA[i];
@@ -705,8 +720,9 @@ public class shipOEHistory : MonoBehaviour
         //use the old orbit for both positions
         Vector3 temp_r1 = findShipPos(shipT[j], j);
         Vector3 temp_r2 = findShipPos(shipT[j + 1], j);
+        long t = shipT[j + 1] - shipT[j];
 
-        //convert to vector3d for more accuracy
+        //convert to 1vector3d for more accuracy
         //switch coordinates to go from Unity to normal x,y,z
         Vector3d r1, r2;
         r1.x = temp_r1.x;
@@ -743,14 +759,62 @@ public class shipOEHistory : MonoBehaviour
         //delta true anomaly
         v = v2 - v1;
 
+        //there is no unique solution if v is 180 degrees
+        //and the program outputs errors if v is more than 180 degrees
+        //so well need a different start position
+        if (v >= Math.PI)
+        {
+            if (v < 4.5)
+            {
+                Debug.Log("v is smaller than 4.5");
+                //find r1 at 90 degrees mean anomaly
+                v1 = Math.PI / 2;
+                temp_r1 = findShipPos(shipT[j] + (long)((v1 - el.anom) / el.n),j);
+            }
+            else
+            {
+                Debug.Log("v is larger than 4.5");
+                //find r1 at a mean anomaly bigger than 180 degrees
+                v1 = Math.PI + 0.2;
+                temp_r1 = findShipPos(shipT[j] + (long)((v1 - el.anom) / el.n), j);
+            }
+            t -= (long)((v1 - el.anom) / el.n);
+
+            r1.x = temp_r1.x;
+            r1.y = temp_r1.z;
+            r1.z = temp_r1.y;
+
+            r1 *= Global.scale * 1000;
+
+            v1 += ((2 * el.ecc) - (0.25 * Math.Pow(el.ecc, 3))) * Math.Sin(el.anom);
+            v1 += (1.25 * Math.Pow(el.ecc, 2)) * Math.Sin(2 * el.anom);
+            v1 += ((13 / 12) * Math.Pow(el.ecc, 3)) * Math.Sin(3 * el.anom);
+        }
+
+        //delta true anomaly
+        v = v2 - v1;
+
         Debug.Log("v1: " + v1);
         Debug.Log("v2: " + v2);
         Debug.Log("v: " + v);
 
         //calculating the eccentric anomaly, from the true anomaly
         double E1, E2, E;
+        
         E1 = Math.Acos((el.ecc + Math.Cos(v1)) / (1 + el.ecc * Math.Cos(v1)));
         E2 = Math.Acos((el.ecc + Math.Cos(v2)) / (1 + el.ecc * Math.Cos(v2)));
+
+        //adjusting E1 and E2 for symmetry
+        if (v1 > Math.PI)
+        {
+            Debug.Log("Adjusting E1");
+            E1 = 2 * Math.PI - E1;
+        }
+        if (v2 > Math.PI)
+        {
+            Debug.Log("Adjusting E2");
+            E2 = 2 * Math.PI - E2;
+        }
 
         //delta eccentric anomaly
         E = E2 - E1;
@@ -765,7 +829,6 @@ public class shipOEHistory : MonoBehaviour
 
         //calculate f and g
         double f, g, f1, g1;
-        long t = shipT[j + 1] - shipT[j];
         Debug.Log("Calc f");
         Debug.Log("el.axis: "+ el.axis);
         Debug.Log("cosE: "+ Math.Cos(E));
@@ -959,12 +1022,12 @@ public class shipOEHistory : MonoBehaviour
         E = Math.Acos((el.ecc + Math.Cos(v)) / (1 + el.ecc * Math.Cos(v)));
         
         //if r2 dot v is smaller than zero, then v is bigger than 180 degrees
-        //if (dotProduct(r2, vel) <= 0)
-        //{
-          //  v = 2 * Math.PI - v;
-            //E = 2 * Math.PI - E;
-            //Debug.Log("adjusting v and E");
-        //}
+        if (dotProduct(r2, vel) <= 0)
+        {
+            v = 2 * Math.PI - v;
+            E = 2 * Math.PI - E;
+            Debug.Log("adjusting v and E");
+        }
         Debug.Log("v: " + v);
         Debug.Log("E: " + E);
 

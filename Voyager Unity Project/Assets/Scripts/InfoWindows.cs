@@ -99,10 +99,12 @@ public class InfoWindows : MonoBehaviour
 		public void CreateWindow (string focused)
 		{
 				//Debug.Log ("focused is: " + focused);
-
+                int dummy;
+            
 				//add the object if it is not in the list
 				//otherwise, do nothing
-				if (!names.Contains (focused)) {
+                //and if it's a planet
+				if (int.TryParse(focused, out dummy) && !names.Contains (focused)) {
 						//if the information exist in file
 						string info = getInfo (focused);
 						if (info != null) {
