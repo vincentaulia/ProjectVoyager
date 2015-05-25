@@ -51,7 +51,8 @@ public class MoonOrbit : MonoBehaviour
 	
 		GameObject cameraObject;			//stores a reference to the object in focus
 		GameObject cameraParent;				//stores a reference to the parent of the object in focus
-	
+
+        public int closeMultiplier = 5;     //multiplies the standard distance for tracks to turn invisible
 	
 		/* This function is called in order to construct a moon's orbit */
 		public void makeMoonOrbit (long time, string body, string parent)
@@ -160,29 +161,59 @@ public class MoonOrbit : MonoBehaviour
 	*/
 		void LateUpdate ()
 		{
-				bool auto = VisualizeOrbits.auto;
 
-				//if the the user is taking control and toggle is off
-				if (!auto && !VisualizeOrbits.moonOrbits) {
-					//turn tracks off and exit
-					line.GetComponent<Renderer> ().enabled = false;
-					distantIcon.GetComponent<Renderer> ().enabled = false;
-					return;
-				}
+				//if it is set to auto
+                if (VisualizeOrbits.auto && !VisualizeOrbits.a_moonOrbits)
+                {
+                    //turn tracks off and exit
+                    line.GetComponent<Renderer>().enabled = false;
+                    distantIcon.GetComponent<Renderer>().enabled = false;
+                    return;
+                }
+                //if it is set to manual
+                else if (!VisualizeOrbits.auto)
+                {
+                    if (VisualizeOrbits.m_moonOrbits)
+                    {
+                        setWidth(0.001f * Camera.main.GetComponent<CameraUserControl>().distance);
+                        line.GetComponent<Renderer>().enabled = true;
+                    }
+                    else
+                    {
+                        line.GetComponent<Renderer>().enabled = false;
+                        distantIcon.GetComponent<Renderer>().enabled = false;
+                    }
+                    return;
+                }
 
 				//get the object of focus
 				cameraObject = GameObject.Find (Camera.main.GetComponent<CameraUserControl> ().target.name);
 				//get the parent of object of focus
 				cameraParent = GameObject.Find (cameraObject.transform.parent.name);
-		
+
+                //the ship is not a child of the planet
+                //so need to adjust this manually
+                if (cameraObject.tag == "Ship")
+                {
+                    cameraParent = GameObject.Find(cameraObject.GetComponent<OrbitalElements>().orb_elements.IDFocus);
+                }
+
 				//reset the appearance of the tracks
 				line.GetComponent<Renderer> ().enabled = true;
 		
 				Vector3 cameraPosition = Camera.main.transform.position;
 				//if the object is a planet
-			
+
 				//if the orbits are that of the moon of another planet, turn them off
-				if (spaceObject == cameraObject || parentObject == cameraObject || parentObject == cameraParent || !auto) {
+				if (spaceObject == cameraObject || parentObject == cameraObject || parentObject == cameraParent) {
+                    //if the camera is too close to the moon
+                    //turn tracks off
+                    if (Camera.main.GetComponent<CameraUserControl>().distance < Camera.main.GetComponent<CameraUserControl>().standardDistance * closeMultiplier)
+                    {
+                        line.GetComponent<Renderer>().enabled = false;
+                        distantIcon.GetComponent<Renderer>().enabled = false;
+                        return;
+                    }
 						//get the normal of the orbit at an angle of 60 degrees from the edge
 						normal = (float)spaceObject.GetComponent<OrbitalElements> ().orb_elements.axis * Mathf.Tan (Mathf.PI / 3);
 						//scale it to Unity scale
@@ -190,7 +221,7 @@ public class MoonOrbit : MonoBehaviour
 						//value determiend by trial and error
 						normal *= 25;
 				
-						if (auto && Vector3.Distance (parentObject.transform.position, cameraPosition) > normal) {
+						if (Vector3.Distance (parentObject.transform.position, cameraPosition) > normal) {
 								line.GetComponent<Renderer> ().enabled = false;
 								distantIcon.GetComponent<Renderer> ().enabled = false;
 					

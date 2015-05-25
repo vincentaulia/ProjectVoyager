@@ -33,6 +33,11 @@ public class ShipOrbit : MonoBehaviour
     public List<GameObject> nodes = new List<GameObject>();  //holds the nodes on this orbit
     public List<int> linkNodes = new List<int>();           //linkes the nodes with one of the points to place it on track
 
+    GameObject cameraObject;			//stores a reference to the object in focus
+    GameObject cameraParent;				//stores a reference to the parent of the object in focus
+
+    public int closeMultiplier = 2;     //multiplies the standard distance for tracks to turn invisible
+
     //float maxRendering = 2000f;		//max rendering distance for ships
 
     //this method creates the primary orbit for the ship
@@ -229,46 +234,75 @@ public class ShipOrbit : MonoBehaviour
 
     }
 
+    //turn tracks and nodes on or off dependong on paramter
+    void switchTracks(bool state)
+    {
+        line.GetComponent<Renderer>().enabled = state;
+        for (int j = 0; j < nodes.Count; j++)
+        {
+            nodes[j].transform.localScale = new Vector3(width * 4, width * 4, width * 4);
+            nodes[j].GetComponent<Renderer>().enabled = state;
+        }
+    }
+
     // Update is called once per frame
     void LateUpdate()
     {
-
-        bool auto = VisualizeOrbits.auto;
-
         //if the the user is taking control and toggle is off
-        if (!auto && !VisualizeOrbits.shipOrbits)
+        if (VisualizeOrbits.auto && !VisualizeOrbits.a_shipOrbits)
         {
-            //turn tracks off
-            line.GetComponent<Renderer>().enabled = false;
-            //turn nodes off
-            for (int j = 0; j < nodes.Count; j++)
+            //turn tracks off and exit
+            switchTracks(false);
+            return;
+        }
+        else if (!VisualizeOrbits.auto)
+        {
+            if (VisualizeOrbits.m_shipOrbits)
             {
-                nodes[j].GetComponent<Renderer>().enabled = false;
+                setWidth(0.0015f * Camera.main.GetComponent<CameraUserControl>().distance);
+                switchTracks(true);
+            }
+            else
+            {
+                //turn tracks off
+                switchTracks(false);
             }
             return;
         }
-
         //if the game is playing, then unflag localPause
         if (!Global.time_doPause)
         {
             localPause = false;
         }
 
-        //if the focus is the ship, use the camera's distance
-        if (Camera.main.GetComponent<CameraUserControl>().target.name == ship.name)
+        //get the object of focus
+        cameraObject = GameObject.Find(Camera.main.GetComponent<CameraUserControl>().target.name);
+        //get the parent of object of focus
+        cameraParent = GameObject.Find(cameraObject.transform.parent.name);
+
+        //the ship is not a child of the planet
+        //so need to adjust this manually
+        if (cameraObject.tag == "Ship")
         {
+            cameraParent = GameObject.Find(cameraObject.GetComponent<OrbitalElements>().orb_elements.IDFocus);
+        }
+
+        //if the focus is the ship, or the planet it is orbiting... or a child of it
+        //use the camera's distance
+        if (ship == cameraObject || parentPlanet == cameraObject || parentPlanet == cameraParent)
+        {
+            //if the camera is too close
+            Debug.Log("distance: " + Camera.main.GetComponent<CameraUserControl>().distance);
+            Debug.Log("Standard: " + Camera.main.GetComponent<CameraUserControl>().standardDistance * closeMultiplier);
+            if (Camera.main.GetComponent<CameraUserControl>().distance < Camera.main.GetComponent<CameraUserControl>().standardDistance * closeMultiplier)
+            {
+                switchTracks(false);
+                return;
+            }
             //set line width
             setWidth(0.0015f * Camera.main.GetComponent<CameraUserControl>().distance);
-            //render it on the screen
-            line.GetComponent<Renderer>().enabled = true;
-
-            //set node width and render it
-            for (int j = 0; j < nodes.Count; j++)
-            {
-                nodes[j].transform.localScale = new Vector3(width*4, width*4, width*4);
-                nodes[j].GetComponent<Renderer>().enabled = true;
-            }
-
+            
+            
             float normal;
             //get the normal of the orbit at an angle of 60 degrees from the edge
             normal = (float)ship.GetComponent<OrbitalElements>().orb_elements.axis * Mathf.Tan(Mathf.PI / 3);
@@ -277,15 +311,13 @@ public class ShipOrbit : MonoBehaviour
             //value determiend by trial and error
             normal *= 25;
 
-            if (auto && Vector3.Distance(parentPlanet.transform.position, Camera.main.transform.position) > normal*2)
+            if (Vector3.Distance(parentPlanet.transform.position, Camera.main.transform.position) > normal*2)
             {
-                line.GetComponent<Renderer>().enabled = false;
-                //turn nodes off
-                for (int j = 0; j < nodes.Count; j++)
-                {
-                    nodes[j].GetComponent<Renderer>().enabled = false;
-                }
-
+                switchTracks(false);
+            }
+            else
+            {
+                switchTracks(true);
             }
 
         }
@@ -299,25 +331,16 @@ public class ShipOrbit : MonoBehaviour
             //value determiend by trial and error
             normal *= 25;
 
-            if (auto && Vector3.Distance(parentPlanet.transform.position, Camera.main.transform.position) > normal)
+            if (Vector3.Distance(parentPlanet.transform.position, Camera.main.transform.position) > normal)
             {
-                line.GetComponent<Renderer>().enabled = false;
-                //turn nodes off
-                for (int j = 0; j < nodes.Count; j++)
-                {
-                    nodes[j].GetComponent<Renderer>().enabled = false;
-                }
+                switchTracks(false);
 
             }
             else
             {
-                line.GetComponent<Renderer>().enabled = true;
+                
                 setWidth(0.001f * Vector3.Distance(Camera.main.transform.position, parentPlanet.transform.position));
-                for (int j = 0; j < nodes.Count; j++)
-                {
-                    nodes[j].transform.localScale = new Vector3(width * 4, width * 4, width * 4);
-                    nodes[j].GetComponent<Renderer>().enabled = true;
-                }
+                switchTracks(true);
             }
 
         }

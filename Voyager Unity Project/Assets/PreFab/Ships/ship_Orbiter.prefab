@@ -17,7 +17,7 @@ GameObject:
   - 114: {fileID: 11413884}
   m_Layer: 0
   m_Name: ship_Orbiter
-  m_TagString: Untagged
+  m_TagString: Ship
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -482,6 +482,7 @@ MonoBehaviour:
   a2: 0
   a3: 0
   a4: 0
+  showButton: 1
 --- !u!114 &11430584
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -508,6 +509,7 @@ MonoBehaviour:
   shipA: []
   shipObject: {fileID: 0}
   updateOrbit: 0
+  debug: 0
 --- !u!135 &13523890
 SphereCollider:
   m_ObjectHideFlags: 1

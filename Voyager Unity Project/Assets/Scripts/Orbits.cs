@@ -57,6 +57,12 @@ public class Orbits : MonoBehaviour
     GameObject cameraObject;			//stores a reference to the object in focus
     GameObject cameraParent;				//stores a reference to the parent of the object in focus
 
+    float distanceFar;          //far distance where tracks become visible
+    public int farMultiplier = 300;     //multiplies the standard distance for tracks to become visible
+    public int closeMultiplier = 10;     //multiplies the standard distance for tracks to turn invisible
+
+    public bool auto;          //holds the state of visualizing orbits
+
     /* This function is called in order to construct a planet's orbit */
     public void makeOrbit(long time, string body)
     {
@@ -69,20 +75,20 @@ public class Orbits : MonoBehaviour
         spaceObject = GameObject.Find(body);
         if (spaceObject == null)
         {
-            Debug.LogError("Object not found to create path1" + body);
+            Debug.LogError("Object not found to create path " + body);
             return;
         }
 
         //get distantIcon of the planet
-        if (body.Length > 3)
-        {
-            distantIcon = GameObject.Find("Planet Distance Icon").transform;
-        }
-        else
+        if (spaceObject.tag == "Planet")
         {
             distantIcon = spaceObject.transform.GetChild(2);
         }
-
+        else
+        {
+            distantIcon = null;
+        }
+        
         // Get the mass, radius and orbital period (using Kepler's Third Law) of the focus body
         mass = (float)spaceObject.GetComponent<OrbitalElements>().orb_elements.massFocus;
         radius = (float)spaceObject.GetComponent<OrbitalElements>().orb_elements.axis;
@@ -149,6 +155,10 @@ public class Orbits : MonoBehaviour
 
         // Update the lastTime value to the time when this new orbit completes a round
         lastTime = time;
+
+        //Camera.main.GetComponent<CameraUserControl>().standardDistance * 300
+        //if 
+        //distanceFar *= Camera.main.GetComponent<CameraUserControl>().standardZoomCalc(spaceObject.transform, Camera.main.GetComponent<CameraUserControl>().standardZoomAngle);
     }
 
     // Set the width of the orbit
@@ -174,12 +184,26 @@ public class Orbits : MonoBehaviour
     {
         if (this.tag == "OrbitPlanet")
         {
-            //if the the user is taking control and toggle is off
-            if (!VisualizeOrbits.auto && !VisualizeOrbits.planetOrbits)
-            {
+
+            //if it is set to auto
+            if(VisualizeOrbits.auto && !VisualizeOrbits.a_planetOrbits) {
                 //turn tracks off and exit
                 line.GetComponent<Renderer>().enabled = false;
                 distantIcon.GetComponent<Renderer>().enabled = false;
+                return;
+            }
+            //if it is set to manual
+            else if(!VisualizeOrbits.auto) {
+                if (VisualizeOrbits.m_planetOrbits)
+                {
+                    setWidth(0.0015f * Camera.main.GetComponent<CameraUserControl>().distance);
+                    line.GetComponent<Renderer>().enabled = true;
+                }
+                else
+                {
+                    line.GetComponent<Renderer>().enabled = false;
+                    distantIcon.GetComponent<Renderer>().enabled = false;
+                }
                 return;
             }
 
@@ -188,12 +212,28 @@ public class Orbits : MonoBehaviour
             //get the parent of object of focus
             cameraParent = GameObject.Find(cameraObject.transform.parent.name);
 
+            //the ship is not a child of the planet
+            //so need to adjust this manually
+            if (cameraObject.tag == "Ship")
+            {
+                cameraParent = GameObject.Find(cameraObject.GetComponent<OrbitalElements>().orb_elements.IDFocus);
+            }
+
             //if the object is not in focus
             //and the camera is close to it
             //turn other tracks off
             if (cameraObject != spaceObject)
             {
-                if (Camera.main.GetComponent<CameraUserControl>().distance < Camera.main.GetComponent<CameraUserControl>().standardDistance * 10)
+                //if the object in focus is a moon or a ship, base the cutoff distance on the planet it is orbiting
+                if (cameraObject.tag == "Moon" || cameraObject.tag == "Ship")
+                {
+                    distanceFar = Camera.main.GetComponent<CameraUserControl>().getStandardDistance(cameraParent.transform) * farMultiplier;
+                }
+                else
+                {
+                    distanceFar = Camera.main.GetComponent<CameraUserControl>().getStandardDistance(cameraObject.transform) * farMultiplier;
+                }
+                if (Camera.main.GetComponent<CameraUserControl>().distance < distanceFar)
                 {
                     line.GetComponent<Renderer>().enabled = false;
                     distantIcon.GetComponent<Renderer>().enabled = false;
@@ -208,6 +248,13 @@ public class Orbits : MonoBehaviour
             //turn the track on for the object in focus
             else
             {
+                //if you're close to the planet
+                //turn off its tracks
+                if (Camera.main.GetComponent<CameraUserControl>().distance < Camera.main.GetComponent<CameraUserControl>().standardDistance * closeMultiplier)
+                {
+                    line.GetComponent<Renderer>().enabled = false;
+                    return;
+                }
                 line.GetComponent<Renderer>().enabled = true;
             }
 
@@ -244,31 +291,79 @@ public class Orbits : MonoBehaviour
         {
             if (this.tag == "OrbitComet")
             {
-                //if the user is taking control and toggle is off
-                if (!VisualizeOrbits.auto && !VisualizeOrbits.cometOrbits)
+                //if it is set to auto
+                if (VisualizeOrbits.auto && !VisualizeOrbits.a_cometOrbits)
                 {
                     //turn tracks off and exit
                     line.GetComponent<Renderer>().enabled = false;
                     return;
                 }
+                //if it is set to manual
+                else if (!VisualizeOrbits.auto)
+                {
+                    if (VisualizeOrbits.m_cometOrbits)
+                    {
+                        setWidth(0.0015f * Camera.main.GetComponent<CameraUserControl>().distance);
+                        line.GetComponent<Renderer>().enabled = true;
+                    }
+                    else
+                    {
+                        line.GetComponent<Renderer>().enabled = false;
+                    }
+                    return;
+                }
             }else if(this.tag == "OrbitAsteroid"){
-                //if the user is taking control and toggle is off
-                if (!VisualizeOrbits.auto && !VisualizeOrbits.asteroidOrbits)
+                //if it is set to auto
+                if (VisualizeOrbits.auto && !VisualizeOrbits.a_asteroidOrbits)
                 {
                     //turn tracks off and exit
                     line.GetComponent<Renderer>().enabled = false;
+                    return;
+                }
+                //if it is set to manual
+                else if (!VisualizeOrbits.auto)
+                {
+                    if (VisualizeOrbits.m_asteroidOrbits)
+                    {
+                        setWidth(0.0015f * Camera.main.GetComponent<CameraUserControl>().distance);
+                        line.GetComponent<Renderer>().enabled = true;
+                    }
+                    else
+                    {
+                        line.GetComponent<Renderer>().enabled = false;
+                    }
                     return;
                 }
             }
 
             //get the object of focus
             cameraObject = GameObject.Find(Camera.main.GetComponent<CameraUserControl>().target.name);
+            //get the parent of object of focus
+            cameraParent = GameObject.Find(cameraObject.transform.parent.name);
+
+            //the ship is not a child of the planet
+            //so need to adjust this manually
+            if (cameraObject.tag == "Ship")
+            {
+                cameraParent = GameObject.Find(cameraObject.GetComponent<OrbitalElements>().orb_elements.IDFocus);
+            }
+
             //if the object is not in focus
             //and the camera is close to it
             //turn the tracks off
             if (cameraObject != spaceObject)
             {
-                if(Camera.main.GetComponent<CameraUserControl>().distance < Camera.main.GetComponent<CameraUserControl>().standardDistance * 10){
+                //if the object in focus is a moon or a ship, base the cutoff distance on the planet it is orbiting
+                if (cameraObject.tag == "Moon" || cameraObject.tag == "Ship")
+                {
+                    distanceFar = Camera.main.GetComponent<CameraUserControl>().getStandardDistance(cameraParent.transform) * farMultiplier;
+                }
+                else {
+                    distanceFar = Camera.main.GetComponent<CameraUserControl>().getStandardDistance(cameraObject.transform) * farMultiplier;
+                }
+
+                if (Camera.main.GetComponent<CameraUserControl>().distance < distanceFar)
+                {
                     line.GetComponent<Renderer>().enabled = false;
                     return;
                 }
@@ -278,9 +373,16 @@ public class Orbits : MonoBehaviour
                     line.GetComponent<Renderer>().enabled = true;
                 }
             }
-            //turn the ran on for the objec tin focus
+            //turn the ran on for the objec in focus
             else
             {
+                //if you're close to the body
+                //turn off its tracks
+                if (Camera.main.GetComponent<CameraUserControl>().distance < Camera.main.GetComponent<CameraUserControl>().standardDistance * closeMultiplier)
+                {
+                    line.GetComponent<Renderer>().enabled = false;
+                    return;
+                }
                 line.GetComponent<Renderer>().enabled = true;
             }
 
@@ -339,13 +441,6 @@ public class Orbits : MonoBehaviour
 
             // Update the current time of the object's new position
             currentTime += timeStep;
-        }
-
-        //if the the user is taking control
-        if (!VisualizeOrbits.auto)
-        {
-            //keep tracks on
-            line.GetComponent<Renderer>().enabled = true;
         }
 
     }

@@ -69,7 +69,7 @@ GameObject:
   - 114: {fileID: 11403774}
   m_Layer: 0
   m_Name: ship_SkyLab
-  m_TagString: Untagged
+  m_TagString: Ship
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -624,6 +624,7 @@ MonoBehaviour:
   shipA: []
   shipObject: {fileID: 0}
   updateOrbit: 0
+  debug: 0
 --- !u!114 &11422414
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -639,6 +640,7 @@ MonoBehaviour:
   a2: 0
   a3: 0
   a4: 0
+  showButton: 1
 --- !u!114 &11443626
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -654,6 +656,7 @@ MonoBehaviour:
   a2: 0
   a3: 0
   a4: 0
+  showButton: 1
 --- !u!114 &11448672
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -669,6 +672,7 @@ MonoBehaviour:
   shipA: []
   shipObject: {fileID: 0}
   updateOrbit: 0
+  debug: 0
 --- !u!114 &11475834
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -371,6 +371,28 @@ public class CameraUserControl : MonoBehaviour
 				return standardDistance;
 		}
 
+        //this function returns the standardZoom distance for any target without affecting the current parameters
+        public float getStandardDistance(Transform target)
+        {
+            float standDistance;
+            if (target.name == "10")
+            {	//if the target is the sun
+                return 6.0f;
+            }
+            // find the maximum target radius of three dimension radius
+            // determine the distance necessary to make a ____ degree angle with the max radius 
+            float[] radius = {(float)target.GetComponent<OrbitalElements> ().orb_elements.radiusx,
+							(float)target.GetComponent<OrbitalElements> ().orb_elements.radiusy,
+							(float)target.GetComponent<OrbitalElements> ().orb_elements.radiusz};
+            //Debug.Log ("rad1 = " + radius[0] + "   rad2 = " + radius[1] + "    rad3 = " + radius[2] + "   MaxRad = " + Mathf.Max (radius)/Mathf.Tan(standardZoomAngle));
+            standDistance = (Mathf.Max(radius) / Mathf.Tan(standardZoomAngle)) / 20000000;
+            if (standDistance <= Camera.main.nearClipPlane)
+            {	//if the standardDistance is less than the clipping distance
+                standDistance = 1.2f * Camera.main.nearClipPlane;	//set it instead to slightly above the clipping distance
+            }
+            return standDistance;
+        }
+
 		// This function puts the camera in one of several standard location relative to the current target
 		// The viewAngle key is: 0 = radial, 1 = anti-radial, 2 = normal, 3 = anti-norm, 4 = tangential, 5 = anti-tan
 		public void cameraAngleSwitch(int viewAngle) {

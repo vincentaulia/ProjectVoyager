@@ -7,13 +7,22 @@ public class VisualizeOrbits : MonoBehaviour {
 	public Rect promptWindow;		//reference the prompt window
 	public Rect orbitsWindow;		//reference the window with checkboxes
 
-	public static bool planetOrbits = true;
-	public static bool moonOrbits = true;
-	public static bool asteroidOrbits = true;
-    public static bool cometOrbits = true;
-	public static bool shipOrbits = true;
+    //auto toggle buttons
+	public static bool a_planetOrbits = true;
+	public static bool a_moonOrbits = true;
+	public static bool a_asteroidOrbits = false;
+    public static bool a_cometOrbits = false;
+	public static bool a_shipOrbits = true;
 
-	public static bool auto = true;			//toggles control butween user and interface
+    //manual toggle buttons
+    public static bool m_planetOrbits = true;
+    public static bool m_moonOrbits = true;
+    public static bool m_asteroidOrbits = true;
+    public static bool m_cometOrbits = true;
+    public static bool m_shipOrbits = true;
+
+	public static bool auto = true;			//toggles control for auto
+    private bool manual = false;            //toggles control for manual
 
 	void OnGUI(){
 
@@ -34,25 +43,52 @@ public class VisualizeOrbits : MonoBehaviour {
 	}
 
 	void orbitsFunc(int windowID){
-		int x = 10;
+        GUILayout.BeginVertical();
 
+        GUILayout.BeginHorizontal();
+        GUILayout.BeginVertical();
+        
 		auto = GUILayout.Toggle (auto, "Auto");
+        manual = !auto;
+        
 
 		//if auto is selected, disable the other options
-		GUI.enabled = !auto;
+		GUI.enabled = auto;
 
-		planetOrbits = GUILayout.Toggle (planetOrbits, "Planets");
-		moonOrbits = GUILayout.Toggle (moonOrbits, "Moons");
-		asteroidOrbits = GUILayout.Toggle (asteroidOrbits, "Asteroids");
-        cometOrbits = GUILayout.Toggle(cometOrbits, "Comets");
-		shipOrbits = GUILayout.Toggle (shipOrbits, "Ships");
+		a_planetOrbits = GUILayout.Toggle (a_planetOrbits, "Planets");
+		a_moonOrbits = GUILayout.Toggle (a_moonOrbits, "Moons");
+		a_asteroidOrbits = GUILayout.Toggle (a_asteroidOrbits, "Asteroids");
+        a_cometOrbits = GUILayout.Toggle(a_cometOrbits, "Comets");
+		a_shipOrbits = GUILayout.Toggle (a_shipOrbits, "Ships");
 
 		//enables the button
 		GUI.enabled = true;
 
+        GUILayout.EndVertical();
+
+        GUILayout.BeginVertical();
+        manual = GUILayout.Toggle(manual, "Manual");
+        auto = !manual;
+
+        //if auto is selected, disable the other options
+        GUI.enabled = !auto;
+
+        m_planetOrbits = GUILayout.Toggle(m_planetOrbits, "Planets");
+        m_moonOrbits = GUILayout.Toggle(m_moonOrbits, "Moons");
+        m_asteroidOrbits = GUILayout.Toggle(m_asteroidOrbits, "Asteroids");
+        m_cometOrbits = GUILayout.Toggle(m_cometOrbits, "Comets");
+        m_shipOrbits = GUILayout.Toggle(m_shipOrbits, "Ships");
+
+        //enables the button
+        GUI.enabled = true;
+
+        GUILayout.EndVertical();
+        GUILayout.EndHorizontal();
+
 		if (GUILayout.Button("Hide")) {
 			showControls = false;
 				}
+        GUILayout.EndVertical();
 		GUI.DragWindow ();
 
 		}
@@ -61,7 +97,8 @@ public class VisualizeOrbits : MonoBehaviour {
 	void Start () {
 		//initialize the windows
 		promptWindow = new Rect (Screen.width - 140, 40, 130, 50);
-		orbitsWindow = new Rect (Screen.width - 200, 40, 160, 180);
+		//orbitsWindow = new Rect (Screen.width - 200, 40, 160, 180);
+        orbitsWindow = new Rect(Screen.width - 300, 40, 280, 180);
 	}
 	
 	// Update is called once per frame
