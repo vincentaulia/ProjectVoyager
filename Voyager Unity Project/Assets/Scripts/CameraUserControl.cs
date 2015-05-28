@@ -219,6 +219,14 @@ public class CameraUserControl : MonoBehaviour
 								rightClickDisplay.CreateWindow(rayHitInfo.collider.name);
 								rightClickDisplay.OnGUI();
 							}
+							if(rayHitInfo.collider.CompareTag ("Node"))
+							{
+								Debug.Log ("Here Test");
+								Debug.Log (rayHitInfo.collider.name);
+								Debug.Log (rayHitInfo.collider.name.Substring (9, rayHitInfo.collider.name.IndexOf ("_")-9));
+						Debug.Log (rayHitInfo.collider.name.Substring (rayHitInfo.collider.name.IndexOf ("Node") + 4, rayHitInfo.collider.name.Length - rayHitInfo.collider.name.IndexOf ("Node") - 4));
+						Global.ship[int.Parse(rayHitInfo.collider.name.Substring (9, rayHitInfo.collider.name.IndexOf ("_")-9)) -1].GetComponent<shipOEHistory>().openWindow(int.Parse (rayHitInfo.collider.name.Substring (rayHitInfo.collider.name.IndexOf ("Node") + 4, rayHitInfo.collider.name.Length - rayHitInfo.collider.name.IndexOf ("Node") - 4)));
+							}
 						}
 					}
 					else

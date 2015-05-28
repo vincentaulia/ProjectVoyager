@@ -29,6 +29,7 @@ TagManager:
   - OrbitShip
   - OrbitComet
   - OrbitAsteroid
+  - Node
   layers:
   - Default
   - TransparentFX
