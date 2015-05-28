@@ -172,7 +172,7 @@ public class ShipOrbit : MonoBehaviour
         //instantiate the node
         int count = nodes.Count;
         nodes.Add((GameObject)Instantiate(nodePrefab));
-        nodes[count].transform.name = "Node" + (count + 1);
+        nodes[count].transform.name = this.name + "_Node" + (count + 1);
         nodes[count].transform.parent = GameObject.Find("Nodes").transform;
         //link the node with position i
         linkNodes.Add(i);
@@ -292,8 +292,8 @@ public class ShipOrbit : MonoBehaviour
         if (ship == cameraObject || parentPlanet == cameraObject || parentPlanet == cameraParent)
         {
             //if the camera is too close
-            Debug.Log("distance: " + Camera.main.GetComponent<CameraUserControl>().distance);
-            Debug.Log("Standard: " + Camera.main.GetComponent<CameraUserControl>().standardDistance * closeMultiplier);
+           // Debug.Log("distance: " + Camera.main.GetComponent<CameraUserControl>().distance);
+           // Debug.Log("Standard: " + Camera.main.GetComponent<CameraUserControl>().standardDistance * closeMultiplier);
             if (Camera.main.GetComponent<CameraUserControl>().distance < Camera.main.GetComponent<CameraUserControl>().standardDistance * closeMultiplier)
             {
                 switchTracks(false);

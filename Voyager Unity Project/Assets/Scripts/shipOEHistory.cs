@@ -19,6 +19,9 @@ public class shipOEHistory : MonoBehaviour
     public List<Elements> shipOE = new List<Elements>();
     public List<long> shipT = new List<long>();       //the global time where an orbit strats
     public List<double> shipA = new List<double>();   //the end mean anomaly of an orbit
+	public List<int> nodeWindows = new List<int>(); 
+	public List<Rect> windows = new List<Rect> ();
+	public List<string> windowInfo = new List<string> ();
     public GameObject shipObject;
     private int currentTimePos;
     private Vector3 def;
@@ -442,6 +445,135 @@ public class shipOEHistory : MonoBehaviour
         Initial.calcData();
     }
 
+	//Open the node Info Window
+	public void openWindow(int nodeNumber)
+	{
+		windows[nodeNumber - 1] = (new Rect (Input.mousePosition.x, Screen.height - Input.mousePosition.y, 200, 150));
+
+		nodeWindows[nodeNumber - 1] = 1;
+	}
+
+	//Closes the Node Info Window
+	public void closeWindow(int nodeNumber)
+	{
+		nodeWindows[nodeNumber] = 0;
+	}
+
+	//Store information about the added node. Exit Mean Anom is the mean anom of old orbit where the node is
+	//Entering mean anom is the mean anom of the node in new orbit
+	string addInfo(int index, string n, string t, string r, double mA)
+	{
+		string info = "Node" + (index + 1) + "\n";
+		info += "Time of Maeuver (s):" + shipT[index + 1] + "\n";
+		info += "Normal DeltaV :" + n + "\n";
+		info += "Tangential DeltaV :" + t + "\n";
+		info += "Radial DeltaV :" + r + "\n";
+		info += "Exit Mean Anom :" + Math.Round((mA * 180.0 /Math.PI),2) + "\n";
+		info += "Entering Mean Anom :" + Math.Round((shipOE[index + 1].anom * 180.0 /Math.PI),2) + "\n";
+		return info;
+	}
+	
+	void OnGUI()
+	{
+		//GUI.skin = MenuSkin;
+
+
+//
+//		GUI.BeginGroup(new Rect (Input.mousePosition.x, Screen.height - Input.mousePosition.y, 200, 150));
+//		GUI.Box(new Rect(0, 0, 120, 300), "Maneuver Node");
+//		GUI.Label(new Rect(10, 30, 100, 20), "Time");
+//		GUI.Label(new Rect(10, 90, 100, 20), "Tangential");
+//		GUI.Label(new Rect(10, 150, 100, 20), "Radial");
+//		GUI.Label(new Rect(10, 150, 100, 20), "Normal");
+//		GUI.EndGroup();
+
+
+		for (int i=0; i<nodeWindows.Count; i++) {
+			if(nodeWindows[i] == 1){
+				windows [i] = GUI.Window (100 + i, windows [i], DoMyWindow, windowInfo [i]);}
+		}
+
+
+
+		
+		if (deltaVGui)
+		{
+			//Debug.Log ("OE COUNT");
+			//Debug.Log (shipT[1]);
+			//Debug.Log(findShipPos (Global.time));
+			GUI.BeginGroup(new Rect(Screen.width - 130, Screen.height - 310, 120, 270));
+			GUI.Box(new Rect(0, 0, 120, 300), "Maneuver Node");
+			GUI.Label(new Rect(10, 30, 100, 20), "Normal");
+			a1 = GUI.TextField(new Rect(10, 60, 80, 20), a1, 8);
+			a1 = Regex.Replace(a1, "[?+-][^.0-9]", "");
+			GUI.Label(new Rect(10, 90, 100, 20), "Tangential");
+			a2 = GUI.TextField(new Rect(10, 120, 80, 20), a2, 8);
+			a2 = Regex.Replace(a2, "[?+-][^.0-9]", "");
+			GUI.Label(new Rect(10, 150, 100, 20), "Radial");
+			a3 = GUI.TextField(new Rect(10, 180, 80, 20), a3, 8);
+			a3 = Regex.Replace(a3, "[?+-][^.0-9]", "");
+			
+			if (GUI.Button(new Rect(10, 210, 100, 20), "Change DV"))
+			{
+				
+				//ONLY LEAVE ONE OF THE METHODS UNCOMMENTED
+				
+				//1] first method to calculate deltaV
+				//this.gameObject.GetComponent<shipOEHistory> ().deltaVInput(double.Parse (a1), double.Parse (a2), double.Parse (a3)) ;
+				
+				//2] second method to calculate deltaV
+				deltaVInputNew(double.Parse(a1), double.Parse(a2), double.Parse(a3));
+				
+				updateOrbit = true;
+				deltaVGui = false;
+				Debug.Log("Time of orbits");
+				for (int i = 0; i < shipT.Count; i++)
+				{
+					Debug.Log(shipT[i]);
+				}
+				
+				//show the DV button again
+				this.GetComponent<ShipNodeGui>().showButton = true;
+				nodeWindows.Add (0);
+				windows.Add (new Rect());
+				windowInfo.Add (addInfo(j,a1,a2,a3,mAnom));
+			}
+			//this button should be added when we can test Change DV before applying it
+			//if (GUI.Button(new Rect(10, 240, 100, 20),"Done"))
+			//{
+			//flag to update visualizing the tracks
+			//updateOrbit = true;
+			//deltaVGui = false; 
+			//}
+			
+			//canel adding the node and delete the inserted parameters
+			if (GUI.Button(new Rect(10, 240, 100, 20), "Cancel"))
+			{
+				deltaVGui = false;
+				removeOEpos(shipA.Count - 1);
+				
+				//show the DV button again
+				this.GetComponent<ShipNodeGui>().showButton = true;
+			}
+			GUI.EndGroup();
+		}
+	}
+
+	//Create window script for node info windows
+	public void DoMyWindow (int windowID)
+	{
+		//The top bar's dimentsions are 200 wide and 20 tall. The borders are 2 wide all around.
+		//CameraUserControl cameraScript = Camera.main.GetComponent<CameraUserControl> ();	//cameraUserControl script attached to the main camera
+		
+		GUI.DragWindow(new Rect(0, 0, 178, 20)); //Only the top bar is dragable
+		
+		// Closes the window and removes the planet from myList upon clicking on X button
+		if(GUI.Button (new Rect (178, 2, 20, 16), "X"))
+		{	
+			closeWindow(windowID - 100);
+		}
+
+	}
 
 
 
@@ -647,69 +779,7 @@ public class shipOEHistory : MonoBehaviour
         Initial.calcData();
     }
 
-    void OnGUI()
-    {
-        //GUI.skin = MenuSkin;
-
-        if (deltaVGui)
-        {
-            //Debug.Log ("OE COUNT");
-            //Debug.Log (shipT[1]);
-            //Debug.Log(findShipPos (Global.time));
-            GUI.BeginGroup(new Rect(Screen.width - 130, Screen.height - 310, 120, 270));
-            GUI.Box(new Rect(0, 0, 120, 300), "Maneuver Node");
-            GUI.Label(new Rect(10, 30, 100, 20), "Normal");
-            a1 = GUI.TextField(new Rect(10, 60, 80, 20), a1, 8);
-            a1 = Regex.Replace(a1, "[?+-][^.0-9]", "");
-            GUI.Label(new Rect(10, 90, 100, 20), "Tangential");
-            a2 = GUI.TextField(new Rect(10, 120, 80, 20), a2, 8);
-            a2 = Regex.Replace(a2, "[?+-][^.0-9]", "");
-            GUI.Label(new Rect(10, 150, 100, 20), "Radial");
-            a3 = GUI.TextField(new Rect(10, 180, 80, 20), a3, 8);
-            a3 = Regex.Replace(a3, "[?+-][^.0-9]", "");
-
-            if (GUI.Button(new Rect(10, 210, 100, 20), "Change DV"))
-            {
-
-                //ONLY LEAVE ONE OF THE METHODS UNCOMMENTED
-
-                //1] first method to calculate deltaV
-                //this.gameObject.GetComponent<shipOEHistory> ().deltaVInput(double.Parse (a1), double.Parse (a2), double.Parse (a3)) ;
-
-                //2] second method to calculate deltaV
-                deltaVInputNew(double.Parse(a1), double.Parse(a2), double.Parse(a3));
-
-                updateOrbit = true;
-                deltaVGui = false;
-                Debug.Log("Time of orbits");
-                for (int i = 0; i < shipT.Count; i++)
-                {
-                    Debug.Log(shipT[i]);
-                }
-
-                //show the DV button again
-                this.GetComponent<ShipNodeGui>().showButton = true;
-            }
-            //this button should be added when we can test Change DV before applying it
-            //if (GUI.Button(new Rect(10, 240, 100, 20),"Done"))
-            //{
-            //flag to update visualizing the tracks
-            //updateOrbit = true;
-            //deltaVGui = false; 
-            //}
-
-            //canel adding the node and delete the inserted parameters
-            if (GUI.Button(new Rect(10, 240, 100, 20), "Cancel"))
-            {
-                deltaVGui = false;
-                removeOEpos(shipA.Count - 1);
-
-                //show the DV button again
-                this.GetComponent<ShipNodeGui>().showButton = true;
-            }
-            GUI.EndGroup();
-        }
-    }
+    
 
     public void deltaVInputNew(double normal, double tangent, double radial)
     {
