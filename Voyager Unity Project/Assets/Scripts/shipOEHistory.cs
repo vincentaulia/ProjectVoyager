@@ -174,8 +174,10 @@ public class shipOEHistory : MonoBehaviour
         Debug.Log("mAnom: " + mAnom);
         Debug.Log("intial.anom: " + Initial.anom);
 		long timeInOrbit;
+		//If the Initial Anom is greater then mAnom add 2*PI rad to make it a positive number so that 
+		//we can calculate the time spent in orbit and get a positive value
         if (mAnom <= Initial.anom) {
-						//if the place of the new node is before the previous node
+
 			timeInOrbit = (long)((mAnom - Initial.anom + (2 * Math.PI)) / Initial.n);
 				} 
 		else {
@@ -928,6 +930,7 @@ public class shipOEHistory : MonoBehaviour
         {
             //the components of the new velocity scale by the same factor
             //compute this factor
+			Debug.Log("Tangential" + tangent);
             factor = (vel2.magnitude + tangent) / vel2.magnitude;
 
             vel = vel2 * factor;
@@ -951,6 +954,7 @@ public class shipOEHistory : MonoBehaviour
             //the negative sign is because the position vector points outward
             //but the radial velocity vector should point to the focus point
             new_vel = -r2 / factor;  //velocity vector associated with the radial burn
+			Debug.Log("Radial" + radial);
             Debug.Log("new vel: " + new_vel);
             Debug.Log("mag: " + new_vel.magnitude);
 
@@ -960,6 +964,7 @@ public class shipOEHistory : MonoBehaviour
         //compute the normal burn
         if (normal != 0)
         {
+			Debug.Log ("Normal" + normal);
             //get the cross product of the position vecotr
             //with the velocity vector
             //to get a vector perpendicular to both (will be normal to orbit)
