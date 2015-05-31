@@ -173,17 +173,18 @@ public class shipOEHistory : MonoBehaviour
         Debug.Log("Initial.n: " + Initial.n);
         Debug.Log("mAnom: " + mAnom);
         Debug.Log("intial.anom: " + Initial.anom);
-
-        if (mAnom <= Initial.anom)
-        {
-            //if the place of the new node is before the previous node
-            return -1;
-        }
-
+		long timeInOrbit;
+        if (mAnom <= Initial.anom) {
+						//if the place of the new node is before the previous node
+			timeInOrbit = (long)((mAnom - Initial.anom + (2 * Math.PI)) / Initial.n);
+				} 
+		else {
+			timeInOrbit = (long)((mAnom - Initial.anom) / Initial.n);
+				}
         //double period = 2 * Math.PI * Math.Sqrt (Initial.axis / 6.67384e-11 * (Initial.mass + Initial.massFocus));
         //double currMAnom = ((Global.time - shipT[i]) * Initial.n ) - shipA[i];
 
-        long timeInOrbit = (long)((mAnom - Initial.anom) / Initial.n);  //LOSS OF PRECISSION, Change need anom where orbit started
+          //LOSS OF PRECISSION, Change need anom where orbit started
         //	if (i == 1)
         //		timeInOrbit += 3000;
         Debug.Log("Time in Orbit");
