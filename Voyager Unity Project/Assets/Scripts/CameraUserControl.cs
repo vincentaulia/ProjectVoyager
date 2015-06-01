@@ -226,7 +226,7 @@ public class CameraUserControl : MonoBehaviour
 						Debug.Log("Clicked on a valid planet object: " + rayHitInfo.collider.name);
 						rightClickDisplay = GameObject.Find("Bary Center").GetComponent<InfoWindows>(); 
 						rightClickDisplay.CreateWindow(rayHitInfo.collider.name);
-						rightClickDisplay.OnGUI();
+						rightClickDisplay.popUpMoreCamOptions = true;
 					}
 					if(rayHitInfo.collider.CompareTag ("Node"))
 					{

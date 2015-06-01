@@ -37,17 +37,9 @@ public class InfoWindows : MonoBehaviour
 		//int InfoPresent;						//boolean. whether a window is displayed for this object
 		//public Rect windowRect;					//to hold the coordinates of the window
 
-		public void OnGUI ()
-		{
-
-				//windowRect = GUI.Window (6, windowRect, windowFunc, "Information");
-
-				//display all the windows that have been poped up
-				for (int i=0; i<myList.Count; i++) {
-						myList [i] = GUI.Window (int.Parse (names [i]), myList [i], DoMyWindow, data [i]);
-				}
-
-		}
+		// This boolean is toggled from CameraUserControl.cs
+		// It brings up the camera options menu when right clicking a planet.
+		public bool popUpMoreCamOptions = false; 
 
 		//sets some properties for the pop up windows
 		public void DoMyWindow (int windowID)
@@ -186,6 +178,21 @@ public class InfoWindows : MonoBehaviour
 
 				GUI.DragWindow ();
 		}*/
+
+		void OnGUI ()
+		{
+			//windowRect = GUI.Window (6, windowRect, windowFunc, "Information");
+
+			// This boolean is toggled from CameraUserControl.cs
+			// It brings up the camera options menu when right clicking a planet.
+			if (popUpMoreCamOptions) {
+				//display all the windows that have been poped up
+				for (int i=0; i<myList.Count; i++) {
+					myList [i] = GUI.Window (int.Parse (names [i]), myList [i], DoMyWindow, data [i]);
+				}
+			}
+		
+		}
 
 		// Use this for initialization
 		void Start ()
