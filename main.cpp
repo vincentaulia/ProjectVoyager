@@ -77,10 +77,10 @@ int main(int argc, char** argv)
     /*The following is a first order Euler approximation of the motion of the bodies
      This was taken from Zach's example code. This should be eventually replaced with
      a Runge-Kutta 10th order approximation.*/
-    
     /*
-	unsigned int h = 60*60*24;		//h = step size, in seconds. Right now it's about 15 minutes.
-	unsigned int t = 0;		//t is the running time track. Starts at t = 0
+    
+	unsigned int h = 60*60*24;              //h = step size, in seconds. Right now it's about 15 minutes.
+	unsigned int t = 0;                     //t is the running time track. Starts at t = 0
 	unsigned int t_final = 24*60*60*365*1;	//Must be an integer!
 	mat Acceleration(Velocity.n_rows,Velocity.n_cols);
 	Acceleration.zeros();
@@ -110,111 +110,120 @@ int main(int argc, char** argv)
     
     /*************************************************************
      *************************************************************
-Start of RK10 code (note: Compiles, but does not produce accurate results)
+                        Start of RKN12(10) code
      *************************************************************
      *************************************************************/
-
-    // Algorithm for numerical integration of the 2nd order Acceleration ODE to find Position and Velocity
-    // Based on "A Runge-Kutta Method of Order 10" by E. Hairer
-    // Available: http://imamat.oxfordjournals.org/content/21/1/47.full.pdf (Accessed: 19 Oct. 2014)
-    // Implemented by Behrad Vatankhahghadim
-    // 19 October 2014
     
+    //Constant matrices for RKN1012. (Maybe some of these should be arrays?)
+    mat c_RKN10(17, 1);
+    mat A_RKN10(17, 17);
+    mat Aprime_RKN10(17, 17);
+    mat Bhat_RKN10(17,1);
+    mat Bphat_RKN10(17, 1);
+    mat B_RKN10(17, 1);
+    mat Bprime_RKN10(17, 1);
     
-   
-    // Set the number of stages to 17
-    int s = 17;
-    //declare variables to store summartions.
-    //mat Sum_AL, Sum_AK, Sum_BL, Sum_BK;
-    mat Sum_AL(Velocity.n_rows, Velocity.n_cols);
-    mat Sum_AK(Velocity.n_rows, Velocity.n_cols);
-    mat Sum_BL(Velocity.n_rows, Velocity.n_cols);
-    mat Sum_BK(Velocity.n_rows, Velocity.n_cols);
+    //Populate the matrices with a function call. (all but g_RKN10 because that's different for each one)
+    populate_RKN10_coeffs (c_RKN10, A_RKN10, Bhat_RKN10, Bphat_RKN10, B_RKN10, Bprime_RKN10);
     
-    //declare the k and l arrays. k and l are both arrays of matrices.
-    mat *k;
-    mat *l;
-    k = new mat [s];
-    l = new mat [s];
-    
-    //Initialize the matrix in each step of the array to be a 0 matrix
-    //Note: The pseudocode that the physics team provided doesn't say what to initialize these arrays to.
-    for (int counter = 0; counter <= s; counter ++) {
-        k[counter] = mat(Velocity.n_rows, Velocity.n_cols, fill::zeros);
-        l[counter] = mat(Velocity.n_rows, Velocity.n_cols, fill::zeros);
-        
-    }
-    
-    //declare and initialize the a_RK10 and b_RK10 arrays of coefficients.
-    double a_RK10[17][17];
-    double b_RK10[17];
-    populate_RK10_coeffs (a_RK10, b_RK10);
-    
-    unsigned int h = 60*60*24;		//h = step size, in seconds. Right now it's about 15 minutes.
+    unsigned int h = 60*60*24;		//h = step size, in seconds.
 	unsigned int t = 0;		//t is the running time track. Starts at t = 0
 	unsigned int t_final = 24*60*60*365*1;	//Must be an integer!
 	mat Acceleration(Velocity.n_rows,Velocity.n_cols);
-	Acceleration.zeros();
+    
+    //ignore the hatless stuff.
+    //mat Position_hatless(Velocity.n_rows,Velocity.n_cols);
+    //Position_hatless = Position;
+	//mat Velocity_hatless(Velocity.n_rows,Velocity.n_cols);
+    //Velocity_hatless= Velocity;
 
-    /*
-     The following are needed before entering the loop:
-     - Set the Position and Velocity to their initial conditions
-     - Initialize the k and l arrays to 1D arrays of 17 elements (number of stages = s = 17)
-     - Assign the coefficients from the source above to a, b, c arrays (also available in JPG on Drive)
-     (a is 2D, while b and c are 1D)
-     */
+	Acceleration.zeros();
+    
+    //g_RKN10 needs to be an array of 17 matrices, and each matrix is Nx3
+    mat* g_RKN10;
+    g_RKN10 = new mat [17];
+    for (int i = 0; i < 17; i++) {
+        g_RKN10[i].set_size(numSpaceObjs, 3);
+        g_RKN10[i].zeros();
+    }
+    //sums
+    mat sum_gbHat(numSpaceObjs, 3);
+    mat sum_gbpHat(numSpaceObjs, 3);
+    //hatless
+    mat sum_gb(numSpaceObjs, 3);
+    mat sum_gbPrime(numSpaceObjs, 3);
+    
+    //holds the sum of a[i][j]*g[j] from j = 0 to j = i-1.
+    mat sum_ag(numSpaceObjs, 3);
+    
+    mat phi_hat(Velocity.n_rows,Velocity.n_cols);
+    mat phi_phat(Velocity.n_rows,Velocity.n_cols);
+    //hatless
+    //mat phi(Velocity.n_rows,Velocity.n_cols);
+    //mat phiPrime(Velocity.n_rows,Velocity.n_cols);
     
     while (t <= t_final)
     {
-        
-        // Start of RK10 approximation
-        
-        // Reset all summations to zero
-        Sum_AL.zeros();
-        Sum_AK.zeros();
-        Sum_BL.zeros();
-        Sum_BK.zeros();
-        
-
-        //Start of fancy math here.
-        // Loop through all stages
-        for (int i = 1; i <= s; i++)
-        {
-            // Accumulate the a_ij*l_j and a_ij*k_j summations
-            for (int j = 1; j < i; j++)
-            {
-                Sum_AL += (a_RK10[i][j] * l[j - 1]);
-                Sum_AK += (a_RK10[i][j] * k[j - 1]);
-            }
-            
-            // Calculate the intermediate k's and l's for each stage
-            k[i - 1] = Velocity + h * Sum_AL;
-            l[i - 1] = grav_accel (Position + h * Sum_AK , Mass);
-            
-            // Accumulate the b_i*l_i and b_i*k_i summations for later use
-            Sum_BL = Sum_BL + (b_RK10[i - 1] * l[i - 1]);
-            Sum_BK = Sum_BK + (b_RK10[i - 1] * k[i - 1]);
-        }
-        
         //This writes the planet data to the output file, but only every 24 hours, to avoid huge text files.
         if (t % (60*60*24) == 0) {
             writeData(spaceObjects, numSpaceObjs, Velocity, Position, t, outputFile);
         }
+        //cout << "New iteration. t = " << t << "\n";
         
+        //zero the sums every timestep.
+        sum_gbHat.zeros();
+        sum_gbpHat.zeros();
+        sum_gb.zeros();
+        sum_gbPrime.zeros();
+
+        
+        //Start of fancy math here.
+
+        //Calculating g array.
+        for (int i = 0; i < 17; i++) {
+            sum_ag.zeros();
+            //cout << ("sum_ag has been zeroed.\n");
+            for(int j = 0; j < i - 1; j++) {
+                sum_ag += A_RKN10(i, j)*g_RKN10[j];
+            }
+
+            //g_RKN10 = f(t + c[i]*h, Position(t) + c[i]*h*Velocity(t) + h^2*Sum_ag)
+            //We're just ignoring the part with 't', because our acceleration function doesn't include t.
+            g_RKN10[i] = grav_accel(Position + c_RKN10[i]*h*Velocity + h*h*sum_ag,Mass);
+            
+        }
+        //cout << ("g array created.\n");
+        
+        //Creating sum_gb
+        for (int i = 0; i < 17; i++) {
+            sum_gbHat += Bhat_RKN10(i,0)*g_RKN10[i];
+            sum_gbpHat += Bphat_RKN10(i,0)*g_RKN10[i];
+            //hatless sums
+            //sum_gb += B_RKN10(i,0)*g_RKN10[i];
+            //sum_gbPrime += Bprime_RKN10(i,0)*g_RKN10[i];
+        }
+        //cout << ("sum matrices created.\n");
+        //Matrix math.
+        phi_hat = Velocity + h*sum_gbHat;
+        phi_phat = sum_gbpHat;
+        
+        //phi = Velocity + h*sum_gbHat;
+        //phiPrime = sum_gbPrime;
         
         // Update the position and velocity using the previously calculated weighted sums of k's and l's
-        Position = Position + 1 * Sum_BK;
-        Velocity = Velocity + 1 * Sum_BL;
+        Position = Position + h*phi_hat;
+        Velocity = Velocity + h*phi_phat;
+        
+        //Position_hatless = Position + h*phi;
+        //Velocity_hatless = Velocity + h*phiPrime;
         
         // Step forward in time
-        t = t + h;
+        t += h;
     }
-    
-    
     
     /*************************************************************
      *************************************************************
-                    End of RK10 Code
+                        End of RK12(10) Code
      *************************************************************
      *************************************************************/
 
