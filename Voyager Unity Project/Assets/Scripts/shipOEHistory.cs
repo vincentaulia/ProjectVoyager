@@ -630,20 +630,22 @@ public class shipOEHistory : MonoBehaviour
 		//These unit vectors are in the reference frame of the ship
 
 		//Calculate normal unit vector
-		Vector3d normalUnitVec = crossProduct (r1, r2);
+		Vector3d normalUnitVec = crossProduct(r2, vel2);
 		normalUnitVec /= normalUnitVec.magnitude;
 
 		//Calculate the radial unit vector
 		Vector3d radialUnitVec = r2 * -1 / r2.magnitude;
 
 		//Calculate the tangenta unit vector
-		Vector3d tangentialunitVector = crossProduct (radialUnitVec, normalUnitVec);
+		Vector3d tangentialUnitVector = crossProduct (radialUnitVec, normalUnitVec);
 
-		//Calculate the flight angle 
-		double phi = Math.Atan ((el.ecc * Math.Sin(v))/(1 + el.ecc * Math.Cos(v)));
+		//Calculate the flight angle // subtracted from 360 for appropriate rotation direction
+		double phi = (Math.PI * 2) - Math.Atan ((el.ecc * Math.Sin(v))/(1 + el.ecc * Math.Cos(v)));
+
+		Debug.Log ("phi: " + phi);
 
 		//Rotated tangential vector so its tangent to the orbit
-		Vector3d rotatedTangentialVec = rotationFunction (tangentialunitVector, normalUnitVec, phi);
+		Vector3d rotatedTangentialVec = rotationFunction (tangentialUnitVector, normalUnitVec, phi);
 
 		//Rotated radial unit vector 
 		Vector3d rotatedRadialVec = rotationFunction (radialUnitVec, normalUnitVec, phi);
@@ -652,7 +654,7 @@ public class shipOEHistory : MonoBehaviour
 		vel = vel2;
 		vel += normalUnitVec * normal;
 		vel += rotatedRadialVec * radial;
-		vel += tangentialunitVector * tangent;
+		vel += rotatedTangentialVec * tangent;
 
 //		double factor = 0;
 //        //compute the tangential burn
@@ -726,11 +728,20 @@ public class shipOEHistory : MonoBehaviour
         //get the position object
         Vector3 pos = orbiting.transform.position;
         //visualize vel1
-        GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r1, switchComonents(vel1), 0.07f, "velocity1");
+        //GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r1, switchComonents(vel1), 0.07f, "velocity1");
         //visualize vel2
-        GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel2), 0.07f, "velocity2");
+       // GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel2), 0.07f, "velocity2");
         //visualize vel (after burn)
-        GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel), 0.07f, "velocity3");
+       // GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel), 0.07f, "velocity3");
+
+		//visualize radial unit vector that is amplified and added to old velocity
+		GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(rotatedRadialVec), 0.07f, "velocity1");
+		//visualize tangential unit vector that is amplified and added to old velocity
+		GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(rotatedTangentialVec), 0.07f, "velocity2");
+		//visualize normal unit vector that is amplified and added to old velocity
+		GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(normalUnitVec), 0.07f, "velocity3");
+		//visualize vel (after burn)
+		//GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel), 0.07f, "velocity3");
 
         //now calculate the orbital elements of the new orbit
 
