@@ -38,6 +38,8 @@ public class InsertShip : MonoBehaviour
 		public GameObject orbitPrefab;
 		public Stopwatch stopwatch = new Stopwatch(); //for testing purposes only
 
+        public GameObject vector;
+
 		void OnGUI ()
 		{
 
@@ -394,4 +396,23 @@ public class InsertShip : MonoBehaviour
 		{
 	
 		}
+        public void drawVector(Vector3 start, Vector3 dir, float length, string name = "vector")
+        {
+            GameObject vect = (GameObject)Instantiate(vector);
+
+            //this is the direction vector after being scaled
+            Vector3 scaled;
+            scaled = dir * length / dir.magnitude;
+
+            vect.name = name;
+
+            //place the vector halfway between the origin and the destinatino
+            vect.transform.position = start + scaled / 2;
+
+            //rotate it accordingly
+            vect.transform.LookAt(start + scaled);
+
+            //scale the vector along the z-axis only
+            vect.transform.localScale = new Vector3(vect.transform.localScale.x, vect.transform.localScale.y, length);
+        }
 }

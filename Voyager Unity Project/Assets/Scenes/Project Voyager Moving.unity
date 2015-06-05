@@ -627,6 +627,7 @@ MonoBehaviour:
     width: 120
     height: 50
   orbitPrefab: {fileID: 100000, guid: 350304f44270c7c49b7042304ab91d65, type: 2}
+  vector: {fileID: 183500, guid: bf4df265e8d9c5c49bcca4aa9294a0a9, type: 2}
 --- !u!4 &334651165
 Transform:
   m_ObjectHideFlags: 0
@@ -3247,6 +3248,7 @@ MonoBehaviour:
   - 
   - 
   - 
+  popUpMoreCamOptions: 0
 --- !u!114 &2087644003
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -84,9 +84,10 @@ public class Orbits : MonoBehaviour
         {
             distantIcon = spaceObject.transform.GetChild(2);
         }
+        //for asteroid or comet
         else
         {
-            distantIcon = null;
+            distantIcon = spaceObject.transform.GetChild(1);
         }
         
         // Get the mass, radius and orbital period (using Kepler's Third Law) of the focus body
@@ -296,6 +297,7 @@ public class Orbits : MonoBehaviour
                 {
                     //turn tracks off and exit
                     line.GetComponent<Renderer>().enabled = false;
+                    distantIcon.GetComponent<Renderer>().enabled = false;
                     return;
                 }
                 //if it is set to manual
@@ -309,6 +311,7 @@ public class Orbits : MonoBehaviour
                     else
                     {
                         line.GetComponent<Renderer>().enabled = false;
+                        distantIcon.GetComponent<Renderer>().enabled = false;
                     }
                     return;
                 }
@@ -318,6 +321,7 @@ public class Orbits : MonoBehaviour
                 {
                     //turn tracks off and exit
                     line.GetComponent<Renderer>().enabled = false;
+                    distantIcon.GetComponent<Renderer>().enabled = false;
                     return;
                 }
                 //if it is set to manual
@@ -331,6 +335,7 @@ public class Orbits : MonoBehaviour
                     else
                     {
                         line.GetComponent<Renderer>().enabled = false;
+                        distantIcon.GetComponent<Renderer>().enabled = false;
                     }
                     return;
                 }
@@ -365,6 +370,7 @@ public class Orbits : MonoBehaviour
                 if (Camera.main.GetComponent<CameraUserControl>().distance < distanceFar)
                 {
                     line.GetComponent<Renderer>().enabled = false;
+                    distantIcon.GetComponent<Renderer>().enabled = false;
                     return;
                 }
                 //if the camera is far, turn tracks back on

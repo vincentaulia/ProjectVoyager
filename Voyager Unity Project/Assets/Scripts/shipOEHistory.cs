@@ -930,7 +930,7 @@ public class shipOEHistory : MonoBehaviour
         {
             //the components of the new velocity scale by the same factor
             //compute this factor
-			Debug.Log("Tangential" + tangent);
+			Debug.Log("Tangential: " + tangent);
             factor = (vel2.magnitude + tangent) / vel2.magnitude;
 
             vel = vel2 * factor;
@@ -944,6 +944,9 @@ public class shipOEHistory : MonoBehaviour
         //compute the radial burn
         if (radial != 0)
         {
+
+            Debug.Log("Radial: " + radial);
+
             //we have the position vector
             //determine the required scaling for the
             //needed radial velocity vector
@@ -964,7 +967,7 @@ public class shipOEHistory : MonoBehaviour
         //compute the normal burn
         if (normal != 0)
         {
-			Debug.Log ("Normal" + normal);
+			Debug.Log ("Normal: " + normal);
             //get the cross product of the position vecotr
             //with the velocity vector
             //to get a vector perpendicular to both (will be normal to orbit)
@@ -987,6 +990,17 @@ public class shipOEHistory : MonoBehaviour
         Debug.Log("factor: " + factor);
         Debug.Log("vel: " + vel);
         Debug.Log("mag: " + vel.magnitude);
+
+        //get the object of focus
+        GameObject orbiting = GameObject.Find(el.IDFocus);
+        //get the position object
+        Vector3 pos = orbiting.transform.position;
+        //visualize vel1
+        GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r1, switchComonents(vel1), 0.07f, "velocity1");
+        //visualize vel2
+        GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel2), 0.07f, "velocity2");
+        //visualize vel (after burn)
+        GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel), 0.07f, "velocity3");
 
         //now calculate the orbital elements of the new orbit
 
@@ -1127,7 +1141,28 @@ public class shipOEHistory : MonoBehaviour
 
     }
 
+    //switch the components to swtich from universal coordinates
+    //to Unity's coordinates.. or the opposite
+    public Vector3 switchComonents(Vector3 input)
+    {
+        Vector3 returnVector;
+        returnVector.x = input.x;
+        returnVector.y = input.z;
+        returnVector.z = input.y;
 
+        return returnVector;
+    }
+
+    //overload method to take in double vectors
+    public Vector3 switchComonents(Vector3d input)
+    {
+        Vector3 returnVector;
+        returnVector.x = (float)input.x;
+        returnVector.y = (float)input.z;
+        returnVector.z = (float)input.y;
+
+        return returnVector;
+    }
     //OUTDATED
 
 
