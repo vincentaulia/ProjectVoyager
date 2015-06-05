@@ -142,22 +142,7 @@ public class shipOEHistory : MonoBehaviour
         deltaVGui = true;
     }
 
-    //		public int deltavChange (double mAnom)
-    //		{
-    //				Elements Initial = currentOE (Global.time);
-    //				int i = indexFinder (Global.time);
-    //				double period = 2 * Math.PI * Math.Sqrt (Initial.axis / 6.67384e-11 * (Initial.mass + Initial.massFocus););
-    //				double currMAnom = ((Global.time - shipT[i]) * Initial.n ) - shipA[i];
-    //				long timeInOrbit = (long)(mAnom/Initial.n);  //LOSS OF PRECISSION
-    //				Debug.Log ("Time in Orbit");
-    //				Debug.Log (timeInOrbit);
-    //				shipA [i] = mAnom;
-    //				if (i == 0)
-    //					AddNewOE (Initial, timeInOrbit);
-    //				else
-    //					AddNewOE (Initial, (shipT[i] + timeInOrbit) );
-    //				return i;
-    //		}
+    
 
     public int deltavChange(double mAnom)
     {
@@ -176,7 +161,7 @@ public class shipOEHistory : MonoBehaviour
 		long timeInOrbit;
 		//If the Initial Anom is greater then mAnom add 2*PI rad to make it a positive number so that 
 		//we can calculate the time spent in orbit and get a positive value
-        if (mAnom <= Initial.anom) {
+        if (mAnom < Initial.anom) {
 
 			timeInOrbit = (long)((mAnom - Initial.anom + (2 * Math.PI)) / Initial.n);
 				} 
@@ -195,98 +180,7 @@ public class shipOEHistory : MonoBehaviour
         AddNewOE(Initial, (shipT[i] + timeInOrbit));
         return i;
     }
-    public void deltaVInput(double normal, double tangent, double radial)
-    {
-        Elements prev = shipOE[j + 1];
-        CalcNormalDeltaV(ref prev, normal, mAnom);
-        CalcTangentialDeltaV(ref prev, tangent, mAnom);
-        CalcRadialDeltaV(ref prev, radial, mAnom);
-        GetComponent<ShipMissionFunctions>().update_deltaV_budget(normal + tangent + radial);
-
-        double bigE = 1;
-        double new_bigE;
-        for (int i = 0; i < 50; i++)
-        {
-            new_bigE = bigE - ((bigE - prev.ecc * Math.Sin(bigE) - mAnom) / (1 - prev.ecc * Math.Cos(bigE)));
-            bigE = new_bigE;
-        }
-        Debug.Log("Approximation");
-        Debug.Log(mAnom);
-        Debug.Log(prev.ecc);
-        Debug.Log(bigE);
-        double[] velocityVector = GetComponent<ShipMissionFunctions>().calc_current_velocity_double(bigE);
-        double[] positionVector = findShipPosDouble(shipT[j + 1] - 1);
-
-        Debug.Log("Time");
-        Debug.Log(shipT[j + 1]);
-        positionVector[0] = positionVector[0] * Global.scale * 1000;
-        //Debug.Log (positionVector[0]);
-        positionVector[1] = positionVector[1] * Global.scale * 1000;
-        positionVector[2] = positionVector[2] * Global.scale * 1000;
-        Debug.Log("PositionVectors");
-        for (int i = 0; i < 3; i++)
-        {
-            Debug.Log("v: " + velocityVector[i]);
-        }
-        for (int i = 0; i < 3; i++)
-        {
-            Debug.Log("p: " + positionVector[i]);
-        }
-        Debug.Log("dotted");
-        double dot = dotProduct(velocityVector, positionVector);
-        Debug.Log(dot);
-        dot = dot / magnitude(velocityVector) / magnitude(positionVector);
-        Debug.Log(dot);
-
-        double angle = Math.Acos(dot) - (Math.PI / 2);  //Real Flight Angle 
-        Debug.Log("angle: " + angle);
-
-        Debug.Log("a: " + prev.axis);
-        Debug.Log("e: " + prev.ecc);
-        Debug.Log("r: " + magnitude(positionVector));
-        double inter = (((((prev.axis * (1 - Math.Pow(prev.ecc, 2))) / (magnitude(positionVector))) - 1) / prev.ecc));
-        //Debug.Log("old inter: " + inter);
-        //inter = (prev.axis*(1 - prev.ecc*prev.ecc) / magnitude(positionVector) - 1) / prev.ecc;
-        Debug.Log("inter: " + inter);
-        if (inter > 1.0)
-        {
-            inter = 1.0;
-            Debug.Log("Warning!!! value greater then 1");
-        }
-        if (inter < -1.0)
-        {
-            inter = -1.0;
-            Debug.Log("Warning!!! value less then -1");
-        }
-        double solution1 = Math.Acos(inter);
-        double solution2 = Math.PI * 2 - solution1;
-        //Debug.Log (((((prev.axis * (1 - Math.Pow(prev.ecc,2))) / (magnitude(positionVector) * Global.scale *1000)) - 1) / prev.ecc));
-        //Debug.Log ((((((prev.axis * (1 - Math.Pow(prev.ecc,2))) / (magnitude(positionVector) * Global.scale *1000)) - 1) / prev.ecc)));
-        Debug.Log("Sollutions");
-        Debug.Log(solution1);
-        Debug.Log(solution2);
-        Debug.Log(prev.ecc);
-        Debug.Log(prev.axis);
-        //Debug.Log (positionVector.magnitude* Global.scale *1000);
-        double flightAngle1 = Math.Atan(((prev.ecc * Math.Sin(solution1)) / (1 + (prev.ecc * Math.Cos(solution1)))));
-        double flightAngle2 = Math.Atan(((prev.ecc * Math.Sin(solution2)) / (1 + (prev.ecc * Math.Cos(solution2)))));
-        Debug.Log("flightAngles");
-        Debug.Log(flightAngle1);
-        Debug.Log(flightAngle2);
-        Debug.Log("Angle Diff");
-        Debug.Log(flightAngle1 - angle);
-        Debug.Log(flightAngle2 - angle);
-        double trueValue = (Math.Abs(flightAngle1 - angle) > Math.Abs(flightAngle2 - angle)) ? solution2 : solution1;
-        double eccentricAnom = Math.Acos(((prev.ecc + Math.Cos(trueValue)) / (1 + prev.ecc * Math.Cos(trueValue))));
-        double initialMeanAnom = (eccentricAnom - prev.ecc * Math.Sin(eccentricAnom));
-
-
-        prev.anom = initialMeanAnom;
-        Debug.Log("Initial Mean Anom");
-        Debug.Log(initialMeanAnom);
-        shipOE[j + 1] = prev;
-    }
-
+   
     public double dotProduct(double[] V1, double[] V2)
     {
         return ((V1[0] * V2[0]) + (V1[1] * V2[1]) + (V1[2] * V2[2]));
@@ -540,6 +434,10 @@ public class shipOEHistory : MonoBehaviour
 				nodeWindows.Add (0);
 				windows.Add (new Rect());
 				windowInfo.Add (addInfo(j,a1,a2,a3,mAnom));
+				//reset the windows back to 0
+				a1 = "0";
+				a2 = "0";
+				a3 = "0";
 			}
 			//this button should be added when we can test Change DV before applying it
 			//if (GUI.Button(new Rect(10, 240, 100, 20),"Done"))
@@ -578,211 +476,16 @@ public class shipOEHistory : MonoBehaviour
 
 	}
 
-
-
-    /*	This function takes the initial orbital elements of the 
-        ship and returns the final orbital elements based on the
-        delta-V applied in the normal/anti-normal direction.
-        DeltaV varible should be in Perifocal Coordinates.
-    */
-    void CalcNormalDeltaV(ref Elements Initial, double DeltaV, double mAnom)
-    {
-
-        // Approximation of the true anomaly as a sine series of the mean anomaly
-        double TrueAnomaly;
-        TrueAnomaly = mAnom;
-        TrueAnomaly += ((2 * Initial.ecc) - (0.25 * Math.Pow(Initial.ecc, 3))) * Math.Sin(mAnom);
-        TrueAnomaly += (1.25 * Math.Pow(Initial.ecc, 2)) * Math.Sin(2 * mAnom);
-        TrueAnomaly += ((13 / 12) * Math.Pow(Initial.ecc, 3)) * Math.Sin(3 * mAnom);
-
-        /* Calculate the final longitude (right ascension) of the ascending node */
-
-        // Calculate the magnitude of the initial velocity //
-
-        // Calculate the standard gravitational parameter
-        double Mu;
-        Mu = 6.67384e-11 * (Initial.mass + Initial.massFocus);
-
-        // Calculate the specific relative angular momentum
-        double h;
-        h = Math.Sqrt(Math.Sqrt(1 - Math.Pow(Initial.ecc, 2)) * Initial.axis * Mu);
-
-        // Calculate the initial velocity in Perifocal Coordinates
-        Vector3 InitialVelocity;
-        double IVp = -1 * Mu * Math.Sin(TrueAnomaly) / h;
-        double IVq = (Initial.ecc + Math.Cos(TrueAnomaly)) * Mu / h;
-        double IVw = 0;
-        InitialVelocity = new Vector3((float)IVp, (float)IVq, (float)IVw);
-
-        double VelocityMag = InitialVelocity.magnitude;
-
-        // Calculate the angle between the initial and the final orbits
-        double AngleBtwnOrbits;
-        AngleBtwnOrbits = 2 * Math.Asin(DeltaV / (2 * VelocityMag));
-
-        // Calculate the argument of latitude
-        double ArgOfLatitude;
-        ArgOfLatitude = TrueAnomaly + Initial.arg;
-
-        //calculate the final inclination
-        double FinalIncl = Math.Acos(Math.Cos(Initial.incl) * Math.Cos(AngleBtwnOrbits) - Math.Sin(Initial.incl) * Math.Sin(AngleBtwnOrbits) * Math.Cos(ArgOfLatitude));
-
-        // Calculate the difference between the intial and the final longitudes of ascending node
-        double DeltaOmega = 0;
-
-        if (Initial.incl == 0)
-        {
-            DeltaOmega = mAnom;
-        }
-        else
-        {
-            DeltaOmega = Math.Acos((Math.Cos(AngleBtwnOrbits) - Math.Cos(Initial.incl) * Math.Cos(FinalIncl)) / Math.Sin(Initial.incl) / Math.Sin(FinalIncl));
-        }
-
-        double FinalAsc = DeltaOmega + Initial.asc;
-
-        // Because the maneuver is only in the normal/anti-normal direction,
-        // only the Inclination and Longitude of Ascending Node change
-        Initial.incl = FinalIncl;
-        if (Initial.incl + AngleBtwnOrbits < 0)
-        {
-            Initial.incl *= -1;
-        }
-        Initial.asc = FinalAsc;
-
-        // Calculate the final P, Q and n orbital elements after the maneuver
-        Initial.calcData();
-
-    }
-
-    /*	This function takes the initial orbital elements of the 
-            ship and returns the final orbital elements based on the
-            delta-V applied in the tangential/anti-tangential direction.
-            DeltaV varible should be in Perifocal Coordinates.
-        */
-    void CalcTangentialDeltaV(ref Elements Initial, double DeltaV, double mAnom)
-    {
-
-        // Approximation of the true anomaly as a sine series of the mean anomaly
-        double TrueAnomaly;
-        TrueAnomaly = mAnom;
-        TrueAnomaly += ((2 * Initial.ecc) - (0.25 * Math.Pow(Initial.ecc, 3))) * Math.Sin(mAnom);
-        TrueAnomaly += (1.25 * Math.Pow(Initial.ecc, 2)) * Math.Sin(2 * mAnom);
-        TrueAnomaly += ((13 / 12) * Math.Pow(Initial.ecc, 3)) * Math.Sin(3 * mAnom);
-        Debug.Log("True anomaly: " + TrueAnomaly);
-        //Debug.Log (TrueAnomaly); // check this.
-
-        // Calculate the standard gravitational parameter
-        double Mu;
-        Mu = 6.67384e-11 * (Initial.mass + Initial.massFocus);
-        Debug.Log("Mu: " + Mu);
-        // Calculate the specific relative angular momentum
-        double h;
-        h = Math.Sqrt((1 - Math.Pow(Initial.ecc, 2)) * Initial.axis * Mu);
-        Debug.Log("ecc: " + Initial.ecc);
-        Debug.Log("axis: " + Initial.axis);
-        Debug.Log("h: " + h);
-        // Calculate the initial velocity in Perifocal Coordinates
-        Vector3 InitialVelocity;
-        double IVp = -1 * Mu * Math.Sin(TrueAnomaly) / h;
-        double IVq = (Initial.ecc + Math.Cos(TrueAnomaly)) * Mu / h;
-        double IVw = 0;
-        InitialVelocity = new Vector3((float)IVp, (float)IVq, (float)IVw);
-
-        // Calculate the magnitude of the initial velocity
-        double VelocityMag = InitialVelocity.magnitude;
-        Debug.Log("p: " + IVp);
-        Debug.Log("q: " + IVq);
-        Debug.Log("InitialVelocity: " + VelocityMag);
-        // Calculate the orbital distance from object to primary
-        double r;
-        r = Math.Pow(h, 2) / Mu / (1 + (Initial.ecc * Math.Cos(TrueAnomaly)));
-        Debug.Log("r: " + r);
-
-        // Calculate the new specific orbital energy
-        double EnergNew;
-        double newVel = VelocityMag + DeltaV;
-        EnergNew = ((Math.Pow(newVel, 2)) / 2) - (Mu / r);
-        Debug.Log("Energynew: " + EnergNew);
-
-        /* Calculate the new semi-major axis */
-        Initial.axis = -1 * Mu / 2 / EnergNew;
-        Debug.Log("axis: " + Initial.axis);
-
-        // Calculate the position of the object in Perifocal Coordinates
-        Vector3 rVec;
-        double rVp = r * Math.Cos(TrueAnomaly);
-        double rVq = r * Math.Sin(TrueAnomaly);
-        double rVw = 0;
-        rVec = new Vector3((float)rVp, (float)rVq, (float)rVw);
-        double newR = rVec.magnitude; //only need the scalar value of the distance
-
-        // Calculate the magnitude of the new angular velocity vector
-        double hNew;
-        hNew = newR * newVel;
-
-        /***** Calculate the new eccentricity *****/
-        Initial.ecc = Math.Sqrt(1 + (2 * (Math.Pow(hNew, 2) * EnergNew)) / Math.Pow(Mu, 2));
-
-        /***** Calculate the final P, Q, W and n orbital elements after the maneuver *****/
-        Initial.calcData();
-    }
-    //	/*	This function takes the initial orbital elements of the 
-    //		ship and returns the final orbital elements based on the
-    //		delta-V applied in the radial/anti-radial direction.
-    //		DeltaV varible should be in Perifocal Coordinates.
-    //	*/
-    void CalcRadialDeltaV(ref Elements Initial, double DeltaV, double mAnom)
-    {
-
-        // Approximation of the true anomaly as a sine series of the mean anomaly
-        double TrueAnomaly;
-        TrueAnomaly = mAnom;
-        TrueAnomaly += ((2 * Initial.ecc) - (0.25 * Math.Pow(Initial.ecc, 3))) * Math.Sin(mAnom);
-        TrueAnomaly += (1.25 * Math.Pow(Initial.ecc, 2)) * Math.Sin(2 * mAnom);
-        TrueAnomaly += ((13 / 12) * Math.Pow(Initial.ecc, 3)) * Math.Sin(3 * mAnom);
-
-        // Calculate the standard gravitational parameter
-        double Mu;
-        Mu = 6.67384e-11 * (Initial.mass + Initial.massFocus);
-
-        // Calculate the specific relative angular momentum
-        double h;
-        h = Math.Sqrt((1 - Math.Pow(Initial.ecc, 2)) * Initial.axis * Mu);
-
-        // Calculate the initial velocity in Perifocal Coordinates
-        Vector3 InitialVelocity;
-        double IVp = -1 * Mu * Math.Sin(TrueAnomaly) / h;
-        double IVq = (Initial.ecc + Math.Cos(TrueAnomaly)) * Mu / h;
-        double IVw = 0;
-        InitialVelocity = new Vector3((float)IVp, (float)IVq, (float)IVw);
-
-        // Calculate the magnitude of the initial velocity
-        double VelocityMag = InitialVelocity.magnitude;
-
-        // Calculate the orbital distance from object to primary
-        double r;
-        r = Math.Pow(h, 2) / Mu / (1 + (Initial.ecc * Math.Cos(TrueAnomaly)));
-
-        // Calculate the new specific orbital energy
-        // Velocity vectors are at a right angle; use pythagorean theorem
-        double EnergNew;
-        double newVel = Math.Sqrt(Math.Pow(VelocityMag, 2) + Math.Pow(DeltaV, 2));
-        EnergNew = ((Math.Pow(newVel, 2)) / 2) - (Mu / r);
-
-        /***** Calculate the new semi-major axis *****/
-        Initial.axis = -1 * Mu / 2 / EnergNew;
-
-        // Specific relative angular momentum does not change in a radial burn.
-
-        /***** Calculate the new eccentricity *****/
-        Initial.ecc = Math.Sqrt(1 + (2 * (Math.Pow(h, 2) * EnergNew)) / Math.Pow(Mu, 2));
-
-        /***** Calculate the final P, Q, W and n orbital elements after the maneuver *****/
-        Initial.calcData();
-    }
-
-    
+	//This function use Rodriguez formula to rotate an initial vecor around the axis by theta degrees in counter clockwise direction 
+	// Axis must be a unit vector
+    public Vector3d rotationFunction(Vector3d initial, Vector3d axis, double theta)
+	{
+		Vector3d newVec;
+		newVec = initial * Math.Cos (theta);
+		newVec += crossProduct (axis, initial) * Math.Sin (theta);
+		newVec += initial * dotProduct (axis, initial) * (1 - Math.Cos (theta));
+		return newVec;
+	}
 
     public void deltaVInputNew(double normal, double tangent, double radial)
     {
@@ -924,70 +627,97 @@ public class shipOEHistory : MonoBehaviour
 
         vel2 = f1 * r1 + g1 * vel1;
 
-        double factor = 0;
-        //compute the tangential burn
-        if (tangent != 0)
-        {
-            //the components of the new velocity scale by the same factor
-            //compute this factor
-			Debug.Log("Tangential: " + tangent);
-            factor = (vel2.magnitude + tangent) / vel2.magnitude;
+		//These unit vectors are in the reference frame of the ship
 
-            vel = vel2 * factor;
-        }
-        else
-        {
-            //set this up to use for other burns
-            vel = vel2;
-        }
+		//Calculate normal unit vector
+		Vector3d normalUnitVec = crossProduct (r1, r2);
+		normalUnitVec /= normalUnitVec.magnitude;
 
-        //compute the radial burn
-        if (radial != 0)
-        {
+		//Calculate the radial unit vector
+		Vector3d radialUnitVec = r2 * -1 / r2.magnitude;
 
-            Debug.Log("Radial: " + radial);
+		//Calculate the tangenta unit vector
+		Vector3d tangentialunitVector = crossProduct (radialUnitVec, normalUnitVec);
 
-            //we have the position vector
-            //determine the required scaling for the
-            //needed radial velocity vector
-            factor = r2.magnitude / radial;
+		//Calculate the flight angle 
+		double phi = Math.Atan ((el.ecc * Math.Sin(v))/(1 + el.ecc * Math.Cos(v)));
 
-            //scale the position vector down to get the velocity
-            //vector in the same direction, with the required magnitude
-            //the negative sign is because the position vector points outward
-            //but the radial velocity vector should point to the focus point
-            new_vel = -r2 / factor;  //velocity vector associated with the radial burn
-			Debug.Log("Radial" + radial);
-            Debug.Log("new vel: " + new_vel);
-            Debug.Log("mag: " + new_vel.magnitude);
+		//Rotated tangential vector so its tangent to the orbit
+		Vector3d rotatedTangentialVec = rotationFunction (tangentialunitVector, normalUnitVec, phi);
 
-            vel += new_vel;         //add both velocity vectors
-        }
+		//Rotated radial unit vector 
+		Vector3d rotatedRadialVec = rotationFunction (radialUnitVec, normalUnitVec, phi);
+        
+		//Calculate the new velocity
+		vel = vel2;
+		vel += normalUnitVec * normal;
+		vel += rotatedRadialVec * radial;
+		vel += tangentialunitVector * tangent;
 
-        //compute the normal burn
-        if (normal != 0)
-        {
-			Debug.Log ("Normal: " + normal);
-            //get the cross product of the position vecotr
-            //with the velocity vector
-            //to get a vector perpendicular to both (will be normal to orbit)
-            new_vel = crossProduct(r2, vel2);
-
-            //get the factor between the computed vector and the required
-            //normal velocity
-            factor = new_vel.magnitude / normal;
-
-            //scale down the velocity vector to the required scale
-            new_vel /= factor;
-
-            vel += new_vel;     //add both velocity vectors
-        }
+//		double factor = 0;
+//        //compute the tangential burn
+//        if (tangent != 0)
+//        {
+//            //the components of the new velocity scale by the same factor
+//            //compute this factor
+//			Debug.Log("Tangential: " + tangent);
+//            factor = (vel2.magnitude + tangent) / vel2.magnitude;
+//
+//            vel = vel2 * factor;
+//        }
+//        else
+//        {
+//            //set this up to use for other burns
+//            vel = vel2;
+//        }
+//
+//        //compute the radial burn
+//        if (radial != 0)
+//        {
+//
+//            Debug.Log("Radial: " + radial);
+//
+//            //we have the position vector
+//            //determine the required scaling for the
+//            //needed radial velocity vector
+//            factor = r2.magnitude / radial;
+//
+//            //scale the position vector down to get the velocity
+//            //vector in the same direction, with the required magnitude
+//            //the negative sign is because the position vector points outward
+//            //but the radial velocity vector should point to the focus point
+//            new_vel = -r2 / factor;  //velocity vector associated with the radial burn
+//			Debug.Log("Radial" + radial);
+//            Debug.Log("new vel: " + new_vel);
+//            Debug.Log("mag: " + new_vel.magnitude);
+//
+//            vel += new_vel;         //add both velocity vectors
+//        }
+//
+//        //compute the normal burn
+//        if (normal != 0)
+//        {
+//			Debug.Log ("Normal: " + normal);
+//            //get the cross product of the position vecotr
+//            //with the velocity vector
+//            //to get a vector perpendicular to both (will be normal to orbit)
+//            new_vel = crossProduct(r2, vel2);
+//
+//            //get the factor between the computed vector and the required
+//            //normal velocity
+//            factor = new_vel.magnitude / normal;
+//
+//            //scale down the velocity vector to the required scale
+//            new_vel /= factor;
+//
+//            vel += new_vel;     //add both velocity vectors
+//        }
 
         Debug.Log("vel1: " + vel1);
         Debug.Log("mag: " + vel1.magnitude);
         Debug.Log("vel2: " + vel2);
         Debug.Log("mag: " + vel2.magnitude);
-        Debug.Log("factor: " + factor);
+        //Debug.Log("factor: " + factor);
         Debug.Log("vel: " + vel);
         Debug.Log("mag: " + vel.magnitude);
 
@@ -1164,6 +894,322 @@ public class shipOEHistory : MonoBehaviour
         return returnVector;
     }
     //OUTDATED
+
+	public void deltaVInput(double normal, double tangent, double radial)
+	{
+		Elements prev = shipOE[j + 1];
+		CalcNormalDeltaV(ref prev, normal, mAnom);
+		CalcTangentialDeltaV(ref prev, tangent, mAnom);
+		CalcRadialDeltaV(ref prev, radial, mAnom);
+		GetComponent<ShipMissionFunctions>().update_deltaV_budget(normal + tangent + radial);
+		
+		double bigE = 1;
+		double new_bigE;
+		for (int i = 0; i < 50; i++)
+		{
+			new_bigE = bigE - ((bigE - prev.ecc * Math.Sin(bigE) - mAnom) / (1 - prev.ecc * Math.Cos(bigE)));
+			bigE = new_bigE;
+		}
+		Debug.Log("Approximation");
+		Debug.Log(mAnom);
+		Debug.Log(prev.ecc);
+		Debug.Log(bigE);
+		double[] velocityVector = GetComponent<ShipMissionFunctions>().calc_current_velocity_double(bigE);
+		double[] positionVector = findShipPosDouble(shipT[j + 1] - 1);
+		
+		Debug.Log("Time");
+		Debug.Log(shipT[j + 1]);
+		positionVector[0] = positionVector[0] * Global.scale * 1000;
+		//Debug.Log (positionVector[0]);
+		positionVector[1] = positionVector[1] * Global.scale * 1000;
+		positionVector[2] = positionVector[2] * Global.scale * 1000;
+		Debug.Log("PositionVectors");
+		for (int i = 0; i < 3; i++)
+		{
+			Debug.Log("v: " + velocityVector[i]);
+		}
+		for (int i = 0; i < 3; i++)
+		{
+			Debug.Log("p: " + positionVector[i]);
+		}
+		Debug.Log("dotted");
+		double dot = dotProduct(velocityVector, positionVector);
+		Debug.Log(dot);
+		dot = dot / magnitude(velocityVector) / magnitude(positionVector);
+		Debug.Log(dot);
+		
+		double angle = Math.Acos(dot) - (Math.PI / 2);  //Real Flight Angle 
+		Debug.Log("angle: " + angle);
+		
+		Debug.Log("a: " + prev.axis);
+		Debug.Log("e: " + prev.ecc);
+		Debug.Log("r: " + magnitude(positionVector));
+		double inter = (((((prev.axis * (1 - Math.Pow(prev.ecc, 2))) / (magnitude(positionVector))) - 1) / prev.ecc));
+		//Debug.Log("old inter: " + inter);
+		//inter = (prev.axis*(1 - prev.ecc*prev.ecc) / magnitude(positionVector) - 1) / prev.ecc;
+		Debug.Log("inter: " + inter);
+		if (inter > 1.0)
+		{
+			inter = 1.0;
+			Debug.Log("Warning!!! value greater then 1");
+		}
+		if (inter < -1.0)
+		{
+			inter = -1.0;
+			Debug.Log("Warning!!! value less then -1");
+		}
+		double solution1 = Math.Acos(inter);
+		double solution2 = Math.PI * 2 - solution1;
+		//Debug.Log (((((prev.axis * (1 - Math.Pow(prev.ecc,2))) / (magnitude(positionVector) * Global.scale *1000)) - 1) / prev.ecc));
+		//Debug.Log ((((((prev.axis * (1 - Math.Pow(prev.ecc,2))) / (magnitude(positionVector) * Global.scale *1000)) - 1) / prev.ecc)));
+		Debug.Log("Sollutions");
+		Debug.Log(solution1);
+		Debug.Log(solution2);
+		Debug.Log(prev.ecc);
+		Debug.Log(prev.axis);
+		//Debug.Log (positionVector.magnitude* Global.scale *1000);
+		double flightAngle1 = Math.Atan(((prev.ecc * Math.Sin(solution1)) / (1 + (prev.ecc * Math.Cos(solution1)))));
+		double flightAngle2 = Math.Atan(((prev.ecc * Math.Sin(solution2)) / (1 + (prev.ecc * Math.Cos(solution2)))));
+		Debug.Log("flightAngles");
+		Debug.Log(flightAngle1);
+		Debug.Log(flightAngle2);
+		Debug.Log("Angle Diff");
+		Debug.Log(flightAngle1 - angle);
+		Debug.Log(flightAngle2 - angle);
+		double trueValue = (Math.Abs(flightAngle1 - angle) > Math.Abs(flightAngle2 - angle)) ? solution2 : solution1;
+		double eccentricAnom = Math.Acos(((prev.ecc + Math.Cos(trueValue)) / (1 + prev.ecc * Math.Cos(trueValue))));
+		double initialMeanAnom = (eccentricAnom - prev.ecc * Math.Sin(eccentricAnom));
+		
+		
+		prev.anom = initialMeanAnom;
+		Debug.Log("Initial Mean Anom");
+		Debug.Log(initialMeanAnom);
+		shipOE[j + 1] = prev;
+	}
+
+
+	//		public int deltavChange (double mAnom)
+	//		{
+	//				Elements Initial = currentOE (Global.time);
+	//				int i = indexFinder (Global.time);
+	//				double period = 2 * Math.PI * Math.Sqrt (Initial.axis / 6.67384e-11 * (Initial.mass + Initial.massFocus););
+	//				double currMAnom = ((Global.time - shipT[i]) * Initial.n ) - shipA[i];
+	//				long timeInOrbit = (long)(mAnom/Initial.n);  //LOSS OF PRECISSION
+	//				Debug.Log ("Time in Orbit");
+	//				Debug.Log (timeInOrbit);
+	//				shipA [i] = mAnom;
+	//				if (i == 0)
+	//					AddNewOE (Initial, timeInOrbit);
+	//				else
+	//					AddNewOE (Initial, (shipT[i] + timeInOrbit) );
+	//				return i;
+	//		}
+	
+	
+	/*	This function takes the initial orbital elements of the 
+        ship and returns the final orbital elements based on the
+        delta-V applied in the normal/anti-normal direction.
+        DeltaV varible should be in Perifocal Coordinates.
+    */
+	void CalcNormalDeltaV(ref Elements Initial, double DeltaV, double mAnom)
+	{
+		
+		// Approximation of the true anomaly as a sine series of the mean anomaly
+		double TrueAnomaly;
+		TrueAnomaly = mAnom;
+		TrueAnomaly += ((2 * Initial.ecc) - (0.25 * Math.Pow(Initial.ecc, 3))) * Math.Sin(mAnom);
+		TrueAnomaly += (1.25 * Math.Pow(Initial.ecc, 2)) * Math.Sin(2 * mAnom);
+		TrueAnomaly += ((13 / 12) * Math.Pow(Initial.ecc, 3)) * Math.Sin(3 * mAnom);
+		
+		/* Calculate the final longitude (right ascension) of the ascending node */
+		
+		// Calculate the magnitude of the initial velocity //
+		
+		// Calculate the standard gravitational parameter
+		double Mu;
+		Mu = 6.67384e-11 * (Initial.mass + Initial.massFocus);
+		
+		// Calculate the specific relative angular momentum
+		double h;
+		h = Math.Sqrt(Math.Sqrt(1 - Math.Pow(Initial.ecc, 2)) * Initial.axis * Mu);
+		
+		// Calculate the initial velocity in Perifocal Coordinates
+		Vector3 InitialVelocity;
+		double IVp = -1 * Mu * Math.Sin(TrueAnomaly) / h;
+		double IVq = (Initial.ecc + Math.Cos(TrueAnomaly)) * Mu / h;
+		double IVw = 0;
+		InitialVelocity = new Vector3((float)IVp, (float)IVq, (float)IVw);
+		
+		double VelocityMag = InitialVelocity.magnitude;
+		
+		// Calculate the angle between the initial and the final orbits
+		double AngleBtwnOrbits;
+		AngleBtwnOrbits = 2 * Math.Asin(DeltaV / (2 * VelocityMag));
+		
+		// Calculate the argument of latitude
+		double ArgOfLatitude;
+		ArgOfLatitude = TrueAnomaly + Initial.arg;
+		
+		//calculate the final inclination
+		double FinalIncl = Math.Acos(Math.Cos(Initial.incl) * Math.Cos(AngleBtwnOrbits) - Math.Sin(Initial.incl) * Math.Sin(AngleBtwnOrbits) * Math.Cos(ArgOfLatitude));
+		
+		// Calculate the difference between the intial and the final longitudes of ascending node
+		double DeltaOmega = 0;
+		
+		if (Initial.incl == 0)
+		{
+			DeltaOmega = mAnom;
+		}
+		else
+		{
+			DeltaOmega = Math.Acos((Math.Cos(AngleBtwnOrbits) - Math.Cos(Initial.incl) * Math.Cos(FinalIncl)) / Math.Sin(Initial.incl) / Math.Sin(FinalIncl));
+		}
+		
+		double FinalAsc = DeltaOmega + Initial.asc;
+		
+		// Because the maneuver is only in the normal/anti-normal direction,
+		// only the Inclination and Longitude of Ascending Node change
+		Initial.incl = FinalIncl;
+		if (Initial.incl + AngleBtwnOrbits < 0)
+		{
+			Initial.incl *= -1;
+		}
+		Initial.asc = FinalAsc;
+		
+		// Calculate the final P, Q and n orbital elements after the maneuver
+		Initial.calcData();
+		
+	}
+	
+	
+	
+	/*	This function takes the initial orbital elements of the 
+            ship and returns the final orbital elements based on the
+            delta-V applied in the tangential/anti-tangential direction.
+            DeltaV varible should be in Perifocal Coordinates.
+        */
+	void CalcTangentialDeltaV(ref Elements Initial, double DeltaV, double mAnom)
+	{
+		
+		// Approximation of the true anomaly as a sine series of the mean anomaly
+		double TrueAnomaly;
+		TrueAnomaly = mAnom;
+		TrueAnomaly += ((2 * Initial.ecc) - (0.25 * Math.Pow(Initial.ecc, 3))) * Math.Sin(mAnom);
+		TrueAnomaly += (1.25 * Math.Pow(Initial.ecc, 2)) * Math.Sin(2 * mAnom);
+		TrueAnomaly += ((13 / 12) * Math.Pow(Initial.ecc, 3)) * Math.Sin(3 * mAnom);
+		Debug.Log("True anomaly: " + TrueAnomaly);
+		//Debug.Log (TrueAnomaly); // check this.
+		
+		// Calculate the standard gravitational parameter
+		double Mu;
+		Mu = 6.67384e-11 * (Initial.mass + Initial.massFocus);
+		Debug.Log("Mu: " + Mu);
+		// Calculate the specific relative angular momentum
+		double h;
+		h = Math.Sqrt((1 - Math.Pow(Initial.ecc, 2)) * Initial.axis * Mu);
+		Debug.Log("ecc: " + Initial.ecc);
+		Debug.Log("axis: " + Initial.axis);
+		Debug.Log("h: " + h);
+		// Calculate the initial velocity in Perifocal Coordinates
+		Vector3 InitialVelocity;
+		double IVp = -1 * Mu * Math.Sin(TrueAnomaly) / h;
+		double IVq = (Initial.ecc + Math.Cos(TrueAnomaly)) * Mu / h;
+		double IVw = 0;
+		InitialVelocity = new Vector3((float)IVp, (float)IVq, (float)IVw);
+		
+		// Calculate the magnitude of the initial velocity
+		double VelocityMag = InitialVelocity.magnitude;
+		Debug.Log("p: " + IVp);
+		Debug.Log("q: " + IVq);
+		Debug.Log("InitialVelocity: " + VelocityMag);
+		// Calculate the orbital distance from object to primary
+		double r;
+		r = Math.Pow(h, 2) / Mu / (1 + (Initial.ecc * Math.Cos(TrueAnomaly)));
+		Debug.Log("r: " + r);
+		
+		// Calculate the new specific orbital energy
+		double EnergNew;
+		double newVel = VelocityMag + DeltaV;
+		EnergNew = ((Math.Pow(newVel, 2)) / 2) - (Mu / r);
+		Debug.Log("Energynew: " + EnergNew);
+		
+		/* Calculate the new semi-major axis */
+		Initial.axis = -1 * Mu / 2 / EnergNew;
+		Debug.Log("axis: " + Initial.axis);
+		
+		// Calculate the position of the object in Perifocal Coordinates
+		Vector3 rVec;
+		double rVp = r * Math.Cos(TrueAnomaly);
+		double rVq = r * Math.Sin(TrueAnomaly);
+		double rVw = 0;
+		rVec = new Vector3((float)rVp, (float)rVq, (float)rVw);
+		double newR = rVec.magnitude; //only need the scalar value of the distance
+		
+		// Calculate the magnitude of the new angular velocity vector
+		double hNew;
+		hNew = newR * newVel;
+		
+		/***** Calculate the new eccentricity *****/
+		Initial.ecc = Math.Sqrt(1 + (2 * (Math.Pow(hNew, 2) * EnergNew)) / Math.Pow(Mu, 2));
+		
+		/***** Calculate the final P, Q, W and n orbital elements after the maneuver *****/
+		Initial.calcData();
+	}
+	//	/*	This function takes the initial orbital elements of the 
+	//		ship and returns the final orbital elements based on the
+	//		delta-V applied in the radial/anti-radial direction.
+	//		DeltaV varible should be in Perifocal Coordinates.
+	//	*/
+	void CalcRadialDeltaV(ref Elements Initial, double DeltaV, double mAnom)
+	{
+		
+		// Approximation of the true anomaly as a sine series of the mean anomaly
+		double TrueAnomaly;
+		TrueAnomaly = mAnom;
+		TrueAnomaly += ((2 * Initial.ecc) - (0.25 * Math.Pow(Initial.ecc, 3))) * Math.Sin(mAnom);
+		TrueAnomaly += (1.25 * Math.Pow(Initial.ecc, 2)) * Math.Sin(2 * mAnom);
+		TrueAnomaly += ((13 / 12) * Math.Pow(Initial.ecc, 3)) * Math.Sin(3 * mAnom);
+		
+		// Calculate the standard gravitational parameter
+		double Mu;
+		Mu = 6.67384e-11 * (Initial.mass + Initial.massFocus);
+		
+		// Calculate the specific relative angular momentum
+		double h;
+		h = Math.Sqrt((1 - Math.Pow(Initial.ecc, 2)) * Initial.axis * Mu);
+		
+		// Calculate the initial velocity in Perifocal Coordinates
+		Vector3 InitialVelocity;
+		double IVp = -1 * Mu * Math.Sin(TrueAnomaly) / h;
+		double IVq = (Initial.ecc + Math.Cos(TrueAnomaly)) * Mu / h;
+		double IVw = 0;
+		InitialVelocity = new Vector3((float)IVp, (float)IVq, (float)IVw);
+		
+		// Calculate the magnitude of the initial velocity
+		double VelocityMag = InitialVelocity.magnitude;
+		
+		// Calculate the orbital distance from object to primary
+		double r;
+		r = Math.Pow(h, 2) / Mu / (1 + (Initial.ecc * Math.Cos(TrueAnomaly)));
+		
+		// Calculate the new specific orbital energy
+		// Velocity vectors are at a right angle; use pythagorean theorem
+		double EnergNew;
+		double newVel = Math.Sqrt(Math.Pow(VelocityMag, 2) + Math.Pow(DeltaV, 2));
+		EnergNew = ((Math.Pow(newVel, 2)) / 2) - (Mu / r);
+		
+		/***** Calculate the new semi-major axis *****/
+		Initial.axis = -1 * Mu / 2 / EnergNew;
+		
+		// Specific relative angular momentum does not change in a radial burn.
+		
+		/***** Calculate the new eccentricity *****/
+		Initial.ecc = Math.Sqrt(1 + (2 * (Math.Pow(h, 2) * EnergNew)) / Math.Pow(Mu, 2));
+		
+		/***** Calculate the final P, Q, W and n orbital elements after the maneuver *****/
+		Initial.calcData();
+	}
+
 
 
     //		//////////////////// Changed a bunch of Cin to Sin and Inital to Initial
