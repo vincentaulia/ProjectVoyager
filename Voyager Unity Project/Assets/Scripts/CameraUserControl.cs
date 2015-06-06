@@ -276,7 +276,7 @@ public class CameraUserControl : MonoBehaviour
 			//newPosition = target.position + (cameraAngleSwitchFactor - transform.forward)*distance;
 			//newPosition = target.position + (cameraAngleSwitchFactor)*distance;
 			
-			Debug.Log ("LateUpdate - Lerping camera from " + transform.position + " to " + newPosition);
+			//Debug.Log ("LateUpdate - Lerping camera from " + transform.position + " to " + newPosition);
 			transform.position = Vector3.Lerp (transform.position, newPosition, smooth * Time.deltaTime);
 			
 			//cameraAngleSwitchFactor = Vector3.zero;

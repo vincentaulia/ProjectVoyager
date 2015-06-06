@@ -537,7 +537,7 @@ public class shipOEHistory : MonoBehaviour
 
         //there is no unique solution if v is 180 degrees
         //and the program outputs errors if v is more than 180 degrees
-        //so well need a different start position
+        //so we'll need a different start position
         if (v >= Math.PI)
         {
             if (v < 4.5)
