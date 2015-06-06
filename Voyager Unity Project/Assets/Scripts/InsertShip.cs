@@ -396,7 +396,7 @@ public class InsertShip : MonoBehaviour
 		{
 	
 		}
-        public void drawVector(Vector3 start, Vector3 dir, float length, string name = "vector")
+        public void drawVector(Vector3 start, Vector3 dir, float length, Color color, string name = "vector")
         {
             GameObject vect = (GameObject)Instantiate(vector);
 
@@ -414,5 +414,8 @@ public class InsertShip : MonoBehaviour
 
             //scale the vector along the z-axis only
             vect.transform.localScale = new Vector3(vect.transform.localScale.x, vect.transform.localScale.y, length);
+
+            //colour the vector
+            vect.GetComponent<MeshRenderer>().material.color = color;
         }
 }

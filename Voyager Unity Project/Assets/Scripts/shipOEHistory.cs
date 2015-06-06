@@ -735,11 +735,11 @@ public class shipOEHistory : MonoBehaviour
        // GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel), 0.07f, "velocity3");
 
 		//visualize radial unit vector that is amplified and added to old velocity
-		GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(rotatedRadialVec), 0.07f, "velocity1");
+		GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(rotatedRadialVec), 0.07f, Color.red, "radial");
 		//visualize tangential unit vector that is amplified and added to old velocity
-		GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(rotatedTangentialVec), 0.07f, "velocity2");
+		GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(rotatedTangentialVec), 0.07f, Color.blue, "tangential");
 		//visualize normal unit vector that is amplified and added to old velocity
-		GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(normalUnitVec), 0.07f, "velocity3");
+		GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(normalUnitVec), 0.07f, Color.green, "normal");
 		//visualize vel (after burn)
 		//GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel), 0.07f, "velocity3");
 
