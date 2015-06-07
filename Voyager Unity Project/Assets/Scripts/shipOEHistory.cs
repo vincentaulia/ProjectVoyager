@@ -649,7 +649,16 @@ public class shipOEHistory : MonoBehaviour
 
 		//Rotated radial unit vector 
 		Vector3d rotatedRadialVec = rotationFunction (radialUnitVec, normalUnitVec, phi);
-        
+
+        //this calculates the scalar of the velocity
+        //the tangential component can be scaled to this velocity
+        double vel_scal;
+        vel_scal = Math.Sqrt(Mu * (2 / r2.magnitude - 1 / el.axis));
+
+        Debug.Log("mag of tang: " + rotatedTangentialVec.magnitude);
+        //scale the velocity vector in the tangential direction
+        vel2 = rotatedTangentialVec * vel_scal;
+
 		//Calculate the new velocity
 		vel = vel2;
 		vel += normalUnitVec * normal;
@@ -714,11 +723,12 @@ public class shipOEHistory : MonoBehaviour
 //
 //            vel += new_vel;     //add both velocity vectors
 //        }
-
+        
         Debug.Log("vel1: " + vel1);
         Debug.Log("mag: " + vel1.magnitude);
         Debug.Log("vel2: " + vel2);
         Debug.Log("mag: " + vel2.magnitude);
+        //Debug.Log("other vel: " + vel_scal);
         //Debug.Log("factor: " + factor);
         Debug.Log("vel: " + vel);
         Debug.Log("mag: " + vel.magnitude);
@@ -728,11 +738,11 @@ public class shipOEHistory : MonoBehaviour
         //get the position object
         Vector3 pos = orbiting.transform.position;
         //visualize vel1
-        //GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r1, switchComonents(vel1), 0.07f, "velocity1");
+        GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r1, switchComonents(vel1), 0.07f, Color.white, "velocity1");
         //visualize vel2
-       // GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel2), 0.07f, "velocity2");
+        GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel2), 0.1f, Color.white, "velocity2");
         //visualize vel (after burn)
-       // GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel), 0.07f, "velocity3");
+        GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel), 0.07f, Color.yellow, "velocity3");
 
 		//visualize radial unit vector that is amplified and added to old velocity
 		GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(rotatedRadialVec), 0.07f, Color.red, "radial");
