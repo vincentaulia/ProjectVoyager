@@ -126,9 +126,10 @@ public class shipOEHistory : MonoBehaviour
         return null;
     }
 
-    public void deltaVAdd(double mAnom)
+    public void deltaVAdd(double mAnom, int orbits)
     {
-        j = deltavChange(mAnom);
+        Debug.Log("orbits: " + orbits);
+        j = deltavChange(mAnom, orbits);
         //if the place of the new node is before the previous node
         if (j == -1)
         {
@@ -144,7 +145,7 @@ public class shipOEHistory : MonoBehaviour
 
     
 
-    public int deltavChange(double mAnom)
+    public int deltavChange(double mAnom, int orbits)
     {
         //Elements Initial = currentOE (Global.time);
         //int i = indexFinder (Global.time);
@@ -159,15 +160,26 @@ public class shipOEHistory : MonoBehaviour
         Debug.Log("mAnom: " + mAnom);
         Debug.Log("intial.anom: " + Initial.anom);
 		long timeInOrbit;
+
+        //if the initial anom is greater than or equal to mAnom
+        //then it's an invalid input
+        //'(mAnom <= Initial.anom) was not used to account for slight changes in less sig figs
+        if (mAnom - Initial.anom < 0.001 && orbits == 0)
+        {
+            return -1;
+        }
+
+        //calculating the time of orbit taking in account repeating orbits
+        timeInOrbit = (long)((mAnom - Initial.anom + (2 * Math.PI * orbits)) / Initial.n);
+
 		//If the Initial Anom is greater then mAnom add 2*PI rad to make it a positive number so that 
 		//we can calculate the time spent in orbit and get a positive value
-        if (mAnom < Initial.anom) {
-
-			timeInOrbit = (long)((mAnom - Initial.anom + (2 * Math.PI)) / Initial.n);
-				} 
-		else {
-			timeInOrbit = (long)((mAnom - Initial.anom) / Initial.n);
-				}
+        //if (mAnom < Initial.anom) {
+        //    timeInOrbit = (long)((mAnom - Initial.anom + (2 * Math.PI)) / Initial.n);
+        //        } 
+        //else {
+        //    timeInOrbit = (long)((mAnom - Initial.anom) / Initial.n);
+        //        }
         //double period = 2 * Math.PI * Math.Sqrt (Initial.axis / 6.67384e-11 * (Initial.mass + Initial.massFocus));
         //double currMAnom = ((Global.time - shipT[i]) * Initial.n ) - shipA[i];
 
@@ -551,7 +563,7 @@ public class shipOEHistory : MonoBehaviour
             {
                 Debug.Log("v is larger than 4.5");
                 //find r1 at a mean anomaly bigger than 180 degrees
-                v1 = Math.PI + 0.2;
+                v1 = Math.PI + 1;
                 temp_r1 = findShipPos(shipT[j] + (long)((v1 - el.anom) / el.n), j);
             }
             t -= (long)((v1 - el.anom) / el.n);

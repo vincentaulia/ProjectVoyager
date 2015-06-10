@@ -3321,6 +3321,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fc9d2932ca01a04ab8b9423cf904cf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jumpRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  jumpButton:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  timeBox:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
 --- !u!114 &2087644008
 MonoBehaviour:
   m_ObjectHideFlags: 0

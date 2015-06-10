@@ -132,7 +132,7 @@ public class InfoWindows : MonoBehaviour
 				string line = null;
 
 				for (int i=0; i< info.Length; i++) {
-						Debug.Log (line);
+						//Debug.Log (line);
 						line = info [i];
 						//check if information about the planet is present
 						if (line.StartsWith (planet)) {
