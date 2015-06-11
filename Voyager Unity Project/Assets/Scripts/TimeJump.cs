@@ -28,8 +28,6 @@ using System;
 using System.IO;
 using System.Globalization;
 
-
-
 public class TimeJump : MonoBehaviour
 {
     // Timeskip variables
@@ -52,6 +50,7 @@ public class TimeJump : MonoBehaviour
     int x = Screen.width - 300;
 
     int timebox_x = Screen.width - 440;
+	//int timebox_x = 0;
     int timebox_y = Screen.height - 230;
 
     long real_year = 2014;
@@ -269,10 +268,17 @@ public class TimeJump : MonoBehaviour
             leap_year = false;
         }
 
-        if (month == 8) //added_time_vals[4] >= 2014 
+        if (month == 8) { //added_time_vals[4] >= 2014
+			//Debug.Log("added_time_vals[3]="+added_time_vals[3]+", days_in_month[month]="+days_in_month[month]+".");
             day_m = added_time_vals[3] + days_in_month[month] - 31;
-        else
+
+			if (day_m == 0) {
+				day_m = 1;
+			}
+		}
+        else {
             day_m = added_time_vals[3] + days_in_month[month];
+		}
         added_time_vals[3] = orig_time_vals[3];
 
 
