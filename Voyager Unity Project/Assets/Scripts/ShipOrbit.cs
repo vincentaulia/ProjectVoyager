@@ -142,31 +142,93 @@ public class ShipOrbit : MonoBehaviour
     //this method creates the orbits after a node is added
     //it stops visualizing the old orbit after the node and
     //only visualizes the new orbit
-    public void makeAnotherOrbit(long time)
+    public void makeAnotherOrbit(long time, long partialTime)
     {
         Elements el = ship.GetComponent<shipOEHistory>().shipOE[orbits];
 
-        //get the semi-major axis
-        radius = (float)el.axis;
-        //calculate the orbital period using Kepler's third law
-        orbital_period = Mathf.Sqrt((4 * Mathf.PI * Mathf.PI * Mathf.Pow(radius, 3)) / (6.67384e-11f * mass));
-
-        //calculate the time_step to get about 400 points
-        time_step = (long)(orbital_period / 400);
-
         localTime = time;
-
-        //store the current position of i
         int prev_i = i;
-
-        //figure out where to start the second orbit
-        while (timePoint[--i] > localTime) ;
-        i++;
         int j = i + 401;
+        Debug.Log("timepoint: " + timePoint[i - 1]);
+        Debug.Log("local: " + localTime);
 
-        if (prev_i > j)
+        //the ship doesn't loop in the orbit
+        if (timePoint[i-1] > localTime)
         {
-            Debug.Log("ERROR[ShipOrbit]: The new number of points is smaller than the previous one");
+            //get the semi-major axis
+            radius = (float)el.axis;
+            //calculate the orbital period using Kepler's third law
+            orbital_period = Mathf.Sqrt((4 * Mathf.PI * Mathf.PI * Mathf.Pow(radius, 3)) / (6.67384e-11f * mass));
+            //calculate the time_step to get about 400 points
+            time_step = (long)(orbital_period / 400);
+
+            //store the current position of i
+            //int prev_i = i;
+
+            //figure out where to start the second orbit
+            while (timePoint[--i] > localTime) ;
+            i++;
+            //int j = i + 401;
+
+            if (prev_i > j)
+            {
+                Debug.Log("ERROR[ShipOrbit]: The new number of points is smaller than the previous one");
+            }
+            Debug.Log("I DOOOOOO NOOOOOOT LOOOOOOOOOP");
+        }
+        else
+        {
+            Debug.Log("I LOOOOOOOOOP");
+            //if there are no previous nodes
+            //get the position at the end of the orbit
+            if (orbits == 1)
+            {
+                localTime = timePoint[i - 1] + time_step;
+            }
+                //get the position of the node
+            else
+            {
+                localTime = timePoint[linkNodes[orbits - 2]] + time_step;
+            }
+                //if it's more than one loop
+                //advance the local time
+                while (time - localTime > orbital_period)
+                {
+                    localTime += (long)orbital_period;
+                    Debug.Log("once orbit");
+                }
+
+                Debug.Log("orbital per: " + orbital_period);
+                Debug.Log("localTime: " + localTime);
+
+                while (localTime < time)
+                {
+                    points.Add(ship.GetComponent<shipOEHistory>().findShipPos(localTime));
+                    //increase the array of points by 1
+                    line.SetVertexCount(i + 1);
+                    //store the time for the point
+                    timePoint.Add(localTime);
+
+                    //ship's position is parents position + ship's position relative to the parent
+                    current = parentPosition + points[i];
+                    //include the new point in the array of points
+                    line.SetPosition(i, current);
+                    //increase the time step
+                    localTime += time_step;
+                    //increment
+                    i++;
+                }
+            
+
+            //get the semi-major axis
+            radius = (float)el.axis;
+            //calculate the orbital period using Kepler's third law
+            orbital_period = Mathf.Sqrt((4 * Mathf.PI * Mathf.PI * Mathf.Pow(radius, 3)) / (6.67384e-11f * mass));
+            //calculate the time_step to get about 400 points
+            time_step = (long)(orbital_period / 400);
+            j = i + 401;
+
+            localTime = time;
         }
 
         //instantiate the node
@@ -176,6 +238,7 @@ public class ShipOrbit : MonoBehaviour
         nodes[count].transform.parent = GameObject.Find("Nodes").transform;
         //link the node with position i
         linkNodes.Add(i);
+
 
         //keep adding points until the track is complete
         while (i != j)
@@ -209,6 +272,8 @@ public class ShipOrbit : MonoBehaviour
         
         //place the node at the appropriate place
        nodes[count].transform.position = parentPosition + points[linkNodes[count]];
+
+       orbits++;
 
 
     }
@@ -382,8 +447,8 @@ public class ShipOrbit : MonoBehaviour
         if (ship.GetComponent<shipOEHistory>().updateOrbit)
         {
             //make another orbit for them
-            makeAnotherOrbit(ship.GetComponent<shipOEHistory>().shipT[orbits]);
-            orbits++;
+            //makeAnotherOrbit(ship.GetComponent<shipOEHistory>().shipT[orbits]);
+            //orbits++;
             //turn the flag off again
             ship.GetComponent<shipOEHistory>().updateOrbit = false;
         }

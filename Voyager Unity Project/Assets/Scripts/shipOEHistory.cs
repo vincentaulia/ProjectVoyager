@@ -23,6 +23,7 @@ public class shipOEHistory : MonoBehaviour
 	public List<Rect> windows = new List<Rect> ();
 	public List<string> windowInfo = new List<string> ();
     public GameObject shipObject;
+    public GameObject shipTrack;
     private int currentTimePos;
     private Vector3 def;
     private bool deltaVGui = false;
@@ -34,6 +35,7 @@ public class shipOEHistory : MonoBehaviour
     public Stopwatch stopwatch = new Stopwatch(); //for testing purposes only
     public bool updateOrbit = false;
     public bool debug = false;
+    private long timeTillNode;      //used in creating tracks for ship
 
     /* Constructor, takes the first OE of a ship, the GamObject ship and the time at which it is created
     NOTE: ship GameObject is only needed for PcaPosition.findPos */
@@ -50,6 +52,12 @@ public class shipOEHistory : MonoBehaviour
         currentTimePos = 0;
         //stopwatch.Stop(); // REMOVE LATER
         //Debug.Log (stopwatch.Elapsed.TotalMilliseconds); //REMOVE LATER
+    }
+
+    //this method links the orbit of the ship to the shipTrack
+    public void linkTrack(string name)
+    {
+        shipTrack = GameObject.Find("Orbit" + name);
     }
 
     public string currentSphereOfInfluence() // 150 milisecond speed :/
@@ -171,6 +179,18 @@ public class shipOEHistory : MonoBehaviour
 
         //calculating the time of orbit taking in account repeating orbits
         timeInOrbit = (long)((mAnom - Initial.anom + (2 * Math.PI * orbits)) / Initial.n);
+        if (orbits > 0)
+        {
+            timeTillNode = (long)((mAnom - Initial.anom) / Initial.n);
+            if (timeTillNode < 0)
+            {
+                timeTillNode = (long)((mAnom - Initial.anom+ (2 * Math.PI)) / Initial.n);
+            }
+        }
+        else
+        {
+            timeTillNode = 0;
+        }
 
 		//If the Initial Anom is greater then mAnom add 2*PI rad to make it a positive number so that 
 		//we can calculate the time spent in orbit and get a positive value
@@ -433,12 +453,13 @@ public class shipOEHistory : MonoBehaviour
 				//2] second method to calculate deltaV
 				deltaVInputNew(double.Parse(a1), double.Parse(a2), double.Parse(a3));
 				
-				updateOrbit = true;
+				//updateOrbit = true;
+                shipTrack.GetComponent<ShipOrbit>().makeAnotherOrbit(shipT[shipT.Count - 1], timeTillNode);
 				deltaVGui = false;
 				Debug.Log("Time of orbits");
 				for (int i = 0; i < shipT.Count; i++)
 				{
-					Debug.Log(shipT[i]);
+					Debug.Log("i: " + shipT[i]);
 				}
 				
 				//show the DV button again
@@ -652,7 +673,7 @@ public class shipOEHistory : MonoBehaviour
 		Vector3d tangentialUnitVector = crossProduct (radialUnitVec, normalUnitVec);
 
 		//Calculate the flight angle // subtracted from 360 for appropriate rotation direction
-		double phi = (Math.PI * 2) - Math.Atan ((el.ecc * Math.Sin(v))/(1 + el.ecc * Math.Cos(v)));
+		double phi = (Math.PI * 2) - Math.Atan ((el.ecc * Math.Sin(v2))/(1 + el.ecc * Math.Cos(v2)));
 
 		Debug.Log ("phi: " + phi);
 
@@ -750,11 +771,14 @@ public class shipOEHistory : MonoBehaviour
         //get the position object
         Vector3 pos = orbiting.transform.position;
         //visualize vel1
-        GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r1, switchComonents(vel1), 0.07f, Color.white, "velocity1");
+        //GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r1, switchComonents(vel1), 0.07f, Color.white, "velocity1");
         //visualize vel2
-        GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel2), 0.1f, Color.white, "velocity2");
+        //GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel2), 0.1f, Color.white, "velocity2");
         //visualize vel (after burn)
         GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel), 0.07f, Color.yellow, "velocity3");
+
+        //visualize tangential vector before the rotation
+        GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(tangentialUnitVector), 0.07f, Color.cyan, "tangential_noturn");
 
 		//visualize radial unit vector that is amplified and added to old velocity
 		GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(rotatedRadialVec), 0.07f, Color.red, "radial");

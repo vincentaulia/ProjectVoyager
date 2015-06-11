@@ -295,6 +295,9 @@ public class TimeJump : MonoBehaviour
         j++;
         GUI.Label(new Rect(10, 70 + j * 20, 150, 20), "Day M: ");
         GUI.Label(new Rect(70, 70 + j * 20, 150, 20), day_m.ToString());
+
+        //drags the window but the slider will not be dragged with it
+        GUI.DragWindow();
     }
 
     public void doPause()
@@ -371,7 +374,7 @@ public class TimeJump : MonoBehaviour
     void Start()
     {
         jumpRect = new Rect(Screen.width - 300, 400, 290, 200);
-        jumpButton = new Rect(Screen.width - 140, 400, 130, 50);
+        jumpButton = new Rect(Screen.width - 140, 170, 130, 50);
         timeBox = new Rect(timebox_x, timebox_y, 200, 230);
         //GUI.Button(jumpButton = new Rect (Screen.width - 140, 500, 130, 50),"TIME JUMP");
     }

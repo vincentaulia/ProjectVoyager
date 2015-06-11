@@ -180,6 +180,9 @@ public class InsertShip : MonoBehaviour
 				Global.orbitsShip [count].transform.parent = GameObject.Find ("OrbitsShip").transform;
 				//calculate the points of the orbit
 				Global.orbitsShip [count].GetComponent<ShipOrbit> ().createOrbit (Global.time, Global.ship [i].name);
+                //link the track to the ship
+                Global.ship[i].GetComponent<shipOEHistory>().linkTrack(Global.ship[i].name);
+
 				//stopwatch.Stop(); // REMOVE LATER
 				//Debug.Log ("TIME ELAPSED");
 				//Debug.Log(stopwatch.Elapsed.TotalMilliseconds); //REMOVE LATER

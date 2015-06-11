@@ -68,7 +68,10 @@ public class ShipNodeGui : MonoBehaviour
         {
             if (GUI.Button(new Rect(Screen.width - 160, Screen.height - 80, 120, 40), "Add DV Node"))
             {
-                anom = Global.time.ToString();
+                //anom = Global.time.ToString();
+                //reset anom and orbits
+                anom = "0";
+                orbits = "0";
                 open *= -1;
                 //hide the button
                 showButton = false;
