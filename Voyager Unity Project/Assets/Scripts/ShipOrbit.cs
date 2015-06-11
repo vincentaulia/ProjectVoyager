@@ -13,9 +13,9 @@ public class ShipOrbit : MonoBehaviour
     public List<Vector3> points = new List<Vector3>();
     long time_step;
     long localTime;
-    float orbital_period;	//stores the time it takes for one orbit
-    float mass;				//mass of focus body
-    float radius;			//semi-major axis of orbit
+    double orbital_period;	//stores the time it takes for one orbit
+    //float mass;				//mass of focus body
+    //float radius;			//semi-major axis of orbit
     int i;					//stores number of points in the track
 
     Vector3 origin;			//the start position of the track
@@ -53,11 +53,15 @@ public class ShipOrbit : MonoBehaviour
         line.SetWidth(width, width);
 
         //get the mass of the focus body
-        mass = (float)el.massFocus;
+        //mass = (float)el.massFocus;
         //get the semi-major axis
-        radius = (float)el.axis;
+        //radius = (float)el.axis;
         //calculate the orbital period using Kepler's third law
-        orbital_period = Mathf.Sqrt((4 * Mathf.PI * Mathf.PI * Mathf.Pow(radius, 3)) / (6.67384e-11f * mass));
+        //orbital_period = Mathf.Sqrt((4 * Mathf.PI * Mathf.PI * Mathf.Pow(radius, 3)) / (6.67384e-11f * mass));
+
+        //another equation for calculating the orbital_period
+        orbital_period = 2 * Mathd.PI / el.n;
+
         //get position of the body it is orbiting
         parentPosition = PcaPosition.findPos(parentPlanet.GetComponent<OrbitalElements>().orb_elements, time, parentPlanet);
         //Vector3 parentPosition = ship.GetComponent<shipOEHistory>().findShipPos (time);
@@ -156,9 +160,13 @@ public class ShipOrbit : MonoBehaviour
         if (timePoint[i-1] > localTime)
         {
             //get the semi-major axis
-            radius = (float)el.axis;
+            //radius = (float)el.axis;
             //calculate the orbital period using Kepler's third law
-            orbital_period = Mathf.Sqrt((4 * Mathf.PI * Mathf.PI * Mathf.Pow(radius, 3)) / (6.67384e-11f * mass));
+            //orbital_period = Mathf.Sqrt((4 * Mathf.PI * Mathf.PI * Mathf.Pow(radius, 3)) / (6.67384e-11f * mass));
+
+            //another equation for calculating the orbital_period
+            orbital_period = 2 * Mathd.PI / el.n;
+
             //calculate the time_step to get about 400 points
             time_step = (long)(orbital_period / 400);
 
@@ -179,16 +187,17 @@ public class ShipOrbit : MonoBehaviour
         else
         {
             Debug.Log("I LOOOOOOOOOP");
-            //if there are no previous nodes
-            //get the position at the end of the orbit
+            //Get the time at the beginning of the orbit
             if (orbits == 1)
             {
-                localTime = timePoint[i - 1] + time_step;
+                //localTime = timePoint[i - 1] + time_step;
+                localTime = timePoint[0];
             }
                 //get the position of the node
             else
             {
-                localTime = timePoint[linkNodes[orbits - 2]] + time_step;
+                //localTime = timePoint[linkNodes[orbits - 2]] + time_step;
+                localTime = timePoint[linkNodes[orbits - 2]];
             }
                 //if it's more than one loop
                 //advance the local time
@@ -221,9 +230,13 @@ public class ShipOrbit : MonoBehaviour
             
 
             //get the semi-major axis
-            radius = (float)el.axis;
+            //radius = (float)el.axis;
             //calculate the orbital period using Kepler's third law
-            orbital_period = Mathf.Sqrt((4 * Mathf.PI * Mathf.PI * Mathf.Pow(radius, 3)) / (6.67384e-11f * mass));
+            //orbital_period = Mathf.Sqrt((4 * Mathf.PI * Mathf.PI * Mathf.Pow(radius, 3)) / (6.67384e-11f * mass));
+
+            //another equation for calculating the orbital_period
+            orbital_period = 2 * Mathd.PI / el.n;
+
             //calculate the time_step to get about 400 points
             time_step = (long)(orbital_period / 400);
             j = i + 401;

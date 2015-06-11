@@ -778,7 +778,7 @@ public class shipOEHistory : MonoBehaviour
         GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(vel), 0.07f, Color.yellow, "velocity3");
 
         //visualize tangential vector before the rotation
-        GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(tangentialUnitVector), 0.07f, Color.cyan, "tangential_noturn");
+        //GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(tangentialUnitVector), 0.07f, Color.magenta, "tangential_noturn");
 
 		//visualize radial unit vector that is amplified and added to old velocity
 		GameObject.Find("ForShip").GetComponent<InsertShip>().drawVector(pos + temp_r2, switchComonents(rotatedRadialVec), 0.07f, Color.red, "radial");

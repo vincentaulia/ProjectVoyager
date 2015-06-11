@@ -373,7 +373,7 @@ public class TimeJump : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        jumpRect = new Rect(Screen.width - 300, 400, 290, 200);
+        jumpRect = new Rect(Screen.width - 300, 170, 290, 200);
         jumpButton = new Rect(Screen.width - 140, 170, 130, 50);
         timeBox = new Rect(timebox_x, timebox_y, 200, 230);
         //GUI.Button(jumpButton = new Rect (Screen.width - 140, 500, 130, 50),"TIME JUMP");
