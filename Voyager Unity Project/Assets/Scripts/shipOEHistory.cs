@@ -892,26 +892,63 @@ public class shipOEHistory : MonoBehaviour
         
         //calculate the mean anomaly at the start of the new orbit
         Debug.Log("start of new orbit");
-        //true anomaly
-        //v = Math.Acos(((el.axis * (1 - Math.Pow(el.ecc, 2))) / r2.magnitude - 1)) / el.ecc;
-        v = Math.Acos((dotProduct(e,r2))/(el.ecc * r2.magnitude));
-        //eccentric anomaly
-        E = Math.Acos((el.ecc + Math.Cos(v)) / (1 + el.ecc * Math.Cos(v)));
-        
-        //if r2 dot v is smaller than zero, then v is bigger than 180 degrees
-        if (dotProduct(r2, vel) <= 0)
+
+        //Non-hyperbolic orbits
+        if (el.axis > 0)
         {
-            v = 2 * Math.PI - v;
-            E = 2 * Math.PI - E;
-            Debug.Log("adjusting v and E");
+            Debug.Log("Non-hyperbolic");
+            //true anomaly
+            //v = Math.Acos(((el.axis * (1 - Math.Pow(el.ecc, 2))) / r2.magnitude - 1)) / el.ecc;
+
+            //not sure if this isneeded for E as well...
+            //if the number in arcCos is practically 1
+            if (Math.Abs((dotProduct(e, r2)) / (el.ecc * r2.magnitude) - 1) < 0.00001)
+            {
+                //just put one, because sometimes the floating number can be
+                //the tiniest of fractions above one, which causes NaN error
+                v = Math.Acos(1);
+                Debug.Log("arcCos practically 1");
+            }
+            else
+            {
+                v = Math.Acos((dotProduct(e, r2)) / (el.ecc * r2.magnitude));
+            }
+            //eccentric anomaly
+            E = Math.Acos((el.ecc + Math.Cos(v)) / (1 + el.ecc * Math.Cos(v)));
+
+            //if r2 dot v is smaller than zero, then v is bigger than 180 degrees
+            if (dotProduct(r2, vel) <= 0)
+            {
+                v = 2 * Math.PI - v;
+                E = 2 * Math.PI - E;
+                Debug.Log("adjusting v and E");
+            }
+            
+            //mean anomaly
+            el.anom = E - el.ecc * Math.Sin(E);
+            
         }
+        //hyperbolic orbits
+        else
+        {
+            Debug.Log("Hyperbolic");
+            v = Math.Acos( ((el.axis * (1 - el.ecc*el.ecc)) - r2.magnitude) / (el.ecc * r2.magnitude));
+
+            //PROBLEM FOR CALCULATING E: I DO NOT KNOW WHAT TO DO FOR
+            //E needs to have the same sign as v. Will check thru testing
+
+            //do the inverse cosh in two steps
+            //first get the expression for cosh E
+            double temp = (el.ecc + Math.Cos(v)) / (1 + el.ecc * Math.Cos(v));
+            //apply inverse cosh
+            E = Math.Log(temp + Math.Sqrt(temp + 1)*Math.Sqrt(temp - 1));
+
+            el.anom = el.ecc * Math.Sinh(E) - E;
+        }
+
         Debug.Log("v: " + v);
         Debug.Log("E: " + E);
-
-        //mean anomaly
-        el.anom = E - el.ecc * Math.Sin(E);
         Debug.Log("anomaly: " + el.anom);
-
         //save the updated orbital elements
         shipOE[j + 1] = el;
         debug = true;

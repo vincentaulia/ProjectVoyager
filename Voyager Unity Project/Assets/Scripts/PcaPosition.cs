@@ -260,7 +260,16 @@ public struct Elements
 				W = new Vector3 ((float)Wx, (float)Wy, (float)Wz);
 		
 				// Calculating n
-				n = Math.Sqrt ((6.67384e-11) * (mass + massFocus) / (axis * axis * axis)) * dir;
+                if (axis > 0)
+                {
+                    n = Math.Sqrt((6.67384e-11) * (mass + massFocus) / (axis * axis * axis)) * dir;
+                }
+                //account for hyperbolic orbits
+                else
+                {
+                    n = Math.Sqrt((6.67384e-11) * (mass + massFocus) / (-axis * axis * axis)) * dir;
+                }
+				
 				//Debug.Log (dir);
 		}
 
