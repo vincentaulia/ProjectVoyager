@@ -37,3 +37,9 @@ Thumbs.db
 
 
 
+*.xcworkspacedata
+shipSimulating/shipSimulating.xcodeproj/project.pbxproj
+shipSimulating/shipSimulating.xcodeproj/project.xcworkspace/xcuserdata/zeev.xcuserdatad/UserInterfaceState.xcuserstate
+shipSimulating/shipSimulating.xcodeproj/xcuserdata/zeev.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
+shipSimulating/shipSimulating.xcodeproj/xcuserdata/zeev.xcuserdatad/xcschemes/shipSimulating.xcscheme
+shipSimulating/shipSimulating.xcodeproj/xcuserdata/zeev.xcuserdatad/xcschemes/xcschememanagement.plist
