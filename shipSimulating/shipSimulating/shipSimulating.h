@@ -15,7 +15,6 @@
 using namespace std;
 using namespace arma;
 
-
 class planet {
     
 public:
@@ -143,7 +142,7 @@ public:
 
 mat findPos (Elements el, long time)
 {
-    //This function finds the position of a planet given a bunch of orbital parameters and some other stuff.
+    //This function finds the position of a planet given a bunch of orbital parameters and the time.
     
     double anom = el.anom + el.n * time;
     double E = anom;
@@ -164,51 +163,30 @@ mat findPos (Elements el, long time)
     }
     
     mat R(3, 1);
-    //*********LOSS OF PRECISION HERE BY CONVERTING TO FLOATS.
     R = (el.axis * (cos(E) - el.ecc)) * el.P + (el.axis * sqrt (1 - el.ecc * el.ecc) * sin(E)) * el.Q;
+    //At this point R = position of the object relative to whatever it is orbiting.
     
-    //interchange the y and z components to move the planets in the plane of the game
-    double y = R(1,0);
-    R(1,0) = R(2,0);
-    R(2,0) = y;
     
-    //if it's a ship, get the id of it's orbit focus
-    //if (body.name.Contains ("Ship")) {
-    
-    //orbiting = GameObject.Find (el.IDFocus);
-    //R += orbiting.transform.position;
-    
-    //}
-    //Don't need this anymore. Will make moons children of planets
-    /*else {
+    /*
+    //this is to add the vector to the object it is orbiting
+    int objectID = int.Parse (body.name);
      
-     
-     
-     //this is to add the vector to the object it is orbiting
-     int objectID = int.Parse (body.name);
-     
-     //if the id ends with 99, then it orbits the sun (10)
-     //if the id is something else, then it orbits a planet
-     if (objectID == 10)
+    //if the id ends with 99, then it orbits the sun (10)
+    //if the id is something else, then it orbits a planet
+    if (objectID == 10)
      ;
-     else if (objectID % 100 == 99) {
-     
-     orbiting = GameObject.Find ("10");
-     //Debug.Log (body.name + ": " + orbiting.name);
-     R += orbiting.transform.position;
+    else if (objectID % 100 == 99) {
+         orbiting = GameObject.Find ("10");
+         //Debug.Log (body.name + ": " + orbiting.name);
+         R += orbiting.transform.position;
      } else {
-     int orbiting_id;
-     
-     orbiting_id = (objectID / 100) * 100 + 99;
-     orbiting = GameObject.Find (orbiting_id.ToString ());
-     //Debug.Log (body.name + ": " + orbiting.name);
-     R += orbiting.transform.position;
-     
+         int orbiting_id;
+         orbiting_id = (objectID / 100) * 100 + 99;
+         orbiting = GameObject.Find (orbiting_id.ToString ());
+         //Debug.Log (body.name + ": " + orbiting.name);
+         R += orbiting.transform.position;
      }
-     
-     
-     }*/
-    
+     */
     return R;
 }
 

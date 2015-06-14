@@ -54,10 +54,12 @@ int main(int argc, char** argv)
         Velocity.row(i) = spaceObjects[i].velocity;
     }
     
+    //At this point, initial mass, position, velocity, orb elements should be known for all planets
+    //Initial position
     
     /*************************************************************
      *************************************************************
-     Start of RKN12(10) code
+                        Start of RKN12(10) code
      *************************************************************
      *************************************************************/
     
@@ -170,66 +172,7 @@ int main(int argc, char** argv)
     
     /*************************************************************
      *************************************************************
-     End of RK12(10) Code
-     *************************************************************
-     *************************************************************/
-    
-    /*************************************************************
-     *************************************************************
-     Start of RK4 Placeholder code
-     *************************************************************
-     *************************************************************/
-    
-    /*
-     This is the RK4 code. This works, but it turns out that the RK4 approximation
-     is less accurate than the Euler approximation for our purposes.
-     I'm keeping this code here because it's an easier to understand version of the RK10/RK8 stuff,
-     so it might be helpful if you're trying to figure out RK10/RK8 stuff. */
-    /*
-     
-     unsigned int h = 60*60*0.25;	 //h = step size, in seconds
-     unsigned int t = 0;	 //t is the running time track. Starts at t = 0
-     unsigned int t_final = 24*60*60*365*1;	//Must be an integer!
-     
-     mat k1(Velocity.n_rows, Velocity.n_cols);
-     k1.zeros();
-     mat l1(Velocity.n_rows, Velocity.n_cols);
-     l1.zeros();
-     mat k2(Velocity.n_rows, Velocity.n_cols);
-     k2.zeros();
-     mat l2(Velocity.n_rows, Velocity.n_cols);
-     l2.zeros();
-     mat k3(Velocity.n_rows, Velocity.n_cols);
-     k3.zeros();
-     mat l3(Velocity.n_rows, Velocity.n_cols);
-     l3.zeros();
-     mat k4(Velocity.n_rows, Velocity.n_cols);
-     k4.zeros();
-     mat l4(Velocity.n_rows, Velocity.n_cols);
-     l4.zeros();
-     
-     while (t <= t_final) {
-     //This writes the planet data to the output file, but only every 24 hours.
-     if (t % (60*60*24) == 0) {
-     writeData(spaceObjects, numSpaceObjs, Velocity, Position, t, outputFile);
-     }
-     //start of RK4 approximation.
-     k1 = grav_accel(Position,Mass);
-     l1 = Velocity;
-     k2 = grav_accel(Position + l1/2, Mass);
-     l2 = Velocity + k1/2;
-     k3 = grav_accel(Position + l2/2, Mass);
-     l3 = Velocity + k2/2;
-     k4 = grav_accel(Position + l3, Mass);
-     l4 = Velocity + k3;
-     
-     Velocity = Velocity + h/6*(k1 + 2*k2 + 2*k3 + k4);
-     Position = Position + h/6*(l1 + 2*l2 + 2*l3 + l4);
-     t = t + h;
-     }*/
-    /*************************************************************
-     *************************************************************
-     End of RK4 placeholder code
+                        End of RK12(10) Code
      *************************************************************
      *************************************************************/
     
