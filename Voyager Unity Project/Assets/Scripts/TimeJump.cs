@@ -49,9 +49,12 @@ public class TimeJump : MonoBehaviour
     string yeartxt = "";
     int x = Screen.width - 300;
 
-    int timebox_x = Screen.width - 440;
-	//int timebox_x = 0;
-    int timebox_y = Screen.height - 230;
+    //int timebox_x = Screen.width - 440;
+    //int timebox_y = Screen.height - 230;
+
+	// The time display is initially in the bottom right corner. Looks cleaner, IMHO.
+	int timebox_x = Screen.width - 200;
+	int timebox_y = Screen.height - 230;
 
     long real_year = 2014;
     bool leap_year = false;
@@ -72,11 +75,9 @@ public class TimeJump : MonoBehaviour
          * 16.0 - Years
          * Add more values if you need decades/centuries/etc.
          */
-        //GUI.contentColor = Color.yellow;
-        GUI.backgroundColor = Color.red;
-        sliderValue = Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(timebox_x + 50, timebox_y + 50, 100, 50), sliderValue, 0.0F, 10.0F));
-        GUI.backgroundColor = Color.grey;
-        //Debug.Log("sliderValue = " + sliderValue);
+		// This slider is being constructed from within a GUI window function. Hence, the Rect's x & y coordinates
+		// are relative to the rectangle itself, and not the screen.
+		sliderValue = Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(50, 50, 100, 50), sliderValue, 0.0F, 10.0F));
     }
 
     void guiTimeJump()
@@ -136,6 +137,7 @@ public class TimeJump : MonoBehaviour
 
     public void timeBoxFunc(int windowID)
     {
+		guiTimeSlider();
         switch ((int)sliderValue)
         {
             case 0:
@@ -320,9 +322,9 @@ public class TimeJump : MonoBehaviour
 
     void OnGUI()
     {
-        // Currently, you may only jump to 0 < t <= 999
+        // Currently, you may only jump to 0 < t <= 999. Will improve this.
 
-        //show the big window if the user chooses
+        //Show the big window if the user chooses.
         if (showJump)
         {
             jumpRect = GUI.Window(77, jumpRect, jumpFunc, "Time Jump Menu");
@@ -332,8 +334,6 @@ public class TimeJump : MonoBehaviour
             jumpButton = GUI.Window(78, jumpButton, jumpButtonFunc, "Time Jump");
         }
 
-        //GUI.Box(new Rect(Screen.width-205, Screen.height-105, 200, 100), "Just a box.");
-        guiTimeSlider();
         timeBox = GUI.Window(79, timeBox, timeBoxFunc, "Time");
         guiTimeJump();
         //guiTimeScale();
